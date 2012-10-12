@@ -9,10 +9,12 @@
 
     function Planes(scene) {
       this.scene = scene;
-      this.mirrored = Math.random() > 0.5;
-      this.height = THREE.Math.randFloat(150, 300);
-      this.maxDrift = 4;
+      this.flipped = Math.random() > 0.75;
+      this.height = THREE.Math.randFloat(100, 500);
+      this.angle = 0;
+      this.maxDrift = 300;
       this.drift = {
+        angle: Curve.low(Math.random()) * 60 * Math.PI / 180,
         r: [Math.random() * 2 - 1, Math.random() * 2 - 1],
         g: [Math.random() * 2 - 1, Math.random() * 2 - 1],
         b: [Math.random() * 2 - 1, Math.random() * 2 - 1]
@@ -24,10 +26,8 @@
       };
       this.planes = [new Layers.Planes.Plane(this.scene, this), new Layers.Planes.Plane(this.scene, this)];
       this.planes[0].mesh.rotation.x = 90 * (Math.PI / 180);
-      this.planes[0].mesh.rotation.y = 3 * (Math.PI / 180);
       this.planes[0].mesh.position.y = this.height;
-      this.planes[1].mesh.rotation.x = 90 * (this.mirrored ? -1 : 1) * (Math.PI / 180);
-      this.planes[1].mesh.rotation.y = -3 * (Math.PI / 180);
+      this.planes[1].mesh.rotation.x = 90 * (this.flipped ? -1 : 1) * (Math.PI / 180);
       this.planes[1].mesh.position.y = -this.height;
     }
 
@@ -68,6 +68,10 @@
         brightness: {
           type: 'f',
           value: 1
+        },
+        angle: {
+          type: 'f',
+          value: 0
         },
         shiftXr: {
           type: 'f',
@@ -122,6 +126,8 @@
       if (this.uniforms.brightness.value < 0) {
         this.uniforms.brightness.value = 0;
       }
+      this.uniforms.angle.value += this.parent.drift.angle * elapsed * (this.uniforms.brightness.value - 0.5) * 2;
+      this.uniforms.shiftXr.value += this.parent.drift.r[0] * this.parent.maxDrift * elapsed;
       this.uniforms.shiftXr.value += this.parent.drift.r[0] * this.parent.maxDrift * elapsed;
       this.uniforms.shiftYr.value += this.parent.drift.r[1] * this.parent.maxDrift * elapsed;
       this.uniforms.shiftXg.value -= this.parent.drift.g[0] * this.parent.maxDrift * elapsed;

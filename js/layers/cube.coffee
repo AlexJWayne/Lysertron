@@ -21,7 +21,7 @@ class Layers.Cube extends Layers.Base
     @rotSpeed   = THREE.Math.randFloatSpread 180 * (Math.PI/180)
     @mesh.position.set(
       THREE.Math.randFloatSpread 600
-      THREE.Math.randFloatSpread 400
+      THREE.Math.randFloatSpread 200
       THREE.Math.randFloatSpread 600
     )
 

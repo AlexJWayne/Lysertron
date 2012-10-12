@@ -2,7 +2,7 @@
 scene = new THREE.Scene
 
 # camera
-camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 10000
+camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 100000
 camera.position.set 600, 0, 0
 camera.lookAt new THREE.Vector3
 scene.add camera
