@@ -28,8 +28,10 @@ float grid(float size, float shiftX, float shiftY) {
 void main() {
 
   float fog;
-  if (vPos.x < -3000.0) {
-    fog = (vPos.x + 6000.0) / 3000.0;
+  float distance = length(vPos);
+
+  if (distance > 5000.0) {
+    fog = 1.0 - (distance - 5000.0) / 10000.0;
   } else {
     fog = 1.0;
   }

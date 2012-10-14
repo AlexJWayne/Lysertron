@@ -9,11 +9,15 @@
 
     function Cubes(scene) {
       this.scene = scene;
+      Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = [];
     }
 
     Cubes.prototype.beat = function() {
-      return this.cubes.push(new Layers.Cube(this.scene));
+      var cube;
+      cube = new Layers.Cubes.Cube(this);
+      this.add(cube);
+      return this.cubes.push(cube);
     };
 
     Cubes.prototype.update = function(elapsed) {
@@ -28,7 +32,7 @@
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         cube = _ref1[_j];
         if (cube.expired) {
-          this.scene.remove(cube.mesh);
+          this.remove(cube);
         } else {
           tempCubes.push(cube);
         }
@@ -37,6 +41,46 @@
     };
 
     return Cubes;
+
+  })(Layers.Base);
+
+  Layers.Cubes.Cube = (function(_super) {
+
+    __extends(Cube, _super);
+
+    function Cube() {
+      var material, size;
+      Cube.__super__.constructor.apply(this, arguments);
+      material = {};
+      this.uniforms = {
+        beatScale: {
+          type: 'f',
+          value: 1
+        }
+      };
+      size = THREE.Math.randFloat(100, 200);
+      this.mesh = new THREE.Mesh(new THREE.CubeGeometry(size, size, size, 1, 1, 1), new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
+        uniforms: this.uniforms
+      })));
+      this.add(this.mesh);
+      this.shrinkTime = THREE.Math.randFloat(2, 6);
+      this.rotSpeed = THREE.Math.randFloatSpread(180 * (Math.PI / 180));
+      this.mesh.position.set(THREE.Math.randFloatSpread(400), THREE.Math.randFloatSpread(400), THREE.Math.randFloatSpread(400));
+    }
+
+    Cube.prototype.beat = function() {
+      return this.uniforms.beatScale.value = 1;
+    };
+
+    Cube.prototype.update = function(elapsed) {
+      this.uniforms.beatScale.value -= elapsed / this.shrinkTime;
+      this.mesh.rotation.y += this.rotSpeed * elapsed;
+      if (this.uniforms.beatScale.value <= 0) {
+        return this.expired = true;
+      }
+    };
+
+    return Cube;
 
   })(Layers.Base);
 

@@ -1,9 +1,10 @@
 window.Layers ||=
   _shaders: {}
 
-class Layers.Base
+class Layers.Base extends THREE.Object3D
   constructor: (@scene) ->
-    # ...
+    super
+    @scene.add this
   
   getShader: (name) ->
     Layers._shaders[name] || (

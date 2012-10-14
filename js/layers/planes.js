@@ -8,28 +8,50 @@
     __extends(Planes, _super);
 
     function Planes(scene) {
+      var plane, _i, _len, _ref;
       this.scene = scene;
-      this.flipped = Math.random() > 0.75;
-      this.height = THREE.Math.randFloat(100, 500);
+      Planes.__super__.constructor.apply(this, arguments);
+      this.height = THREE.Math.randFloat(250, 500);
+      this.configRotation();
       this.angle = 0;
       this.maxDrift = 300;
+      this.decayCoef = THREE.Math.randFloat(0.3, 0.7);
       this.drift = {
         angle: Curve.low(Math.random()) * 60 * Math.PI / 180,
-        r: [Math.random() * 2 - 1, Math.random() * 2 - 1],
-        g: [Math.random() * 2 - 1, Math.random() * 2 - 1],
-        b: [Math.random() * 2 - 1, Math.random() * 2 - 1]
+        r: [THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)],
+        g: [THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)],
+        b: [THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)]
       };
       this.gridSize = {
-        r: THREE.Math.randFloat(75, 400),
-        g: THREE.Math.randFloat(75, 400),
-        b: THREE.Math.randFloat(75, 400)
+        r: THREE.Math.randFloat(75, 600),
+        g: THREE.Math.randFloat(75, 600),
+        b: THREE.Math.randFloat(75, 600)
       };
-      this.planes = [new Layers.Planes.Plane(this.scene, this), new Layers.Planes.Plane(this.scene, this)];
+      this.planes = [
+        new Layers.Planes.Plane(this, {
+          side: THREE.FrontSide
+        }), new Layers.Planes.Plane(this, {
+          side: THREE.BackSide
+        })
+      ];
+      _ref = this.planes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        plane = _ref[_i];
+        this.add(plane);
+      }
       this.planes[0].mesh.rotation.x = 90 * (Math.PI / 180);
       this.planes[0].mesh.position.y = this.height;
-      this.planes[1].mesh.rotation.x = 90 * (this.flipped ? -1 : 1) * (Math.PI / 180);
+      this.planes[1].mesh.rotation.x = 90 * (Math.PI / 180);
       this.planes[1].mesh.position.y = -this.height;
     }
+
+    Planes.prototype.configRotation = function() {
+      var strat, strats;
+      strats = [[0, 60], [30, 0], [0, 0], [30, 60]];
+      strat = strats[THREE.Math.randInt(1, strats.length) - 1];
+      console.log(strat);
+      return this.rotSpeed = new THREE.Vector2(strat[0] * Math.PI / 180, strat[1] * Math.PI / 180);
+    };
 
     Planes.prototype.beat = function() {
       var plane, _i, _len, _ref, _results;
@@ -44,6 +66,8 @@
 
     Planes.prototype.update = function(elapsed) {
       var plane, _i, _len, _ref, _results;
+      this.rotation.z += this.rotSpeed.x * elapsed;
+      this.rotation.x += this.rotSpeed.y * elapsed;
       _ref = this.planes;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -61,9 +85,10 @@
 
     __extends(Plane, _super);
 
-    function Plane(scene, parent) {
-      this.scene = scene;
-      this.parent = parent;
+    function Plane(owner, _arg) {
+      this.owner = owner;
+      this.side = _arg.side;
+      Plane.__super__.constructor.apply(this, arguments);
       this.uniforms = {
         brightness: {
           type: 'f',
@@ -99,22 +124,25 @@
         },
         gridSizeR: {
           type: 'f',
-          value: this.parent.gridSize.r
+          value: this.owner.gridSize.r
         },
         gridSizeG: {
           type: 'f',
-          value: this.parent.gridSize.g
+          value: this.owner.gridSize.g
         },
         gridSizeB: {
           type: 'f',
-          value: this.parent.gridSize.b
+          value: this.owner.gridSize.b
         }
       };
       this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(100000, 100000), new THREE.ShaderMaterial(_.extend(this.getMatProperties('plane'), {
-        uniforms: this.uniforms
+        uniforms: this.uniforms,
+        side: this.side,
+        transparent: true
       })));
       this.mesh.doubleSided = true;
-      this.scene.add(this.mesh);
+      this.mesh.transparent = true;
+      this.add(this.mesh);
     }
 
     Plane.prototype.beat = function() {
@@ -122,7 +150,9 @@
     };
 
     Plane.prototype.update = function(elapsed) {
-      this.uniforms.brightness.value -= 0.5 * elapsed;
+      var decay;
+      decay = this.parent.scene.beat.bps * this.owner.decayCoef;
+      this.uniforms.brightness.value -= decay * elapsed;
       if (this.uniforms.brightness.value < 0) {
         this.uniforms.brightness.value = 0;
       }

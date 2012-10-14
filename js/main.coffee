@@ -18,14 +18,12 @@ container.appendChild renderer.domElement
 
 layers = [
   new Layers.Planes scene
-  new Layers.Cubes scene
+  new Layers.Cubes  scene
 ]
 
 # beat
-beat = new Beat bpm: parseFloat(location.search?.replace '?bpm=', '')
-beat.on 'beat', ->
-  for layer in layers
-    layer.beat()
+beat = scene.beat = new Beat bpm: parseFloat(location.search?.replace '?bpm=', '')
+beat.on 'beat', -> layer.beat() for layer in layers
 
 lastFrame = Date.now() / 1000
 update = ->

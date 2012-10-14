@@ -26,7 +26,7 @@
 
   layers = [new Layers.Planes(scene), new Layers.Cubes(scene)];
 
-  beat = new Beat({
+  beat = scene.beat = new Beat({
     bpm: parseFloat((_ref = location.search) != null ? _ref.replace('?bpm=', '') : void 0)
   });
 
