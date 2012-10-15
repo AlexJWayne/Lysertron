@@ -2,8 +2,17 @@ window.Layers ||=
   _shaders: {}
 
 class Layers.Base extends THREE.Object3D
+  components: {}
+
   constructor: (@scene) ->
     super
+
+    @components =
+      for own name, args of @components
+        component = new Component[name](args || {})
+        component.obj = this
+        component
+
     @scene.add this
   
   getShader: (name) ->
@@ -24,3 +33,4 @@ class Layers.Base extends THREE.Object3D
 
   beat: ->
   update: (elapsed) ->
+    component.update(elapsed) for component in @components

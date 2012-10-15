@@ -1,14 +1,27 @@
 class Layers.Cubes extends Layers.Base
+  components:
+    Rotator:
+      maxRoll:  90
+      maxPitch: 90
+
   constructor: (@scene) ->
     super
     @cubes = []
+    @size = [
+      THREE.Math.randFloat(25, 200)
+      THREE.Math.randFloat(25, 200)
+    ]
+    @spawnQty = THREE.Math.randInt(1, 6)
+    @shrinkTime = THREE.Math.randInt(2,6) / @scene.beat.bps
 
   beat: ->
-    cube = new Layers.Cubes.Cube(this)
-    @add cube
-    @cubes.push cube
+    for i in [1..@spawnQty]
+      cube = new Layers.Cubes.Cube(this)
+      @add cube
+      @cubes.push cube
   
   update: (elapsed) ->
+    super
     cube.update elapsed for cube in @cubes
     
     tempCubes = []
@@ -22,8 +35,12 @@ class Layers.Cubes extends Layers.Base
 
 
 class Layers.Cubes.Cube extends Layers.Base
+  # components:
+  #   Rotator:
+  #     maxRoll:  30
+  #     maxPitch: 30
 
-  constructor: ->
+  constructor: (parent)->
     super
     material = {}
 
@@ -32,7 +49,7 @@ class Layers.Cubes.Cube extends Layers.Base
         type: 'f'
         value: 1
 
-    size = THREE.Math.randFloat 100, 200
+    size = THREE.Math.randFloat parent.size...
     @mesh = new THREE.Mesh(
       new THREE.CubeGeometry size, size, size, 1, 1, 1
       new THREE.ShaderMaterial(
@@ -42,19 +59,17 @@ class Layers.Cubes.Cube extends Layers.Base
 
     @add @mesh
     
-    @shrinkTime = THREE.Math.randFloat 2, 6
-    @rotSpeed   = THREE.Math.randFloatSpread 180 * (Math.PI/180)
     @mesh.position.set(
-      THREE.Math.randFloatSpread 400
-      THREE.Math.randFloatSpread 400
-      THREE.Math.randFloatSpread 400
+      THREE.Math.randFloatSpread 500
+      THREE.Math.randFloatSpread 500
+      THREE.Math.randFloatSpread 500
     )
 
   beat: ->
     @uniforms.beatScale.value = 1
 
   update: (elapsed) ->
-    @uniforms.beatScale.value -= elapsed / @shrinkTime
-    @mesh.rotation.y += @rotSpeed * elapsed
+    super
+    @uniforms.beatScale.value -= elapsed / @parent.shrinkTime
 
     @expired = yes if @uniforms.beatScale.value <= 0

@@ -7,21 +7,36 @@
 
     __extends(Cubes, _super);
 
+    Cubes.prototype.components = {
+      Rotator: {
+        maxRoll: 90,
+        maxPitch: 90
+      }
+    };
+
     function Cubes(scene) {
       this.scene = scene;
       Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = [];
+      this.size = [THREE.Math.randFloat(25, 200), THREE.Math.randFloat(25, 200)];
+      this.spawnQty = THREE.Math.randInt(1, 6);
+      this.shrinkTime = THREE.Math.randInt(2, 6) / this.scene.beat.bps;
     }
 
     Cubes.prototype.beat = function() {
-      var cube;
-      cube = new Layers.Cubes.Cube(this);
-      this.add(cube);
-      return this.cubes.push(cube);
+      var cube, i, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 1, _ref = this.spawnQty; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        cube = new Layers.Cubes.Cube(this);
+        this.add(cube);
+        _results.push(this.cubes.push(cube));
+      }
+      return _results;
     };
 
     Cubes.prototype.update = function(elapsed) {
       var cube, tempCubes, _i, _j, _len, _len1, _ref, _ref1;
+      Cubes.__super__.update.apply(this, arguments);
       _ref = this.cubes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         cube = _ref[_i];
@@ -48,8 +63,8 @@
 
     __extends(Cube, _super);
 
-    function Cube() {
-      var material, size;
+    function Cube(parent) {
+      var material, size, _ref;
       Cube.__super__.constructor.apply(this, arguments);
       material = {};
       this.uniforms = {
@@ -58,14 +73,12 @@
           value: 1
         }
       };
-      size = THREE.Math.randFloat(100, 200);
+      size = (_ref = THREE.Math).randFloat.apply(_ref, parent.size);
       this.mesh = new THREE.Mesh(new THREE.CubeGeometry(size, size, size, 1, 1, 1), new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
         uniforms: this.uniforms
       })));
       this.add(this.mesh);
-      this.shrinkTime = THREE.Math.randFloat(2, 6);
-      this.rotSpeed = THREE.Math.randFloatSpread(180 * (Math.PI / 180));
-      this.mesh.position.set(THREE.Math.randFloatSpread(400), THREE.Math.randFloatSpread(400), THREE.Math.randFloatSpread(400));
+      this.mesh.position.set(THREE.Math.randFloatSpread(500), THREE.Math.randFloatSpread(500), THREE.Math.randFloatSpread(500));
     }
 
     Cube.prototype.beat = function() {
@@ -73,8 +86,8 @@
     };
 
     Cube.prototype.update = function(elapsed) {
-      this.uniforms.beatScale.value -= elapsed / this.shrinkTime;
-      this.mesh.rotation.y += this.rotSpeed * elapsed;
+      Cube.__super__.update.apply(this, arguments);
+      this.uniforms.beatScale.value -= elapsed / this.parent.shrinkTime;
       if (this.uniforms.beatScale.value <= 0) {
         return this.expired = true;
       }

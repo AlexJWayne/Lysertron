@@ -30,11 +30,8 @@ void main() {
   float fog;
   float distance = length(vPos);
 
-  if (distance > 5000.0) {
-    fog = 1.0 - (distance - 5000.0) / 10000.0;
-  } else {
-    fog = 1.0;
-  }
+  fog = 1.0 - (distance - 4000.0) / 10000.0;
+  fog = clamp(fog, 0.0, 1.0);
 
   gl_FragColor = vec4(
     vec3(

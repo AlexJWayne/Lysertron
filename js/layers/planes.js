@@ -7,12 +7,18 @@
 
     __extends(Planes, _super);
 
+    Planes.prototype.components = {
+      Rotator: {
+        maxRoll: 45,
+        maxPitch: 15
+      }
+    };
+
     function Planes(scene) {
       var plane, _i, _len, _ref;
       this.scene = scene;
       Planes.__super__.constructor.apply(this, arguments);
       this.height = THREE.Math.randFloat(250, 500);
-      this.configRotation();
       this.angle = 0;
       this.maxDrift = 300;
       this.decayCoef = THREE.Math.randFloat(0.3, 0.7);
@@ -45,14 +51,6 @@
       this.planes[1].mesh.position.y = -this.height;
     }
 
-    Planes.prototype.configRotation = function() {
-      var strat, strats;
-      strats = [[0, 60], [30, 0], [0, 0], [30, 60]];
-      strat = strats[THREE.Math.randInt(1, strats.length) - 1];
-      console.log(strat);
-      return this.rotSpeed = new THREE.Vector2(strat[0] * Math.PI / 180, strat[1] * Math.PI / 180);
-    };
-
     Planes.prototype.beat = function() {
       var plane, _i, _len, _ref, _results;
       _ref = this.planes;
@@ -66,8 +64,7 @@
 
     Planes.prototype.update = function(elapsed) {
       var plane, _i, _len, _ref, _results;
-      this.rotation.z += this.rotSpeed.x * elapsed;
-      this.rotation.x += this.rotSpeed.y * elapsed;
+      Planes.__super__.update.apply(this, arguments);
       _ref = this.planes;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

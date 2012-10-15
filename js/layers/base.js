@@ -11,9 +11,25 @@
 
     __extends(Base, _super);
 
+    Base.prototype.components = {};
+
     function Base(scene) {
+      var args, component, name;
       this.scene = scene;
       Base.__super__.constructor.apply(this, arguments);
+      this.components = (function() {
+        var _ref, _results;
+        _ref = this.components;
+        _results = [];
+        for (name in _ref) {
+          if (!__hasProp.call(_ref, name)) continue;
+          args = _ref[name];
+          component = new Component[name](args || {});
+          component.obj = this;
+          _results.push(component);
+        }
+        return _results;
+      }).call(this);
       this.scene.add(this);
     }
 
@@ -37,7 +53,16 @@
 
     Base.prototype.beat = function() {};
 
-    Base.prototype.update = function(elapsed) {};
+    Base.prototype.update = function(elapsed) {
+      var component, _i, _len, _ref, _results;
+      _ref = this.components;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        component = _ref[_i];
+        _results.push(component.update(elapsed));
+      }
+      return _results;
+    };
 
     return Base;
 

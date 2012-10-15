@@ -1,11 +1,15 @@
 class Layers.Planes extends Layers.Base
+  components: {
+    Rotator:
+      maxRoll: 45
+      maxPitch: 15
+  }
+
   constructor: (@scene) ->
     super
 
     # geom config
     @height  = THREE.Math.randFloat 250, 500
-    
-    @configRotation()
 
     # Shader config
     @angle = 0
@@ -37,29 +41,11 @@ class Layers.Planes extends Layers.Base
     @planes[1].mesh.rotation.x = 90 * (Math.PI/180)
     @planes[1].mesh.position.y = -@height
 
-  configRotation: ->
-    # [pitch, roll]
-    strats = [
-      [0,  60]
-      [30,  0]
-      [ 0,  0]
-      [30, 60]
-    ]
-
-    strat = strats[THREE.Math.randInt(1, strats.length) - 1]
-    console.log strat
-    @rotSpeed = new THREE.Vector2(
-      strat[0] * Math.PI / 180
-      strat[1] * Math.PI / 180
-    )
-
   beat: ->
     plane.beat() for plane in @planes
 
   update: (elapsed) ->
-    @rotation.z += @rotSpeed.x * elapsed
-    @rotation.x += @rotSpeed.y * elapsed
-    
+    super    
     plane.update(elapsed) for plane in @planes
     
 class Layers.Planes.Plane extends Layers.Base

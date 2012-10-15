@@ -16,14 +16,14 @@ renderer = new THREE.WebGLRenderer antialias: yes
 renderer.setSize window.innerWidth, window.innerHeight
 container.appendChild renderer.domElement
 
+# beat
+beat = scene.beat = new Beat bpm: parseFloat(location.search?.replace '?bpm=', '')
+beat.on 'beat', -> layer.beat() for layer in layers
+
 layers = [
   new Layers.Planes scene
   new Layers.Cubes  scene
 ]
-
-# beat
-beat = scene.beat = new Beat bpm: parseFloat(location.search?.replace '?bpm=', '')
-beat.on 'beat', -> layer.beat() for layer in layers
 
 lastFrame = Date.now() / 1000
 update = ->
