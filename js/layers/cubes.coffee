@@ -12,13 +12,14 @@ class Layers.Cubes extends Layers.Base
       THREE.Math.randFloat(25, 200)
     ]
     @spawnQty = THREE.Math.randInt(1, 6)
-    @shrinkTime = THREE.Math.randInt(2,6) / @scene.beat.bps
+    @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
 
   beat: ->
     for i in [1..@spawnQty]
       cube = new Layers.Cubes.Cube(this)
       @add cube
       @cubes.push cube
+    return
   
   update: (elapsed) ->
     super
@@ -33,6 +34,9 @@ class Layers.Cubes extends Layers.Base
 
     @cubes = tempCubes
 
+  alive: ->
+    @cubes.length > 0
+
 
 class Layers.Cubes.Cube extends Layers.Base
   # components:
@@ -43,6 +47,8 @@ class Layers.Cubes.Cube extends Layers.Base
   constructor: (parent)->
     super
     material = {}
+
+    @expired = no
 
     @uniforms =
       beatScale:

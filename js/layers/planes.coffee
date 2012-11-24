@@ -15,7 +15,7 @@ class Layers.Planes extends Layers.Base
     @angle = 0
 
     @maxDrift = 300
-    @decayCoef = THREE.Math.randFloat(0.3, 0.7)
+    @decayCoef = THREE.Math.randFloat(0.5, 1.0)
     @drift =
       angle: Curve.low(Math.random()) * 60 * Math.PI / 180
       r: [THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)]
@@ -41,12 +41,16 @@ class Layers.Planes extends Layers.Base
     @planes[1].mesh.rotation.x = 90 * (Math.PI/180)
     @planes[1].mesh.position.y = -@height
 
-  beat: ->
+  bar: ->
     plane.beat() for plane in @planes
 
   update: (elapsed) ->
     super    
     plane.update(elapsed) for plane in @planes
+
+  alive: ->
+    @planes.brightness > 0
+
     
 class Layers.Planes.Plane extends Layers.Base
   constructor: (@owner, { @side })->
@@ -115,7 +119,7 @@ class Layers.Planes.Plane extends Layers.Base
     @uniforms.brightness.value = 1
 
   update: (elapsed) ->
-    decay = @parent.scene.beat.bps * @owner.decayCoef
+    decay = @parent.scene.song.bps * @owner.decayCoef / @parent.scene.song.data.track.time_signature
 
     @uniforms.brightness.value -= decay * elapsed
     @uniforms.brightness.value = 0 if @uniforms.brightness.value < 0

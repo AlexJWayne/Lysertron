@@ -17,6 +17,7 @@
       var args, component, name;
       this.scene = scene;
       Base.__super__.constructor.apply(this, arguments);
+      this.active = true;
       this.components = (function() {
         var _ref, _results;
         _ref = this.components;
@@ -51,7 +52,21 @@
       };
     };
 
+    Base.prototype.kill = function() {
+      return this.active = false;
+    };
+
+    Base.prototype.expired = function() {
+      return !this.active && !this.alive();
+    };
+
+    Base.prototype.alive = function() {
+      return this.active;
+    };
+
     Base.prototype.beat = function() {};
+
+    Base.prototype.bar = function() {};
 
     Base.prototype.update = function(elapsed) {
       var component, _i, _len, _ref, _results;
