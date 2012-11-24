@@ -20,18 +20,16 @@
       this.cubes = [];
       this.size = [THREE.Math.randFloat(25, 200), THREE.Math.randFloat(25, 200)];
       this.spawnQty = THREE.Math.randInt(1, 6);
-      this.shrinkTime = THREE.Math.randInt(2, 6) / this.scene.beat.bps;
+      this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
     }
 
     Cubes.prototype.beat = function() {
-      var cube, i, _i, _ref, _results;
-      _results = [];
+      var cube, i, _i, _ref;
       for (i = _i = 1, _ref = this.spawnQty; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         cube = new Layers.Cubes.Cube(this);
         this.add(cube);
-        _results.push(this.cubes.push(cube));
+        this.cubes.push(cube);
       }
-      return _results;
     };
 
     Cubes.prototype.update = function(elapsed) {
@@ -55,6 +53,10 @@
       return this.cubes = tempCubes;
     };
 
+    Cubes.prototype.alive = function() {
+      return this.cubes.length > 0;
+    };
+
     return Cubes;
 
   })(Layers.Base);
@@ -67,6 +69,7 @@
       var material, size, _ref;
       Cube.__super__.constructor.apply(this, arguments);
       material = {};
+      this.expired = false;
       this.uniforms = {
         beatScale: {
           type: 'f',

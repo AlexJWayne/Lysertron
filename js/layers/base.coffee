@@ -7,6 +7,8 @@ class Layers.Base extends THREE.Object3D
   constructor: (@scene) ->
     super
 
+    @active = yes
+
     @components =
       for own name, args of @components
         component = new Component[name](args || {})
@@ -31,6 +33,21 @@ class Layers.Base extends THREE.Object3D
       fragmentShader: @getShader "#{name}.fshader"
     }
 
+  kill: ->
+    @active = no
+
+  expired: ->
+    not @active and not @alive()
+
+  # Override. Should return false when the layer can be destoryed.
+  alive: -> @active
+
+  # Override. Do stuff on beats.
   beat: ->
+
+  # Override. Do stuff on bars.
+  bar: ->
+
+  # Override, calling super. Update state per frame.
   update: (elapsed) ->
     component.update(elapsed) for component in @components

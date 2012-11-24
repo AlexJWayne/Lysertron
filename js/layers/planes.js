@@ -21,7 +21,7 @@
       this.height = THREE.Math.randFloat(250, 500);
       this.angle = 0;
       this.maxDrift = 300;
-      this.decayCoef = THREE.Math.randFloat(0.3, 0.7);
+      this.decayCoef = THREE.Math.randFloat(0.5, 1.0);
       this.drift = {
         angle: Curve.low(Math.random()) * 60 * Math.PI / 180,
         r: [THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)],
@@ -51,7 +51,7 @@
       this.planes[1].mesh.position.y = -this.height;
     }
 
-    Planes.prototype.beat = function() {
+    Planes.prototype.bar = function() {
       var plane, _i, _len, _ref, _results;
       _ref = this.planes;
       _results = [];
@@ -72,6 +72,10 @@
         _results.push(plane.update(elapsed));
       }
       return _results;
+    };
+
+    Planes.prototype.alive = function() {
+      return this.planes.brightness > 0;
     };
 
     return Planes;
@@ -148,7 +152,7 @@
 
     Plane.prototype.update = function(elapsed) {
       var decay;
-      decay = this.parent.scene.beat.bps * this.owner.decayCoef;
+      decay = this.parent.scene.song.bps * this.owner.decayCoef / this.parent.scene.song.data.track.time_signature;
       this.uniforms.brightness.value -= decay * elapsed;
       if (this.uniforms.brightness.value < 0) {
         this.uniforms.brightness.value = 0;
