@@ -29,27 +29,23 @@
   song = scene.song = new Song;
 
   song.on('beat', function() {
-    var layer, _i, _len, _results;
-    _results = [];
+    var layer, _i, _len;
     for (_i = 0, _len = layers.length; _i < _len; _i++) {
       layer = layers[_i];
       if (layer.active) {
-        _results.push(layer.beat());
+        layer.beat();
       }
     }
-    return _results;
   });
 
   song.on('bar', function() {
-    var layer, _i, _len, _results;
-    _results = [];
+    var layer, _i, _len;
     for (_i = 0, _len = layers.length; _i < _len; _i++) {
       layer = layers[_i];
       if (layer.active) {
-        _results.push(layer.bar());
+        layer.bar();
       }
     }
-    return _results;
   });
 
   song.on('section', function(section) {

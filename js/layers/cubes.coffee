@@ -11,8 +11,13 @@ class Layers.Cubes extends Layers.Base
       THREE.Math.randFloat(25, 200)
       THREE.Math.randFloat(25, 200)
     ]
-    @spawnQty = THREE.Math.randInt(1, 6)
+    @spawnQty = THREE.Math.randInt(2, 6)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
+
+    @color =
+      r: THREE.Math.randFloat(0, 1)
+      g: THREE.Math.randFloat(0, 1)
+      b: THREE.Math.randFloat(0, 1)
 
   beat: ->
     for i in [1..@spawnQty]
@@ -54,6 +59,18 @@ class Layers.Cubes.Cube extends Layers.Base
       beatScale:
         type: 'f'
         value: 1
+
+      colorR:
+        type: 'f'
+        value: parent.color.r
+
+      colorG:
+        type: 'f'
+        value: parent.color.g
+
+      colorB:
+        type: 'f'
+        value: parent.color.b
 
     size = THREE.Math.randFloat parent.size...
     @mesh = new THREE.Mesh(

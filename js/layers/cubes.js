@@ -19,8 +19,13 @@
       Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = [];
       this.size = [THREE.Math.randFloat(25, 200), THREE.Math.randFloat(25, 200)];
-      this.spawnQty = THREE.Math.randInt(1, 6);
+      this.spawnQty = THREE.Math.randInt(2, 6);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
+      this.color = {
+        r: THREE.Math.randFloat(0, 1),
+        g: THREE.Math.randFloat(0, 1),
+        b: THREE.Math.randFloat(0, 1)
+      };
     }
 
     Cubes.prototype.beat = function() {
@@ -74,6 +79,18 @@
         beatScale: {
           type: 'f',
           value: 1
+        },
+        colorR: {
+          type: 'f',
+          value: parent.color.r
+        },
+        colorG: {
+          type: 'f',
+          value: parent.color.g
+        },
+        colorB: {
+          type: 'f',
+          value: parent.color.b
         }
       };
       size = (_ref = THREE.Math).randFloat.apply(_ref, parent.size);
