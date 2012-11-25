@@ -60,7 +60,7 @@ class Layers.Planes.Plane extends Layers.Base
     @uniforms =
       brightness:
         type: 'f'
-        value: 1
+        value: 0
 
       angle:
         type: 'f'
@@ -110,10 +110,7 @@ class Layers.Planes.Plane extends Layers.Base
           side:     @side
           transparent: true
           blending: THREE.AdditiveBlending
-          # # material.blendSrc = THREE[ blendSrc ];
-          # # material.blendDst = THREE[ blendDst ];
           blendEquation: THREE.AddEquation
-
         )
       )
     )

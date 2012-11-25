@@ -51,13 +51,19 @@
       }
     };
 
-    Song.prototype.start = function(cb) {
+    Song.prototype.start = function(playAudio) {
       var _this = this;
-      this.audio.on('playing', function() {
-        _this.scheduleEvents();
-        return typeof cb === "function" ? cb(_this) : void 0;
-      });
-      return this.audio[0].play();
+      if (playAudio == null) {
+        playAudio = true;
+      }
+      if (playAudio) {
+        this.audio.on('playing', function() {
+          return _this.scheduleEvents();
+        });
+        return this.audio[0].play();
+      } else {
+        return this.scheduleEvents();
+      }
     };
 
     return Song;

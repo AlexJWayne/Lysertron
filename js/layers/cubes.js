@@ -25,7 +25,6 @@
       direction = [1, -1][THREE.Math.randInt(0, 1)];
       this.speed = THREE.Math.randFloat(0, 500) * -direction;
       this.accel = THREE.Math.randFloat(0, 1000) * direction;
-      console.log(this.speed, this.accel);
       this.color = {
         r: THREE.Math.randFloat(0, 1),
         g: THREE.Math.randFloat(0, 1),
@@ -108,10 +107,6 @@
       this.accel = this.parent.accel;
       this.vel = this.mesh.position.clone().setLength(this.parent.speed);
     }
-
-    Cube.prototype.beat = function() {
-      return this.uniforms.beatScale.value = 1;
-    };
 
     Cube.prototype.update = function(elapsed) {
       Cube.__super__.update.apply(this, arguments);

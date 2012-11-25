@@ -42,10 +42,11 @@ class window.Song
     return
 
   # Start the audio player
-  start: (cb) ->
-    # @scheduleEvents()
-    @audio.on 'playing', =>
-      @scheduleEvents()
-      cb? this
+  start: (playAudio = yes) ->
+    if playAudio
+      @audio.on 'playing', =>
+        @scheduleEvents()
 
-    @audio[0].play()
+      @audio[0].play()
+    else
+      @scheduleEvents()
