@@ -15,12 +15,17 @@
     };
 
     function Cubes(scene) {
+      var direction;
       this.scene = scene;
       Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = [];
-      this.size = [THREE.Math.randFloat(25, 200), THREE.Math.randFloat(25, 200)];
+      this.size = [THREE.Math.randFloat(50, 200), THREE.Math.randFloat(50, 200)];
       this.spawnQty = THREE.Math.randInt(2, 6);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
+      direction = [1, -1][THREE.Math.randInt(0, 1)];
+      this.speed = THREE.Math.randFloat(0, 500) * -direction;
+      this.accel = THREE.Math.randFloat(0, 1000) * direction;
+      console.log(this.speed, this.accel);
       this.color = {
         r: THREE.Math.randFloat(0, 1),
         g: THREE.Math.randFloat(0, 1),
@@ -72,6 +77,7 @@
 
     function Cube(parent) {
       var material, size, _ref;
+      this.parent = parent;
       Cube.__super__.constructor.apply(this, arguments);
       material = {};
       this.expired = false;
@@ -82,23 +88,25 @@
         },
         colorR: {
           type: 'f',
-          value: parent.color.r
+          value: this.parent.color.r
         },
         colorG: {
           type: 'f',
-          value: parent.color.g
+          value: this.parent.color.g
         },
         colorB: {
           type: 'f',
-          value: parent.color.b
+          value: this.parent.color.b
         }
       };
-      size = (_ref = THREE.Math).randFloat.apply(_ref, parent.size);
+      size = (_ref = THREE.Math).randFloat.apply(_ref, this.parent.size);
       this.mesh = new THREE.Mesh(new THREE.CubeGeometry(size, size, size, 1, 1, 1), new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
         uniforms: this.uniforms
       })));
       this.add(this.mesh);
-      this.mesh.position.set(THREE.Math.randFloatSpread(500), THREE.Math.randFloatSpread(500), THREE.Math.randFloatSpread(500));
+      this.mesh.position.set(THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300));
+      this.accel = this.parent.accel;
+      this.vel = this.mesh.position.clone().setLength(this.parent.speed);
     }
 
     Cube.prototype.beat = function() {
@@ -108,6 +116,8 @@
     Cube.prototype.update = function(elapsed) {
       Cube.__super__.update.apply(this, arguments);
       this.uniforms.beatScale.value -= elapsed / this.parent.shrinkTime;
+      this.vel.addSelf(this.mesh.position.clone().setLength(this.accel * elapsed));
+      this.mesh.position.addSelf(this.vel.clone().multiplyScalar(elapsed));
       if (this.uniforms.beatScale.value <= 0) {
         return this.expired = true;
       }

@@ -16,6 +16,9 @@ renderer = new THREE.WebGLRenderer antialias: yes
 renderer.setSize window.innerWidth, window.innerHeight
 container.appendChild renderer.domElement
 
+ctx = renderer.getContext()
+ctx.disable ctx.DEPTH_TEST
+
 # layers
 layers = []
 
@@ -33,7 +36,8 @@ song.on 'section', (section) ->
   layers.push new Layers.Cubes  scene
 
 # Note how much drift we have
-song.on 'bar', (bar) -> console.log 'drift', bar.start - song.audio[0].currentTime
+song.on 'bar', (bar) ->
+  console.log 'drift', bar.start - song.audio[0].currentTime
 
 lastFrame = Date.now() / 1000
 update = ->

@@ -19,6 +19,7 @@
       this.scene = scene;
       Planes.__super__.constructor.apply(this, arguments);
       this.height = THREE.Math.randFloat(250, 500);
+      this.deathSpeed = 500;
       this.angle = 0;
       this.maxDrift = 300;
       this.decayCoef = THREE.Math.randFloat(0.5, 1.0);
@@ -72,10 +73,6 @@
         _results.push(plane.update(elapsed));
       }
       return _results;
-    };
-
-    Planes.prototype.alive = function() {
-      return this.planes.brightness > 0;
     };
 
     return Planes;
@@ -139,7 +136,9 @@
       this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(100000, 100000), new THREE.ShaderMaterial(_.extend(this.getMatProperties('plane'), {
         uniforms: this.uniforms,
         side: this.side,
-        transparent: true
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        blendEquation: THREE.AddEquation
       })));
       this.mesh.doubleSided = true;
       this.mesh.transparent = true;

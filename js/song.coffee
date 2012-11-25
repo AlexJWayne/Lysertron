@@ -43,6 +43,7 @@ class window.Song
 
   # Start the audio player
   start: (cb) ->
+    # @scheduleEvents()
     @audio.on 'playing', =>
       @scheduleEvents()
       cb? this
