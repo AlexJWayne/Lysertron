@@ -18,7 +18,7 @@
       var direction;
       this.scene = scene;
       Cubes.__super__.constructor.apply(this, arguments);
-      this.cubes = [];
+      this.cubes = new LayerStack;
       this.size = [THREE.Math.randFloat(50, 200), THREE.Math.randFloat(50, 200)];
       this.spawnQty = THREE.Math.randInt(2, 6);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
@@ -35,35 +35,42 @@
     Cubes.prototype.beat = function() {
       var cube, i, _i, _ref;
       for (i = _i = 1, _ref = this.spawnQty; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-        cube = new Layers.Cubes.Cube(this);
+        cube = new Layers.Cubes.Cube(this, {
+          color: this.color,
+          speed: this.speed,
+          accel: this.accel,
+          size: this.size
+        });
         this.add(cube);
         this.cubes.push(cube);
       }
     };
 
+    Cubes.prototype.bar = function() {
+      var cube, i, _i, _ref, _results;
+      _results = [];
+      for (i = _i = 1, _ref = this.spawnQty * 4; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+        cube = new Layers.Cubes.Cube(this, {
+          color: this.color,
+          speed: Math.abs(this.speed * 2),
+          accel: this.accel,
+          size: this.size.map(function(s) {
+            return s / 3;
+          })
+        });
+        this.add(cube);
+        _results.push(this.cubes.push(cube));
+      }
+      return _results;
+    };
+
     Cubes.prototype.update = function(elapsed) {
-      var cube, tempCubes, _i, _j, _len, _len1, _ref, _ref1;
       Cubes.__super__.update.apply(this, arguments);
-      _ref = this.cubes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        cube = _ref[_i];
-        cube.update(elapsed);
-      }
-      tempCubes = [];
-      _ref1 = this.cubes;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        cube = _ref1[_j];
-        if (cube.expired) {
-          this.remove(cube);
-        } else {
-          tempCubes.push(cube);
-        }
-      }
-      return this.cubes = tempCubes;
+      return this.cubes.update(elapsed);
     };
 
     Cubes.prototype.alive = function() {
-      return this.cubes.length > 0;
+      return !this.cubes.isEmpty();
     };
 
     return Cubes;
@@ -74,12 +81,12 @@
 
     __extends(Cube, _super);
 
-    function Cube(parent) {
-      var material, size, _ref;
+    function Cube(parent, _arg) {
+      var material, _ref;
       this.parent = parent;
+      this.color = _arg.color, this.speed = _arg.speed, this.accel = _arg.accel, this.size = _arg.size;
       Cube.__super__.constructor.apply(this, arguments);
       material = {};
-      this.expired = false;
       this.uniforms = {
         beatScale: {
           type: 'f',
@@ -87,26 +94,30 @@
         },
         colorR: {
           type: 'f',
-          value: this.parent.color.r
+          value: this.color.r
         },
         colorG: {
           type: 'f',
-          value: this.parent.color.g
+          value: this.color.g
         },
         colorB: {
           type: 'f',
-          value: this.parent.color.b
+          value: this.color.b
         }
       };
-      size = (_ref = THREE.Math).randFloat.apply(_ref, this.parent.size);
+      size = (_ref = THREE.Math).randFloat.apply(_ref, this.size);
       this.mesh = new THREE.Mesh(new THREE.CubeGeometry(size, size, size, 1, 1, 1), new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
         uniforms: this.uniforms
       })));
       this.add(this.mesh);
       this.mesh.position.set(THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300));
-      this.accel = this.parent.accel;
-      this.vel = this.mesh.position.clone().setLength(this.parent.speed);
+      this.accel = this.accel;
+      this.vel = this.mesh.position.clone().setLength(this.speed);
     }
+
+    Cube.prototype.alive = function() {
+      return this.uniforms.beatScale.value > 0;
+    };
 
     Cube.prototype.update = function(elapsed) {
       Cube.__super__.update.apply(this, arguments);
@@ -114,7 +125,7 @@
       this.vel.addSelf(this.mesh.position.clone().setLength(this.accel * elapsed));
       this.mesh.position.addSelf(this.vel.clone().multiplyScalar(elapsed));
       if (this.uniforms.beatScale.value <= 0) {
-        return this.expired = true;
+        return this.kill();
       }
     };
 

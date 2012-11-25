@@ -25,9 +25,14 @@ class window.LayerStack
   transition: ->
     layer.kill() for layer in @layers
     @push(
-      new Layers.Planes stage.scene
-      new Layers.Cubes  stage.scene
+      # new Layers.Planes stage.scene
+      new Layers.Cubes stage.scene
     )
 
   push: (layers...) ->
-    @layers.push layers...
+    for layer in layers
+      throw "object is not a Layers.Base" unless layer instanceof Layers.Base
+      @layers.push layer
+
+  isEmpty: ->
+    @layers.length is 0
