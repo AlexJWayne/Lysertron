@@ -8,11 +8,17 @@ class Layers.Cubes extends Layers.Base
     super
     @cubes = []
     @size = [
-      THREE.Math.randFloat(25, 200)
-      THREE.Math.randFloat(25, 200)
+      THREE.Math.randFloat(50, 200)
+      THREE.Math.randFloat(50, 200)
     ]
-    @spawnQty = THREE.Math.randInt(2, 6)
+    @spawnQty   = THREE.Math.randInt(2, 6)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
+    
+    direction = [1, -1][THREE.Math.randInt(0, 1)]
+    @speed      = THREE.Math.randFloat(0, 500) * -direction
+    @accel      = THREE.Math.randFloat(0, 1000) *  direction
+
+    console.log @speed, @accel
 
     @color =
       r: THREE.Math.randFloat(0, 1)
@@ -49,7 +55,7 @@ class Layers.Cubes.Cube extends Layers.Base
   #     maxRoll:  30
   #     maxPitch: 30
 
-  constructor: (parent)->
+  constructor: (@parent)->
     super
     material = {}
 
@@ -62,17 +68,17 @@ class Layers.Cubes.Cube extends Layers.Base
 
       colorR:
         type: 'f'
-        value: parent.color.r
+        value: @parent.color.r
 
       colorG:
         type: 'f'
-        value: parent.color.g
+        value: @parent.color.g
 
       colorB:
         type: 'f'
-        value: parent.color.b
+        value: @parent.color.b
 
-    size = THREE.Math.randFloat parent.size...
+    size = THREE.Math.randFloat @parent.size...
     @mesh = new THREE.Mesh(
       new THREE.CubeGeometry size, size, size, 1, 1, 1
       new THREE.ShaderMaterial(
@@ -83,10 +89,13 @@ class Layers.Cubes.Cube extends Layers.Base
     @add @mesh
     
     @mesh.position.set(
-      THREE.Math.randFloatSpread 500
-      THREE.Math.randFloatSpread 500
-      THREE.Math.randFloatSpread 500
+      THREE.Math.randFloatSpread 300
+      THREE.Math.randFloatSpread 300
+      THREE.Math.randFloatSpread 300
     )
+
+    @accel = @parent.accel
+    @vel = @mesh.position.clone().setLength @parent.speed
 
   beat: ->
     @uniforms.beatScale.value = 1
@@ -95,4 +104,21 @@ class Layers.Cubes.Cube extends Layers.Base
     super
     @uniforms.beatScale.value -= elapsed / @parent.shrinkTime
 
+    @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
+    @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
+
     @expired = yes if @uniforms.beatScale.value <= 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+

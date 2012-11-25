@@ -10,6 +10,7 @@ class Layers.Planes extends Layers.Base
 
     # geom config
     @height  = THREE.Math.randFloat 250, 500
+    @deathSpeed = 500
 
     # Shader config
     @angle = 0
@@ -48,8 +49,8 @@ class Layers.Planes extends Layers.Base
     super    
     plane.update(elapsed) for plane in @planes
 
-  alive: ->
-    @planes.brightness > 0
+  # expired: ->
+  #   @planes[0].uniforms.brightness.value <= 0
 
     
 class Layers.Planes.Plane extends Layers.Base
@@ -108,6 +109,11 @@ class Layers.Planes.Plane extends Layers.Base
           uniforms: @uniforms
           side:     @side
           transparent: true
+          blending: THREE.AdditiveBlending
+          # # material.blendSrc = THREE[ blendSrc ];
+          # # material.blendDst = THREE[ blendDst ];
+          blendEquation: THREE.AddEquation
+
         )
       )
     )
