@@ -81,13 +81,25 @@
         layer = _ref[_i];
         layer.kill();
       }
-      return this.push(new Layers.Planes(stage.scene), new Layers.Cubes(stage.scene));
+      return this.push(new Layers.Cubes(stage.scene));
     };
 
     LayerStack.prototype.push = function() {
-      var layers, _ref;
+      var layer, layers, _i, _len, _results;
       layers = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return (_ref = this.layers).push.apply(_ref, layers);
+      _results = [];
+      for (_i = 0, _len = layers.length; _i < _len; _i++) {
+        layer = layers[_i];
+        if (!(layer instanceof Layers.Base)) {
+          throw "object is not a Layers.Base";
+        }
+        _results.push(this.layers.push(layer));
+      }
+      return _results;
+    };
+
+    LayerStack.prototype.isEmpty = function() {
+      return this.layers.length === 0;
     };
 
     return LayerStack;

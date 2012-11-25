@@ -6,7 +6,7 @@ class Layers.Cubes extends Layers.Base
 
   constructor: (@scene) ->
     super
-    @cubes = []
+    @cubes = new LayerStack
     @size = [
       THREE.Math.randFloat(50, 200)
       THREE.Math.randFloat(50, 200)
@@ -25,26 +25,22 @@ class Layers.Cubes extends Layers.Base
 
   beat: ->
     for i in [1..@spawnQty]
-      cube = new Layers.Cubes.Cube(this)
+      cube = new Layers.Cubes.Cube this, color: @color, speed: @speed, accel: @accel, size: @size
       @add cube
       @cubes.push cube
     return
+
+  bar: ->
+    for i in [1..@spawnQty*4]
+      cube = new Layers.Cubes.Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
+      @add cube
+      @cubes.push cube
   
   update: (elapsed) ->
     super
-    cube.update elapsed for cube in @cubes
+    @cubes.update elapsed
     
-    tempCubes = []
-    for cube in @cubes
-      if cube.expired
-        @remove cube
-      else
-        tempCubes.push cube
-
-    @cubes = tempCubes
-
-  alive: ->
-    @cubes.length > 0
+  alive: -> !@cubes.isEmpty()
 
 
 class Layers.Cubes.Cube extends Layers.Base
@@ -53,11 +49,9 @@ class Layers.Cubes.Cube extends Layers.Base
   #     maxRoll:  30
   #     maxPitch: 30
 
-  constructor: (@parent)->
+  constructor: (@parent, { @color, @speed, @accel, @size })->
     super
     material = {}
-
-    @expired = no
 
     @uniforms =
       beatScale:
@@ -66,17 +60,17 @@ class Layers.Cubes.Cube extends Layers.Base
 
       colorR:
         type: 'f'
-        value: @parent.color.r
+        value: @color.r
 
       colorG:
         type: 'f'
-        value: @parent.color.g
+        value: @color.g
 
       colorB:
         type: 'f'
-        value: @parent.color.b
+        value: @color.b
 
-    size = THREE.Math.randFloat @parent.size...
+    size = THREE.Math.randFloat @size...
     @mesh = new THREE.Mesh(
       new THREE.CubeGeometry size, size, size, 1, 1, 1
       new THREE.ShaderMaterial(
@@ -92,8 +86,11 @@ class Layers.Cubes.Cube extends Layers.Base
       THREE.Math.randFloatSpread 300
     )
 
-    @accel = @parent.accel
-    @vel = @mesh.position.clone().setLength @parent.speed
+    @accel = @accel
+    @vel = @mesh.position.clone().setLength @speed
+
+  alive: ->
+    @uniforms.beatScale.value > 0
 
   update: (elapsed) ->
     super
@@ -102,7 +99,7 @@ class Layers.Cubes.Cube extends Layers.Base
     @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
     @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
 
-    @expired = yes if @uniforms.beatScale.value <= 0
+    @kill() if @uniforms.beatScale.value <= 0
 
 
 
