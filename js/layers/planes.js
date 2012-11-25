@@ -90,7 +90,7 @@
       this.uniforms = {
         brightness: {
           type: 'f',
-          value: 0
+          value: 1
         },
         angle: {
           type: 'f',

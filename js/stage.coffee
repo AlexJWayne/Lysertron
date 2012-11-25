@@ -23,7 +23,7 @@ class window.Stage
     container.appendChild @renderer.domElement
 
     # Layers array
-    @layers = []
+    @layerStack = new LayerStack
 
   # Initialize the song and bind song events.
   initSong: ->
@@ -33,17 +33,12 @@ class window.Stage
     for eventType in ['bar', 'beat', 'tatum', 'segment']
       do (eventType) =>
         @song.on eventType, (eventData) =>
-          for layer in @layers when layer.active
-            layer[eventType](eventData)
-          return
+          @layerStack[eventType](eventData)
     
-    # New layers on new sections
+    # Transition layers on new sections
     @song.on 'section', (section) =>
       console.log 'section', section.start
-
-      layer.kill() for layer in @layers
-      @layers.push new Layers.Planes @scene
-      @layers.push new Layers.Cubes  @scene
+      @layerStack.transition()
 
     # Get song from URL
     @songName = window.location.search.match(/^\?(\w+)$/)?[1] || 'Crawl'
@@ -63,19 +58,8 @@ class window.Stage
     elapsed = now - @lastFrame
     @lastFrame = now
 
-    # Prune expired layers.
-    livingLayers = []
-    for layer in @layers
-      if layer.expired()
-        @scene.remove layer
-      else
-        livingLayers.push layer
-
-    @layers = livingLayers
-
-    # Update non expired layers.
-    for layer in @layers
-      layer.update elapsed
+    # Update all layers
+    @layerStack.update elapsed
 
   # This is the main run loop.
   animate: =>
@@ -89,4 +73,4 @@ class window.Stage
 
 # Go
 stage = window.stage = new Stage
-stage.start(no)
+stage.start no

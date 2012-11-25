@@ -60,7 +60,7 @@ class Layers.Planes.Plane extends Layers.Base
     @uniforms =
       brightness:
         type: 'f'
-        value: 0
+        value: 1
 
       angle:
         type: 'f'
