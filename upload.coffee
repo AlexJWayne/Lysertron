@@ -2,7 +2,7 @@ fs = require 'fs'
 request = require 'request'
 
 Echonest = new require('echonest').Echonest
-echo = new Echonest api_key: 'EMHGD8RZYXSECBVBP'
+echo = new Echonest api_key: JSON.parse(fs.readFileSync('echonest.json')).key
 
 [_, _, path, name] = process.argv
 
