@@ -1,10 +1,10 @@
 class window.LayerStack
   constructor: (@layers = []) ->
 
-  beat:     (beat)    -> layer.beat()     for layer in @layers when layer.active; return
-  bar:      (bar)     -> layer.bar()      for layer in @layers when layer.active; return
-  segment:  (segment) -> layer.segment()  for layer in @layers when layer.active; return
-  tatum:    (tatum)   -> layer.tatum()    for layer in @layers when layer.active; return
+  beat:     (data) -> layer.beat(data)     for layer in @layers when layer.active; return
+  bar:      (data) -> layer.bar(data)      for layer in @layers when layer.active; return
+  segment:  (data) -> layer.segment(data)  for layer in @layers when layer.active; return
+  tatum:    (data) -> layer.tatum(data)    for layer in @layers when layer.active; return
 
   update: (elapsed) ->
 
@@ -25,7 +25,7 @@ class window.LayerStack
   transition: ->
     layer.kill() for layer in @layers
     @push(
-      # new Layers.Planes stage.scene
+      new Layers.Tunnel stage.scene
       new Layers.Cubes stage.scene
     )
 

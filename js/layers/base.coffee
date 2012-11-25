@@ -26,16 +26,19 @@ class Layers.Base extends THREE.Object3D
       Layers._shaders[name]
     )
 
-
+  
   getMatProperties: (name) ->
     {
       vertexShader:   @getShader "#{name}.vshader"
       fragmentShader: @getShader "#{name}.fshader"
     }
 
+  # Tells this layer to start to die. It will no longer receive song events,
+  # and will be pruned when @alive() returns false.
   kill: ->
     @active = no
 
+  # Called by LayerStack
   expired: ->
     not @active and not @alive()
 
