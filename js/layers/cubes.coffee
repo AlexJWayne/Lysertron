@@ -13,12 +13,10 @@ class Layers.Cubes extends Layers.Base
     ]
     @spawnQty   = THREE.Math.randInt(2, 6)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
-    
+
     direction = [1, -1][THREE.Math.randInt(0, 1)]
     @speed      = THREE.Math.randFloat(0, 500) * -direction
     @accel      = THREE.Math.randFloat(0, 1000) *  direction
-
-    console.log @speed, @accel
 
     @color =
       r: THREE.Math.randFloat(0, 1)
@@ -96,9 +94,6 @@ class Layers.Cubes.Cube extends Layers.Base
 
     @accel = @parent.accel
     @vel = @mesh.position.clone().setLength @parent.speed
-
-  beat: ->
-    @uniforms.beatScale.value = 1
 
   update: (elapsed) ->
     super

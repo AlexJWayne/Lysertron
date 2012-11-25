@@ -48,6 +48,12 @@ class Layers.Base extends THREE.Object3D
   # Override. Do stuff on bars.
   bar: ->
 
+  # Override. Do stuff on segment.
+  segment: ->
+
+  # Override. Do stuff on bars.
+  tatum: ->
+
   # Override, calling super. Update state per frame.
   update: (elapsed) ->
     component.update(elapsed) for component in @components

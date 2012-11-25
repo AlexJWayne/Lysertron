@@ -68,6 +68,10 @@
 
     Base.prototype.bar = function() {};
 
+    Base.prototype.segment = function() {};
+
+    Base.prototype.tatum = function() {};
+
     Base.prototype.update = function(elapsed) {
       var component, _i, _len, _ref, _results;
       _ref = this.components;
