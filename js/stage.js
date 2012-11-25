@@ -29,7 +29,7 @@
       });
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       container.appendChild(this.renderer.domElement);
-      return this.layers = [];
+      return this.layerStack = new LayerStack;
     };
 
     Stage.prototype.initSong = function() {
@@ -39,14 +39,7 @@
       _ref = ['bar', 'beat', 'tatum', 'segment'];
       _fn = function(eventType) {
         return _this.song.on(eventType, function(eventData) {
-          var layer, _j, _len1, _ref1;
-          _ref1 = _this.layers;
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            layer = _ref1[_j];
-            if (layer.active) {
-              layer[eventType](eventData);
-            }
-          }
+          return _this.layerStack[eventType](eventData);
         });
       };
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -54,15 +47,8 @@
         _fn(eventType);
       }
       this.song.on('section', function(section) {
-        var layer, _j, _len1, _ref1;
         console.log('section', section.start);
-        _ref1 = _this.layers;
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          layer = _ref1[_j];
-          layer.kill();
-        }
-        _this.layers.push(new Layers.Planes(_this.scene));
-        return _this.layers.push(new Layers.Cubes(_this.scene));
+        return _this.layerStack.transition();
       });
       return this.songName = ((_ref1 = window.location.search.match(/^\?(\w+)$/)) != null ? _ref1[1] : void 0) || 'Crawl';
     };
@@ -80,28 +66,11 @@
     };
 
     Stage.prototype.update = function() {
-      var elapsed, layer, livingLayers, now, _i, _j, _len, _len1, _ref, _ref1, _results;
+      var elapsed, now;
       now = Date.now() / 1000;
       elapsed = now - this.lastFrame;
       this.lastFrame = now;
-      livingLayers = [];
-      _ref = this.layers;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        layer = _ref[_i];
-        if (layer.expired()) {
-          this.scene.remove(layer);
-        } else {
-          livingLayers.push(layer);
-        }
-      }
-      this.layers = livingLayers;
-      _ref1 = this.layers;
-      _results = [];
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        layer = _ref1[_j];
-        _results.push(layer.update(elapsed));
-      }
-      return _results;
+      return this.layerStack.update(elapsed);
     };
 
     Stage.prototype.animate = function() {
