@@ -6,14 +6,19 @@ class Layers.Cubes extends Layers.Base
 
   constructor: (@scene) ->
     super
+
     @cubes = new LayerStack
+    
     @size = [
       THREE.Math.randFloat(50, 200)
       THREE.Math.randFloat(50, 200)
     ]
+    
+    @type = ['Cube', 'Sphere'][THREE.Math.randInt 0, 1]
+
     @spawnQty   = THREE.Math.randInt(2, 6)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
-
+    
     direction = [1, -1][THREE.Math.randInt(0, 1)]
     @speed      = THREE.Math.randFloat(0, 500) * -direction
     @accel      = THREE.Math.randFloat(0, 1000) *  direction
@@ -31,7 +36,7 @@ class Layers.Cubes extends Layers.Base
     return
 
   bar: ->
-    for i in [1..@spawnQty*4]
+    for i in [1..@spawnQty*5]
       cube = new Layers.Cubes.Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
       @add cube
       @cubes.push cube
@@ -71,8 +76,15 @@ class Layers.Cubes.Cube extends Layers.Base
         value: @color.b
 
     size = THREE.Math.randFloat @size...
+
+    geom =
+      if @parent.type is 'Cube'
+        new THREE.CubeGeometry size, size, size, 1, 1, 1
+      else
+        new THREE.SphereGeometry size/2, 16, 12
+
     @mesh = new THREE.Mesh(
-      new THREE.CubeGeometry size, size, size, 1, 1, 1
+      geom
       new THREE.ShaderMaterial(
         _.extend @getMatProperties('cube'), uniforms: @uniforms
       )

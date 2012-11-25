@@ -8,46 +8,46 @@
       this.layers = layers != null ? layers : [];
     }
 
-    LayerStack.prototype.beat = function(beat) {
+    LayerStack.prototype.beat = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.beat();
+          layer.beat(data);
         }
       }
     };
 
-    LayerStack.prototype.bar = function(bar) {
+    LayerStack.prototype.bar = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.bar();
+          layer.bar(data);
         }
       }
     };
 
-    LayerStack.prototype.segment = function(segment) {
+    LayerStack.prototype.segment = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.segment();
+          layer.segment(data);
         }
       }
     };
 
-    LayerStack.prototype.tatum = function(tatum) {
+    LayerStack.prototype.tatum = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.tatum();
+          layer.tatum(data);
         }
       }
     };
@@ -81,7 +81,7 @@
         layer = _ref[_i];
         layer.kill();
       }
-      return this.push(new Layers.Cubes(stage.scene));
+      return this.push(new Layers.Tunnel(stage.scene), new Layers.Cubes(stage.scene));
     };
 
     LayerStack.prototype.push = function() {

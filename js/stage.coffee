@@ -6,6 +6,8 @@ class window.Stage
   # Initialize the THREE.js scene, camera and renderer.
   initEngine: ->
     @scene = new THREE.Scene
+    @scene.fog = new THREE.Fog(0x111111, 0, 5000)
+    # @scene.add @scene.fog
 
     # camera
     @camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 100000
@@ -73,4 +75,4 @@ class window.Stage
 
 # Go
 stage = window.stage = new Stage
-stage.start no
+stage.start yes

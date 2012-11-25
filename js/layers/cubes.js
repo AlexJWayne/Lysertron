@@ -20,6 +20,7 @@
       Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = new LayerStack;
       this.size = [THREE.Math.randFloat(50, 200), THREE.Math.randFloat(50, 200)];
+      this.type = ['Cube', 'Sphere'][THREE.Math.randInt(0, 1)];
       this.spawnQty = THREE.Math.randInt(2, 6);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
       direction = [1, -1][THREE.Math.randInt(0, 1)];
@@ -49,7 +50,7 @@
     Cubes.prototype.bar = function() {
       var cube, i, _i, _ref, _results;
       _results = [];
-      for (i = _i = 1, _ref = this.spawnQty * 4; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+      for (i = _i = 1, _ref = this.spawnQty * 5; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         cube = new Layers.Cubes.Cube(this, {
           color: this.color,
           speed: Math.abs(this.speed * 2),
@@ -82,7 +83,7 @@
     __extends(Cube, _super);
 
     function Cube(parent, _arg) {
-      var material, _ref;
+      var geom, material, _ref;
       this.parent = parent;
       this.color = _arg.color, this.speed = _arg.speed, this.accel = _arg.accel, this.size = _arg.size;
       Cube.__super__.constructor.apply(this, arguments);
@@ -106,7 +107,8 @@
         }
       };
       size = (_ref = THREE.Math).randFloat.apply(_ref, this.size);
-      this.mesh = new THREE.Mesh(new THREE.CubeGeometry(size, size, size, 1, 1, 1), new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
+      geom = this.parent.type === 'Cube' ? new THREE.CubeGeometry(size, size, size, 1, 1, 1) : new THREE.SphereGeometry(size / 2, 16, 12);
+      this.mesh = new THREE.Mesh(geom, new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
         uniforms: this.uniforms
       })));
       this.add(this.mesh);

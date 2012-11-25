@@ -18,6 +18,7 @@
     Stage.prototype.initEngine = function() {
       var container;
       this.scene = new THREE.Scene;
+      this.scene.fog = new THREE.Fog(0x111111, 0, 5000);
       this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 100000);
       this.camera.position.set(600, 0, 0);
       this.camera.lookAt(new THREE.Vector3);
@@ -89,6 +90,6 @@
 
   stage = window.stage = new Stage;
 
-  stage.start(false);
+  stage.start(true);
 
 }).call(this);
