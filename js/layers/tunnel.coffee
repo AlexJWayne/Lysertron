@@ -2,13 +2,39 @@ class Layers.Tunnel extends Layers.Base
   constructor: (@scene) ->
     super
 
-    @brightness = 1
-    @baseColor    = new THREE.Color 0x000000
-    @currentColor = new THREE.Color 0x00ff00
+    @baseColor  = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1)
+    
+    @sides = 
+      if Math.random() > 0.4
+        40
+      else
+        [3, 4, 5, 6, 7][THREE.Math.randInt(0, 4)]
+
+    @uniforms =
+      brightness:
+        type: 'f'
+        value: 1
+
+      colorR:
+        type: 'f'
+        value: @baseColor.r
+      colorG:
+        type: 'f'
+        value: @baseColor.g
+      colorB:
+        type: 'f'
+        value: @baseColor.b
 
     @mesh = new THREE.Mesh(
-      new THREE.CylinderGeometry 0, 1000, 20000, 20, 40
-      new THREE.MeshBasicMaterial color: @currentColor
+      new THREE.CylinderGeometry 0, 1000, 20000, @sides, 40
+      new THREE.ShaderMaterial(
+        _.extend(@getMatProperties('tunnel'),
+          uniforms: @uniforms
+          side:         THREE.BackSide
+          transparent:  true
+          blending:     THREE.AdditiveBlending
+        )
+      )
     )
     @mesh.material.side = THREE.BackSide
 
@@ -18,27 +44,23 @@ class Layers.Tunnel extends Layers.Base
     @add @mesh
 
   beat: (beat) ->
-    @currentColor = @baseColor.clone()
-    @setColor()
+    @baseColor = @baseColor.clone()
 
   bar: (bar) ->
     @brightness = 1
 
-  segment: (segment) ->
-    r = _(segment.pitches[0..3]).reduce((sum = 0, num) -> sum + num) / 2
-    g = _(segment.pitches[4..7]).reduce((sum = 0, num) -> sum + num) / 2
-    b = _(segment.pitches[8..11]).reduce((sum = 0, num) -> sum + num) / 2
-
-    @baseColor.setRGB r, g, b
-
   update: (elapsed) ->
-    @brightness -= 0.6 * elapsed
+    @brightness -= 0.4 * elapsed
     @setColor()
 
+  Object.defineProperty @::, 'brightness'
+    get: -> @uniforms.brightness.value
+    set: (val) -> @uniforms.brightness.value = val
+
   setColor: ->
-    color = @currentColor.clone().setRGB(
-      @currentColor.r * @brightness
-      @currentColor.g * @brightness
-      @currentColor.b * @brightness
+    color = @baseColor.clone().setRGB(
+      @baseColor.r * @brightness
+      @baseColor.g * @brightness
+      @baseColor.b * @brightness
     )
     @mesh.material.color = color

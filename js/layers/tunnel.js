@@ -10,57 +10,62 @@
     function Tunnel(scene) {
       this.scene = scene;
       Tunnel.__super__.constructor.apply(this, arguments);
-      this.brightness = 1;
-      this.baseColor = new THREE.Color(0x000000);
-      this.currentColor = new THREE.Color(0x00ff00);
-      this.mesh = new THREE.Mesh(new THREE.CylinderGeometry(0, 1000, 20000, 20, 40), new THREE.MeshBasicMaterial({
-        color: this.currentColor
-      }));
+      this.baseColor = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1));
+      this.sides = Math.random() > 0.4 ? 40 : [3, 4, 5, 6, 7][THREE.Math.randInt(0, 4)];
+      this.uniforms = {
+        brightness: {
+          type: 'f',
+          value: 1
+        },
+        colorR: {
+          type: 'f',
+          value: this.baseColor.r
+        },
+        colorG: {
+          type: 'f',
+          value: this.baseColor.g
+        },
+        colorB: {
+          type: 'f',
+          value: this.baseColor.b
+        }
+      };
+      this.mesh = new THREE.Mesh(new THREE.CylinderGeometry(0, 1000, 20000, this.sides, 40), new THREE.ShaderMaterial(_.extend(this.getMatProperties('tunnel'), {
+        uniforms: this.uniforms,
+        side: THREE.BackSide,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      })));
       this.mesh.material.side = THREE.BackSide;
       this.rotation.z = 90 * Math.PI / 180;
       this.add(this.mesh);
     }
 
     Tunnel.prototype.beat = function(beat) {
-      this.currentColor = this.baseColor.clone();
-      return this.setColor();
+      return this.baseColor = this.baseColor.clone();
     };
 
     Tunnel.prototype.bar = function(bar) {
       return this.brightness = 1;
     };
 
-    Tunnel.prototype.segment = function(segment) {
-      var b, g, r;
-      r = _(segment.pitches.slice(0, 4)).reduce(function(sum, num) {
-        if (sum == null) {
-          sum = 0;
-        }
-        return sum + num;
-      }) / 2;
-      g = _(segment.pitches.slice(4, 8)).reduce(function(sum, num) {
-        if (sum == null) {
-          sum = 0;
-        }
-        return sum + num;
-      }) / 2;
-      b = _(segment.pitches.slice(8, 12)).reduce(function(sum, num) {
-        if (sum == null) {
-          sum = 0;
-        }
-        return sum + num;
-      }) / 2;
-      return this.baseColor.setRGB(r, g, b);
-    };
-
     Tunnel.prototype.update = function(elapsed) {
-      this.brightness -= 0.6 * elapsed;
+      this.brightness -= 0.4 * elapsed;
       return this.setColor();
     };
 
+    Object.defineProperty(Tunnel.prototype, 'brightness', {
+      get: function() {
+        return this.uniforms.brightness.value;
+      },
+      set: function(val) {
+        return this.uniforms.brightness.value = val;
+      }
+    });
+
     Tunnel.prototype.setColor = function() {
       var color;
-      color = this.currentColor.clone().setRGB(this.currentColor.r * this.brightness, this.currentColor.g * this.brightness, this.currentColor.b * this.brightness);
+      color = this.baseColor.clone().setRGB(this.baseColor.r * this.brightness, this.baseColor.g * this.brightness, this.baseColor.b * this.brightness);
       return this.mesh.material.color = color;
     };
 
