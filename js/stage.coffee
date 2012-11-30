@@ -10,9 +10,9 @@ class Echotron.Stage
     # @scene.add @scene.fog
 
     # camera
-    @camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 100000
-    @camera.position.set 600, 0, 0
-    @camera.lookAt new THREE.Vector3
+    @camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 5000
+    @camera.position.set 0, 0, -60
+    @camera.lookAt new THREE.Vector3(0, 0, 0)
     @scene.add @camera
 
     # canvas
@@ -76,4 +76,4 @@ class Echotron.Stage
 # Go
 $ ->
   stage = window.stage = new Echotron.Stage
-  stage.start yes
+  stage.start no

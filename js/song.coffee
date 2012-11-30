@@ -43,10 +43,7 @@ class Echotron.Song
 
   # Start the audio player
   start: (playAudio = yes) ->
-    if playAudio
-      @audio.on 'playing', =>
-        @scheduleEvents()
+    @audio.on 'playing', => @scheduleEvents()
 
-      @audio[0].play()
-    else
-      @scheduleEvents()
+    @audio[0].volume = if playAudio then 0.25 else 0
+    @audio[0].play()
