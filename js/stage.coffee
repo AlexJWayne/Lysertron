@@ -75,4 +75,4 @@ class window.Stage
 
 # Go
 stage = window.stage = new Stage
-stage.start yes
+stage.start no

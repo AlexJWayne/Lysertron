@@ -9,7 +9,6 @@
 
     Tunnel.prototype.uniformAttrs = {
       brightness: 'f',
-      beatBrightness: 'f',
       ripples: 'fv1',
       ease: 'f',
       ringSize: 'f',
@@ -19,14 +18,13 @@
     function Tunnel() {
       Tunnel.__super__.constructor.apply(this, arguments);
       this.brightness = 1;
-      this.beatBrightness = 1;
       this.ripples = [1];
       this.baseColor = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1));
       this.spin = THREE.Math.randFloatSpread(180) * Math.PI / 180;
       this.ease = THREE.Math.randFloat(2, 4);
-      this.ringSize = THREE.Math.randFloat(0.1, 0.6);
-      this.sides = Math.random() > 0.5 ? 40 : [3, 4, 5, 6, 7][THREE.Math.randInt(0, 4)];
-      this.mesh = new THREE.Mesh(new THREE.CylinderGeometry(0, 1000, 20000, this.sides, 40), new THREE.ShaderMaterial(_.extend(this.getMatProperties('tunnel'), {
+      this.ringSize = THREE.Math.randFloat(0.1, 0.3);
+      this.sides = Math.random() > 0.5 ? 40 : [3, 4, 5, 6, 7].random();
+      this.mesh = new THREE.Mesh(new THREE.CylinderGeometry(0, THREE.Math.randFloat(1000, 2000), 20000, this.sides, 50), new THREE.ShaderMaterial(_.extend(this.getMatProperties('tunnel'), {
         side: THREE.BackSide,
         transparent: true,
         blending: THREE.AdditiveBlending
@@ -37,9 +35,8 @@
     }
 
     Tunnel.prototype.beat = function(beat) {
-      this.beatBrightness = 1;
-      this.ripples = this.ripples.slice(0, 3);
-      return this.ripples.unshift(1);
+      this.ripples.unshift(1);
+      return this.ripples = this.ripples.slice(0, 4);
     };
 
     Tunnel.prototype.bar = function(bar) {
@@ -64,7 +61,6 @@
         }
         return _results;
       }).call(this);
-      this.beatBrightness -= 1.25 * elapsed;
       this.brightness -= 0.3 * elapsed;
       return this.mesh.rotation.y += this.spin * elapsed;
     };
