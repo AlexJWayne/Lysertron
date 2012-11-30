@@ -19,18 +19,14 @@
       this.scene = scene;
       Cubes.__super__.constructor.apply(this, arguments);
       this.cubes = new LayerStack;
-      this.size = [THREE.Math.randFloat(50, 200), THREE.Math.randFloat(50, 200)];
+      this.size = [THREE.Math.randFloat(50, 170), THREE.Math.randFloat(50, 170)];
       this.type = ['Cube', 'Sphere'][THREE.Math.randInt(0, 1)];
-      this.spawnQty = THREE.Math.randInt(2, 6);
+      this.spawnQty = THREE.Math.randInt(3, 8);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
       direction = [1, -1][THREE.Math.randInt(0, 1)];
       this.speed = THREE.Math.randFloat(0, 500) * -direction;
       this.accel = THREE.Math.randFloat(0, 1000) * direction;
-      this.color = {
-        r: THREE.Math.randFloat(0, 1),
-        g: THREE.Math.randFloat(0, 1),
-        b: THREE.Math.randFloat(0, 1)
-      };
+      this.color = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), Math.random());
     }
 
     Cubes.prototype.beat = function() {
@@ -82,35 +78,21 @@
 
     __extends(Cube, _super);
 
+    Cube.prototype.uniformAttrs = {
+      beatScale: 'f',
+      tint: 'c'
+    };
+
     function Cube(parent, _arg) {
-      var geom, material, _ref;
+      var geom, _ref;
       this.parent = parent;
       this.color = _arg.color, this.speed = _arg.speed, this.accel = _arg.accel, this.size = _arg.size;
       Cube.__super__.constructor.apply(this, arguments);
-      material = {};
-      this.uniforms = {
-        beatScale: {
-          type: 'f',
-          value: 1
-        },
-        colorR: {
-          type: 'f',
-          value: this.color.r
-        },
-        colorG: {
-          type: 'f',
-          value: this.color.g
-        },
-        colorB: {
-          type: 'f',
-          value: this.color.b
-        }
-      };
+      this.beatScale = 1;
+      this.tint = this.color;
       size = (_ref = THREE.Math).randFloat.apply(_ref, this.size);
       geom = this.parent.type === 'Cube' ? new THREE.CubeGeometry(size, size, size, 1, 1, 1) : new THREE.SphereGeometry(size / 2, 16, 12);
-      this.mesh = new THREE.Mesh(geom, new THREE.ShaderMaterial(_.extend(this.getMatProperties('cube'), {
-        uniforms: this.uniforms
-      })));
+      this.mesh = new THREE.Mesh(geom, new THREE.ShaderMaterial(this.getMatProperties('cube')));
       this.add(this.mesh);
       this.mesh.position.set(THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300), THREE.Math.randFloatSpread(300));
       this.accel = this.accel;
@@ -123,10 +105,10 @@
 
     Cube.prototype.update = function(elapsed) {
       Cube.__super__.update.apply(this, arguments);
-      this.uniforms.beatScale.value -= elapsed / this.parent.shrinkTime;
+      this.beatScale -= elapsed / this.parent.shrinkTime;
       this.vel.addSelf(this.mesh.position.clone().setLength(this.accel * elapsed));
       this.mesh.position.addSelf(this.vel.clone().multiplyScalar(elapsed));
-      if (this.uniforms.beatScale.value <= 0) {
+      if (this.beatScale <= 0) {
         return this.kill();
       }
     };

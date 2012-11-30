@@ -7,31 +7,26 @@
 
     __extends(Tunnel, _super);
 
-    function Tunnel(scene) {
-      this.scene = scene;
+    Tunnel.prototype.uniformAttrs = {
+      brightness: 'f',
+      beatBrightness: 'f',
+      ripples: 'fv1',
+      ease: 'f',
+      ringSize: 'f',
+      baseColor: 'c'
+    };
+
+    function Tunnel() {
       Tunnel.__super__.constructor.apply(this, arguments);
+      this.brightness = 1;
+      this.beatBrightness = 1;
+      this.ripples = [1];
       this.baseColor = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1));
-      this.sides = Math.random() > 0.4 ? 40 : [3, 4, 5, 6, 7][THREE.Math.randInt(0, 4)];
-      this.uniforms = {
-        brightness: {
-          type: 'f',
-          value: 1
-        },
-        colorR: {
-          type: 'f',
-          value: this.baseColor.r
-        },
-        colorG: {
-          type: 'f',
-          value: this.baseColor.g
-        },
-        colorB: {
-          type: 'f',
-          value: this.baseColor.b
-        }
-      };
+      this.spin = THREE.Math.randFloatSpread(180) * Math.PI / 180;
+      this.ease = THREE.Math.randFloat(2, 4);
+      this.ringSize = THREE.Math.randFloat(0.1, 0.6);
+      this.sides = Math.random() > 0.5 ? 40 : [3, 4, 5, 6, 7][THREE.Math.randInt(0, 4)];
       this.mesh = new THREE.Mesh(new THREE.CylinderGeometry(0, 1000, 20000, this.sides, 40), new THREE.ShaderMaterial(_.extend(this.getMatProperties('tunnel'), {
-        uniforms: this.uniforms,
         side: THREE.BackSide,
         transparent: true,
         blending: THREE.AdditiveBlending
@@ -42,7 +37,9 @@
     }
 
     Tunnel.prototype.beat = function(beat) {
-      return this.baseColor = this.baseColor.clone();
+      this.beatBrightness = 1;
+      this.ripples = this.ripples.slice(0, 3);
+      return this.ripples.unshift(1);
     };
 
     Tunnel.prototype.bar = function(bar) {
@@ -50,23 +47,26 @@
     };
 
     Tunnel.prototype.update = function(elapsed) {
-      this.brightness -= 0.4 * elapsed;
-      return this.setColor();
-    };
-
-    Object.defineProperty(Tunnel.prototype, 'brightness', {
-      get: function() {
-        return this.uniforms.brightness.value;
-      },
-      set: function(val) {
-        return this.uniforms.brightness.value = val;
-      }
-    });
-
-    Tunnel.prototype.setColor = function() {
-      var color;
-      color = this.baseColor.clone().setRGB(this.baseColor.r * this.brightness, this.baseColor.g * this.brightness, this.baseColor.b * this.brightness);
-      return this.mesh.material.color = color;
+      var ripple;
+      Tunnel.__super__.update.apply(this, arguments);
+      this.ripples = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.ripples;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          ripple = _ref[_i];
+          ripple -= 0.4 * elapsed;
+          if (ripple > 0) {
+            _results.push(ripple);
+          } else {
+            _results.push(0);
+          }
+        }
+        return _results;
+      }).call(this);
+      this.beatBrightness -= 1.25 * elapsed;
+      this.brightness -= 0.3 * elapsed;
+      return this.mesh.rotation.y += this.spin * elapsed;
     };
 
     return Tunnel;

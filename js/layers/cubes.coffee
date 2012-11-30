@@ -10,23 +10,20 @@ class Layers.Cubes extends Layers.Base
     @cubes = new LayerStack
     
     @size = [
-      THREE.Math.randFloat(50, 200)
-      THREE.Math.randFloat(50, 200)
+      THREE.Math.randFloat(50, 170)
+      THREE.Math.randFloat(50, 170)
     ]
     
     @type = ['Cube', 'Sphere'][THREE.Math.randInt 0, 1]
 
-    @spawnQty   = THREE.Math.randInt(2, 6)
+    @spawnQty   = THREE.Math.randInt(3, 8)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
     
     direction = [1, -1][THREE.Math.randInt(0, 1)]
     @speed      = THREE.Math.randFloat(0, 500) * -direction
     @accel      = THREE.Math.randFloat(0, 1000) *  direction
 
-    @color =
-      r: THREE.Math.randFloat(0, 1)
-      g: THREE.Math.randFloat(0, 1)
-      b: THREE.Math.randFloat(0, 1)
+    @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
   beat: ->
     for i in [1..@spawnQty]
@@ -49,31 +46,15 @@ class Layers.Cubes extends Layers.Base
 
 
 class Layers.Cubes.Cube extends Layers.Base
-  # components:
-  #   Rotator:
-  #     maxRoll:  30
-  #     maxPitch: 30
+  uniformAttrs:
+    beatScale: 'f'
+    tint:      'c'
 
   constructor: (@parent, { @color, @speed, @accel, @size })->
     super
-    material = {}
 
-    @uniforms =
-      beatScale:
-        type: 'f'
-        value: 1
-
-      colorR:
-        type: 'f'
-        value: @color.r
-
-      colorG:
-        type: 'f'
-        value: @color.g
-
-      colorB:
-        type: 'f'
-        value: @color.b
+    @beatScale = 1
+    @tint      = @color
 
     size = THREE.Math.randFloat @size...
 
@@ -85,9 +66,7 @@ class Layers.Cubes.Cube extends Layers.Base
 
     @mesh = new THREE.Mesh(
       geom
-      new THREE.ShaderMaterial(
-        _.extend @getMatProperties('cube'), uniforms: @uniforms
-      )
+      new THREE.ShaderMaterial @getMatProperties('cube')
     )
 
     @add @mesh
@@ -106,12 +85,12 @@ class Layers.Cubes.Cube extends Layers.Base
 
   update: (elapsed) ->
     super
-    @uniforms.beatScale.value -= elapsed / @parent.shrinkTime
+    @beatScale -= elapsed / @parent.shrinkTime
 
     @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
     @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
 
-    @kill() if @uniforms.beatScale.value <= 0
+    @kill() if @beatScale <= 0
 
 
 

@@ -13,12 +13,20 @@
 
     Base.prototype.components = {};
 
+    Base.prototype.uniformAttrs = {};
+
     function Base(scene) {
-      var args, component, name;
       this.scene = scene;
       Base.__super__.constructor.apply(this, arguments);
       this.active = true;
-      this.components = (function() {
+      this.initComponents();
+      this.initUniforms();
+      this.scene.add(this);
+    }
+
+    Base.prototype.initComponents = function() {
+      var args, component, name;
+      return this.components = (function() {
         var _ref, _results;
         _ref = this.components;
         _results = [];
@@ -31,8 +39,33 @@
         }
         return _results;
       }).call(this);
-      this.scene.add(this);
-    }
+    };
+
+    Base.prototype.initUniforms = function() {
+      var name, type, _ref,
+        _this = this;
+      this.uniforms = {};
+      _ref = this.uniformAttrs;
+      for (name in _ref) {
+        type = _ref[name];
+        this.uniforms[name] = {
+          type: type,
+          value: null
+        };
+        if (!(name in this)) {
+          (function(name, type) {
+            return Object.defineProperty(_this.constructor.prototype, name, {
+              get: function() {
+                return this.uniforms[name].value;
+              },
+              set: function(val) {
+                return this.uniforms[name].value = val;
+              }
+            });
+          })(name, type);
+        }
+      }
+    };
 
     Base.prototype.getShader = function(name) {
       var _this = this;
@@ -48,7 +81,8 @@
     Base.prototype.getMatProperties = function(name) {
       return {
         vertexShader: this.getShader("" + name + ".vshader"),
-        fragmentShader: this.getShader("" + name + ".fshader")
+        fragmentShader: this.getShader("" + name + ".fshader"),
+        uniforms: this.uniforms
       };
     };
 
