@@ -3,20 +3,42 @@ window.Layers ||=
 
 class Layers.Base extends THREE.Object3D
   components: {}
+  uniformAttrs: {}
 
   constructor: (@scene) ->
     super
 
     @active = yes
+    @initComponents()
+    @initUniforms()
 
+    @scene.add this
+
+  # Is this silly? I'm thinkning it is.
+  initComponents: ->
     @components =
       for own name, args of @components
         component = new Component[name](args || {})
         component.obj = this
         component
 
-    @scene.add this
-  
+  # Setup list of uniforms sent to shaders.
+  initUniforms: ->
+    @uniforms = {}
+    for name, type of @uniformAttrs
+      @uniforms[name] =
+        type:  type
+        value: null
+
+      # Define an accessor property on the prototype 
+      unless name of this
+        do (name, type) =>
+          Object.defineProperty @constructor::, name,
+            get: -> @uniforms[name].value
+            set: (val) -> @uniforms[name].value = val
+
+    return
+
   getShader: (name) ->
     Layers._shaders[name] || (
       $.ajax
@@ -31,6 +53,7 @@ class Layers.Base extends THREE.Object3D
     {
       vertexShader:   @getShader "#{name}.vshader"
       fragmentShader: @getShader "#{name}.fshader"
+      uniforms:       @uniforms
     }
 
   # Tells this layer to start to die. It will no longer receive song events,
