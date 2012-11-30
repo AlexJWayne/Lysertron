@@ -1,4 +1,4 @@
-class window.Song
+class Echotron.Song
 
   # Class is an event emitter
   _.extend @::, Backbone.Events

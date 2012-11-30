@@ -1,4 +1,4 @@
-class window.Stage
+class Echotron.Stage
   constructor: ->
     @initEngine()
     @initSong()
@@ -25,11 +25,11 @@ class window.Stage
     container.appendChild @renderer.domElement
 
     # Layers array
-    @layerStack = new LayerStack
+    @layerStack = new Echotron.LayerStack
 
   # Initialize the song and bind song events.
   initSong: ->
-    @song = @scene.song = new Song
+    @song = @scene.song = new Echotron.Song
 
     # Bind all events
     for eventType in ['bar', 'beat', 'tatum', 'segment']
@@ -74,5 +74,6 @@ class window.Stage
     @renderer.render @scene, @camera
 
 # Go
-stage = window.stage = new Stage
-stage.start no
+$ ->
+  stage = window.stage = new Echotron.Stage
+  stage.start yes

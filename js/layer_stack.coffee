@@ -1,4 +1,4 @@
-class window.LayerStack
+class Echotron.LayerStack
   constructor: (@layers = []) ->
 
   beat:     (data) -> layer.beat(data)     for layer in @layers when layer.active; return
@@ -24,14 +24,13 @@ class window.LayerStack
 
   transition: ->
     layer.kill() for layer in @layers
-    @push(
-      new Layers.Tunnel stage.scene
-      new Layers.Cubes stage.scene
-    )
+    for name, klass of window.Echotron.Echoes
+      @push new klass stage.scene
+    return
 
   push: (layers...) ->
     for layer in layers
-      throw "object is not a Layers.Base" unless layer instanceof Layers.Base
+      throw "object is not a Echotron.Echo" unless layer instanceof Echotron.Echo
       @layers.push layer
 
   isEmpty: ->
