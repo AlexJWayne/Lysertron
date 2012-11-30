@@ -23,7 +23,7 @@
       this.type = ['Cube', 'Sphere'][THREE.Math.randInt(0, 1)];
       this.spawnQty = THREE.Math.randInt(3, 8);
       this.shrinkTime = THREE.Math.randInt(3, 6) / this.scene.song.bps;
-      direction = [1, -1][THREE.Math.randInt(0, 1)];
+      direction = [1, -1].random();
       this.speed = THREE.Math.randFloat(0, 500) * -direction;
       this.accel = THREE.Math.randFloat(0, 1000) * direction;
       this.color = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), Math.random());

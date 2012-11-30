@@ -1,7 +1,6 @@
 uniform float brightness;
 uniform float ease;
 uniform float ringSize;
-uniform float beatBrightness;
 
 uniform float ripples[4];
 uniform vec3 baseColor;
@@ -16,8 +15,8 @@ void main() {
   for (int i = 0; i < 4; i++) {
     float progress = pow(1.0 - ripples[i], ease);
     float ringVal = 1.0 - smoothstep(0.0, 0.1 * ringSize, abs(vPos.y / 10000.0 - progress));
-    rings += clamp(ringVal * beatBrightness, 0.0, 1.0);
+    rings += clamp(ringVal * pow(ripples[i], ease), 0.0, 1.0);
   }
 
-  gl_FragColor = vec4(dimmedColor + vec3(rings) * 0.3, 1.0);
+  gl_FragColor = vec4(dimmedColor + vec3(rings) * 0.8, 1.0);
 }

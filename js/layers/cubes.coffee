@@ -19,7 +19,7 @@ class Layers.Cubes extends Layers.Base
     @spawnQty   = THREE.Math.randInt(3, 8)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
     
-    direction = [1, -1][THREE.Math.randInt(0, 1)]
+    direction = [1, -1].random()
     @speed      = THREE.Math.randFloat(0, 500) * -direction
     @accel      = THREE.Math.randFloat(0, 1000) *  direction
 

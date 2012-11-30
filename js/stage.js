@@ -90,6 +90,6 @@
 
   stage = window.stage = new Stage;
 
-  stage.start(true);
+  stage.start(false);
 
 }).call(this);
