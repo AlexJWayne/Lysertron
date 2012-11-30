@@ -56,4 +56,3 @@ class Echotron.Echo extends THREE.Object3D
 
   # Override, calling super. Update state per frame.
   update: (elapsed) ->
-    component.update(elapsed) for component in @components
