@@ -1,29 +1,26 @@
 class @Main extends Echotron.Echo
-
-  # Nuke
-  components:
-    Rotator:
-      maxRoll:  90
-      maxPitch: 90
-
   constructor: (@scene) ->
     super
 
     @cubes = new Echotron.LayerStack
     
     @size = [
-      THREE.Math.randFloat(50, 170)
-      THREE.Math.randFloat(50, 170)
+      THREE.Math.randFloat(5, 17)
+      THREE.Math.randFloat(5, 17)
     ]
     
-    @type = ['Cube', 'Sphere'][THREE.Math.randInt 0, 1]
+    @type = ['Cube', 'Sphere'].random()
 
     @spawnQty   = THREE.Math.randInt(3, 8)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
     
     direction = [1, -1].random()
-    @speed      = THREE.Math.randFloat(0, 500)  * -direction
-    @accel      = THREE.Math.randFloat(0, 1000) *  direction
+    @speed      = THREE.Math.randFloat(0, 50)  * -direction
+    @accel      = THREE.Math.randFloat(0, 100) *  direction
+
+    @roll   = [0, THREE.Math.randFloatSpread(180)].random() * Math.PI/180
+    @tumble = [0, THREE.Math.randFloatSpread( 90)].random() * Math.PI/180
+    @rotation.y = THREE.Math.randFloat(0, 360)              * Math.PI/180
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
@@ -42,6 +39,8 @@ class @Main extends Echotron.Echo
   
   update: (elapsed) ->
     super
+    @rotation.z += @roll * elapsed
+    @rotation.x += @tumble * elapsed
     @cubes.update elapsed
     
   alive: -> !@cubes.isEmpty()
@@ -78,9 +77,9 @@ class Cube extends Echotron.Echo
     @add @mesh
     
     @mesh.position.set(
-      THREE.Math.randFloatSpread 300
-      THREE.Math.randFloatSpread 300
-      THREE.Math.randFloatSpread 300
+      THREE.Math.randFloatSpread 30
+      THREE.Math.randFloatSpread 30
+      THREE.Math.randFloatSpread 30
     )
 
     @accel = @accel

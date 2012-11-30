@@ -10,7 +10,7 @@ class @Main extends Echotron.Echo
     super
 
     @brightness     = 1
-    @ripples        = [1]
+    @ripples        = [1, 0, 0, 0]
 
     @baseColor  = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1)
     @spin = THREE.Math.randFloatSpread(180) * Math.PI/180
@@ -25,7 +25,7 @@ class @Main extends Echotron.Echo
 
 
     @mesh = new THREE.Mesh(
-      new THREE.CylinderGeometry 0, THREE.Math.randFloat(1000, 2000), 20000, @sides, 50
+      new THREE.CylinderGeometry 0, THREE.Math.randFloat(100, 200), 2000, @sides, 50
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
         vertexShader:   assets["tunnel.vshader"]
@@ -37,7 +37,7 @@ class @Main extends Echotron.Echo
     )
     @mesh.material.side = THREE.BackSide
 
-    @rotation.z = 90 * Math.PI/180
+    @rotation.x = 90 * Math.PI/180
 
     @add @mesh
 

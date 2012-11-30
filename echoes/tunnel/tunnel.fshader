@@ -14,7 +14,7 @@ void main() {
   float rings = 0.0;
   for (int i = 0; i < 4; i++) {
     float progress = pow(1.0 - ripples[i], ease);
-    float ringVal = 1.0 - smoothstep(0.0, 0.1 * ringSize, abs(vPos.y / 10000.0 - progress));
+    float ringVal = 1.0 - smoothstep(0.0, 0.1 * ringSize, abs(vPos.y / 1000.0 - progress));
     rings += clamp(ringVal * pow(ripples[i], ease), 0.0, 1.0);
   }
 
