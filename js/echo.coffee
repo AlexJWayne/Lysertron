@@ -5,6 +5,7 @@ class Echotron.Echo extends THREE.Object3D
   components: {}
   uniformAttrs: {}
 
+  # Override, calling super. Setup your Echo however you need.
   constructor: (@scene) ->
     super
 
@@ -54,5 +55,5 @@ class Echotron.Echo extends THREE.Object3D
   # Override. Do stuff on bars.
   tatum: ->
 
-  # Override, calling super. Update state per frame.
+  # Override. Update state per frame.
   update: (elapsed) ->
