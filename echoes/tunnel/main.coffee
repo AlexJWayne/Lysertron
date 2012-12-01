@@ -1,23 +1,10 @@
-class TunnelStack extends Echotron.Echo
+@Main = class TunnelStack extends Echotron.EchoStack
   constructor: ->
     super
-    @stack = new Echotron.LayerStack
-
     for i in [0..THREE.Math.randInt(2,6)]
       layer = new Tunnel
       layer.baseColor = new THREE.Color 0x000000 unless i == 0
-      @add layer
-      @stack.push layer
-
-  beat: (beat) -> @stack.beat beat
-  bar:  (bar)  -> @stack.bar  bar
-  update: (elapsed) -> @stack.update(elapsed)
-
-  kill: ->
-    super
-    layer.kill() for layer in @stack.layers
-
-  alive: -> !@stack.isEmpty()
+      @push layer
 
 class Tunnel extends Echotron.Echo
   uniformAttrs:
@@ -95,6 +82,3 @@ class Tunnel extends Echotron.Echo
 
     @brightness -= 0.25 * elapsed
     @mesh.rotation.y += @spin * elapsed
-
-
-@Main = TunnelStack
