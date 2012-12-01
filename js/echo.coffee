@@ -12,7 +12,7 @@ class Echotron.Echo extends THREE.Object3D
     @active = yes
     @initUniforms()
 
-    @scene.add this
+    @scene?.add this
 
   # Setup list of uniforms sent to shaders.
   initUniforms: ->

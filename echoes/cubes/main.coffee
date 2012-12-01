@@ -5,11 +5,14 @@ class @Main extends Echotron.Echo
     @cubes = new Echotron.LayerStack
     
     @size = [
-      THREE.Math.randFloat(5, 17)
-      THREE.Math.randFloat(5, 17)
+      THREE.Math.randFloat(5, 12)
+      THREE.Math.randFloat(5, 12)
     ]
+
+    @size = [12,12]
     
-    @type = ['Cube', 'Sphere'].random()
+    @type = 'Cube' #['Cube', 'Sphere'].random()
+    @shader = ['lit', 'bright'].random()
 
     @spawnQty   = THREE.Math.randInt(3, 8)
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
@@ -38,7 +41,6 @@ class @Main extends Echotron.Echo
       @cubes.push cube
   
   update: (elapsed) ->
-    super
     @rotation.z += @roll * elapsed
     @rotation.x += @tumble * elapsed
     @cubes.update elapsed
@@ -70,7 +72,7 @@ class Cube extends Echotron.Echo
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
         vertexShader:   assets["scaler.vshader"]
-        fragmentShader: assets["colorFade.fshader"]
+        fragmentShader: assets["#{@parent.shader}.fshader"]
       )
     )
 
@@ -89,7 +91,6 @@ class Cube extends Echotron.Echo
     @uniforms.beatScale.value > 0
 
   update: (elapsed) ->
-    super
     @beatScale -= elapsed / @parent.shrinkTime
 
     @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
