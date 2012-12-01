@@ -1,4 +1,4 @@
-@Main = class CubeStack extends Echotron.EchoStack
+module.exports = class Cubes extends Echotron.EchoStack
   constructor: (@scene) ->
     super
     

@@ -23,13 +23,15 @@ exports.register = (app) ->
         else
           assets[file] = fs.readFileSync("echoes/#{req.params.name}/#{file}").toString()
 
-      res.send  """
-                (function() {
-                  var assets = #{JSON.stringify assets};
-                  var __ctx = {};
-                  (function(){
-                    #{code}
-                  }.call(__ctx));
-                  window.Echotron.Echoes.#{req.params.name} = __ctx.Main;
-                }());
-                """
+      res.send(
+        """
+        (function() {
+          var assets = #{JSON.stringify assets};
+          var module = {};
+          (function(){
+            #{code}
+          }.call({}));
+          window.Echotron.Echoes.#{req.params.name} = module.exports;
+        }());
+        """
+      )

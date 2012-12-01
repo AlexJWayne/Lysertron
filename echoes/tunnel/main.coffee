@@ -1,12 +1,12 @@
-@Main = class TunnelStack extends Echotron.EchoStack
+module.exports = class Tunnel extends Echotron.EchoStack
   constructor: ->
     super
     for i in [0..THREE.Math.randInt(2,6)]
-      layer = new Tunnel
+      layer = new SingleTunnel
       layer.baseColor = new THREE.Color 0x000000 unless i == 0
       @push layer
 
-class Tunnel extends Echotron.Echo
+class SingleTunnel extends Echotron.Echo
   uniformAttrs:
     inward:         'f'
     brightness:     'f'
@@ -22,26 +22,25 @@ class Tunnel extends Echotron.Echo
 
     @inward         = [1, 0].random()
     @brightness     = 1
-    @ripples        = [1, 0, 0, 0, 0, 0, 0, 0]
+    @ripples        = [1,0,0,0,0,0,0,0,0,0,0,0]
 
     @baseColor ||= new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1)
     @ringColor =   new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.6, 1.0), 1
 
-    @spin = THREE.Math.randFloatSpread(180) * Math.PI/180
+    @spin          = THREE.Math.randFloatSpread(180) * Math.PI/180
+    @ringSize      = THREE.Math.randFloat(0.1, 1.0)
+    @ringIntensity = THREE.Math.randFloat(0.05, 0.5)
+    @fadeSpeed     = THREE.Math.randFloat(0.15, 0.5)
+
     @ease = [
       THREE.Math.randFloat(0.75, 1.2)
       THREE.Math.randFloat(1.2, 6)
     ].random()
-    @ringSize = THREE.Math.randFloat(0.1, 1.0)
-    @ringIntensity = THREE.Math.randFloat(0.05, 0.5)
-    @fadeSpeed = THREE.Math.randFloat(0.3, 0.6)
 
-    @sides =
-      if Math.random() > 0.5
-        40
-      else
-        [3, 4, 5, 6, 7].random()
-
+    @sides = [
+      40
+      [3, 4, 5, 6, 7].random()
+    ].random()
 
     @mesh = new THREE.Mesh(
       new THREE.CylinderGeometry 0, THREE.Math.randFloat(150, 250), 2000, @sides, 50
@@ -57,7 +56,7 @@ class Tunnel extends Echotron.Echo
     @mesh.material.depthWrite = no
 
     @rotation.x = 90 * Math.PI/180
-    @position.z = Math.random()
+    @position.z = -50 + Math.random()
 
     @add @mesh
 
