@@ -1,4 +1,4 @@
-class @Main extends Echotron.Echo
+class TunnelStack extends Echotron.Echo
   constructor: ->
     super
     @stack = new Echotron.LayerStack
@@ -12,6 +12,10 @@ class @Main extends Echotron.Echo
   beat: (beat) -> @stack.beat beat
   bar:  (bar)  -> @stack.bar  bar
   update: (elapsed) -> @stack.update(elapsed)
+
+  kill: ->
+    super
+    layer.kill() for layer in @stack.layers
 
   alive: -> !@stack.isEmpty()
 
@@ -34,7 +38,7 @@ class Tunnel extends Echotron.Echo
     @ripples        = [1, 0, 0, 0, 0, 0, 0, 0]
 
     @baseColor ||= new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1)
-    @ringColor =   new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0, 1), 1
+    @ringColor =   new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.6, 1.0), 1
 
     @spin = THREE.Math.randFloatSpread(180) * Math.PI/180
     @ease = [
@@ -42,7 +46,7 @@ class Tunnel extends Echotron.Echo
       THREE.Math.randFloat(1.2, 6)
     ].random()
     @ringSize = THREE.Math.randFloat(0.1, 1.0)
-    @ringIntensity = THREE.Math.randFloat(0.05, 0.3)
+    @ringIntensity = THREE.Math.randFloat(0.05, 0.5)
     @fadeSpeed = THREE.Math.randFloat(0.3, 0.6)
 
     @sides =
@@ -91,3 +95,6 @@ class Tunnel extends Echotron.Echo
 
     @brightness -= 0.25 * elapsed
     @mesh.rotation.y += @spin * elapsed
+
+
+@Main = TunnelStack
