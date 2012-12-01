@@ -19,7 +19,10 @@ module.exports = class Cubes extends Echotron.EchoStack
 
     @roll   = [0, THREE.Math.randFloatSpread(180)].random() * Math.PI/180
     @tumble = [0, THREE.Math.randFloatSpread( 90)].random() * Math.PI/180
+    
+    @rotation.x = THREE.Math.randFloat(0, 360)              * Math.PI/180
     @rotation.y = THREE.Math.randFloat(0, 360)              * Math.PI/180
+    @rotation.z = THREE.Math.randFloat(0, 360)              * Math.PI/180
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
