@@ -4,6 +4,7 @@ module.exports =
   vendor: [
     'zepto'
     'three'
+    'stats'
     'underscore'
     'backbone'
     'tweencurve'

@@ -1,4 +1,4 @@
-class @Main extends Echotron.Echo
+class CubeStack extends Echotron.Echo
   constructor: (@scene) ->
     super
 
@@ -16,8 +16,8 @@ class @Main extends Echotron.Echo
     @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
     
     direction = [1, -1].random()
-    @speed      = THREE.Math.randFloat(0, 50)  * -direction
-    @accel      = THREE.Math.randFloat(0, 100) *  direction
+    @speed      = THREE.Math.randFloat(20, 50)  * -direction
+    @accel      = THREE.Math.randFloat(50, 100) *  direction
 
     @roll   = [0, THREE.Math.randFloatSpread(180)].random() * Math.PI/180
     @tumble = [0, THREE.Math.randFloatSpread( 90)].random() * Math.PI/180
@@ -96,16 +96,4 @@ class Cube extends Echotron.Echo
 
     @kill() if @beatScale <= 0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+@Main = CubeStack
