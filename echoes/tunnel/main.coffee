@@ -28,9 +28,9 @@ class SingleTunnel extends Echotron.Echo
     @ringColor =   new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.6, 1.0), 1
 
     @spin          = THREE.Math.randFloatSpread(180) * Math.PI/180
-    @ringSize      = THREE.Math.randFloat(0.1, 1.0)
-    @ringIntensity = THREE.Math.randFloat(0.05, 0.5)
-    @fadeSpeed     = THREE.Math.randFloat(0.15, 0.5)
+    @ringSize      = THREE.Math.randFloat(0.2,  1.2)
+    @ringIntensity = THREE.Math.randFloat(0.05, 0.4)
+    @fadeSpeed     = THREE.Math.randFloat(0.2,  0.5)
 
     @ease = [
       THREE.Math.randFloat(0.75, 1.2)
@@ -56,7 +56,7 @@ class SingleTunnel extends Echotron.Echo
     @mesh.material.depthWrite = no
 
     @rotation.x = 90 * Math.PI/180
-    @position.z = -50 + Math.random()
+    @position.z = -50 #+ Math.random()
 
     @add @mesh
 
