@@ -8,8 +8,6 @@ class @Main extends Echotron.Echo
       THREE.Math.randFloat(5, 12)
       THREE.Math.randFloat(5, 12)
     ]
-
-    @size = [12,12]
     
     @type = 'Cube' #['Cube', 'Sphere'].random()
     @shader = ['lit', 'bright'].random()
