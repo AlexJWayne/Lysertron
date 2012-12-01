@@ -12,8 +12,9 @@ module.exports =
   app: [
     'echo'
     'util'
-    'song'
     'layer_stack'
+    'echo_stack'
+    'song'
     'stage'
   ]
   findEchoes: (callback) ->

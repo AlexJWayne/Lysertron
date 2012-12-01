@@ -1,8 +1,6 @@
-class CubeStack extends Echotron.Echo
+@Main = class CubeStack extends Echotron.EchoStack
   constructor: (@scene) ->
     super
-
-    @cubes = new Echotron.LayerStack
     
     @size = [
       THREE.Math.randFloat(5, 12)
@@ -27,23 +25,17 @@ class CubeStack extends Echotron.Echo
 
   beat: ->
     for i in [1..@spawnQty]
-      cube = new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
-      @add cube
-      @cubes.push cube
+      @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
     return
 
   bar: ->
     for i in [1..@spawnQty*5]
-      cube = new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
-      @add cube
-      @cubes.push cube
+      @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
   
   update: (elapsed) ->
+    super
     @rotation.z += @roll * elapsed
     @rotation.x += @tumble * elapsed
-    @cubes.update elapsed
-    
-  alive: -> !@cubes.isEmpty()
 
 
 class Cube extends Echotron.Echo
@@ -95,5 +87,3 @@ class Cube extends Echotron.Echo
     @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
 
     @kill() if @beatScale <= 0
-
-@Main = CubeStack
