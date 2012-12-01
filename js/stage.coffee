@@ -24,6 +24,10 @@ class Echotron.Stage
     @renderer.setSize window.innerWidth, window.innerHeight
     container.appendChild @renderer.domElement
 
+    # fps
+    @fpsContainer = $('<div id="fps">')
+    $(document.body).append @fpsContainer
+
     # Layers array
     @layerStack = new Echotron.LayerStack
 
@@ -59,6 +63,7 @@ class Echotron.Stage
     now = Date.now() / 1000
     elapsed = now - @lastFrame
     @lastFrame = now
+    @fps = 1/elapsed
 
     # Update all layers
     @layerStack.update elapsed
@@ -72,6 +77,7 @@ class Echotron.Stage
   # Render the scene.
   render: =>
     @renderer.render @scene, @camera
+    @fpsContainer.text Math.round(@fps)
 
 # Go
 $ ->
