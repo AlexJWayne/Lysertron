@@ -1,0 +1,22 @@
+!!! 5
+html
+  head
+    title Echotron
+    style(type="text/css")
+      body   { margin: 0; }
+      canvas { background: black }
+      audio  { position: absolute; bottom: 20px; left: 20px; }
+    
+    // Vendor
+    each name in vendor
+      script(src="js/vendor/#{name}.js")
+
+    // Echotron
+    each name in app
+      script(src="js/#{name}.js")
+
+    // Echoes
+    each echo in echoes
+      script(src="echoes/#{echo}.js")
+  
+  body

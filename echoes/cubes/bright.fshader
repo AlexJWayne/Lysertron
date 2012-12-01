@@ -1,5 +1,6 @@
 uniform float beatScale;
 uniform vec4 color;
+
 varying vec3 vPos;
 
 uniform vec3 tint;
