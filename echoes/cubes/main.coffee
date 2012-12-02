@@ -1,5 +1,5 @@
 module.exports = class Cubes extends Echotron.EchoStack
-  constructor: (@scene) ->
+  constructor: ->
     super
     
     @size = [
@@ -11,7 +11,7 @@ module.exports = class Cubes extends Echotron.EchoStack
     @shader = ['lit', 'bright'].random()
 
     @spawnQty   = THREE.Math.randInt(3, 8)
-    @shrinkTime = THREE.Math.randInt(3, 6) / @scene.song.bps
+    @shrinkTime = THREE.Math.randInt(3, 6) / stage.scene.song.bps
     
     direction = [1, -1].random()
     @speed      = THREE.Math.randFloat(20, 50)  * -direction
@@ -19,7 +19,7 @@ module.exports = class Cubes extends Echotron.EchoStack
 
     @roll   = [0, THREE.Math.randFloatSpread(180)].random() * Math.PI/180
     @tumble = [0, THREE.Math.randFloatSpread( 90)].random() * Math.PI/180
-    
+
     @rotation.x = THREE.Math.randFloat(0, 360)              * Math.PI/180
     @rotation.y = THREE.Math.randFloat(0, 360)              * Math.PI/180
     @rotation.z = THREE.Math.randFloat(0, 360)              * Math.PI/180
@@ -46,7 +46,7 @@ class Cube extends Echotron.Echo
     beatScale: 'f'
     tint:      'c'
 
-  constructor: (@parent, { @color, @speed, @accel, @size })->
+  constructor: (@parentLayer, { @color, @speed, @accel, @size })->
     super
 
     @beatScale = 1
@@ -55,7 +55,7 @@ class Cube extends Echotron.Echo
     size = THREE.Math.randFloat @size...
 
     geom =
-      if @parent.type is 'Cube'
+      if @parentLayer.type is 'Cube'
         new THREE.CubeGeometry size, size, size, 1, 1, 1
       else
         new THREE.SphereGeometry size/2, 16, 12
@@ -65,7 +65,7 @@ class Cube extends Echotron.Echo
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
         vertexShader:   assets["scaler.vshader"]
-        fragmentShader: assets["#{@parent.shader}.fshader"]
+        fragmentShader: assets["#{@parentLayer.shader}.fshader"]
       )
     )
 
@@ -84,7 +84,7 @@ class Cube extends Echotron.Echo
     @uniforms.beatScale.value > 0
 
   update: (elapsed) ->
-    @beatScale -= elapsed / @parent.shrinkTime
+    @beatScale -= elapsed / @parentLayer.shrinkTime
 
     @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
     @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
