@@ -3,8 +3,8 @@ module.exports = class Cubes extends Echotron.EchoStack
     super
     
     @size = [
-      THREE.Math.randFloat(5, 12)
-      THREE.Math.randFloat(5, 12)
+      THREE.Math.randFloat(3, 8)
+      THREE.Math.randFloat(3, 8)
     ]
     
     @type = 'Cube' #['Cube', 'Sphere'].random()
