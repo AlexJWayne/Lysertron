@@ -56,7 +56,7 @@ class SingleTunnel extends Echotron.Echo
     @mesh.material.depthWrite = no
 
     @rotation.x = 90 * Math.PI/180
-    @position.z = -50 #+ Math.random()
+    @position.z = -60
 
     @add @mesh
 

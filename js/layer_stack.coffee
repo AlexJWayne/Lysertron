@@ -31,7 +31,9 @@ class Echotron.LayerStack
   transition: ->
     layer.kill() for layer in @layers
     for name, klass of window.Echotron.Echoes
-      @push new klass stage.scene
+      layer = new klass
+      @push layer
+      stage.scene.add layer
     return
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.

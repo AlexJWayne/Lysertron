@@ -6,13 +6,10 @@ class Echotron.Echo extends THREE.Object3D
   uniformAttrs: {}
 
   # Override, calling super. Setup your Echo however you need.
-  constructor: (@scene) ->
+  constructor: ->
     super
-
     @active = yes
     @initUniforms()
-
-    @scene?.add this
 
   # Setup list of uniforms sent to shaders.
   initUniforms: ->
