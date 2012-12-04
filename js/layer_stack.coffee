@@ -39,7 +39,9 @@ class Echotron.LayerStack
   # Add an Echo to the stack. It must descend from Echotron.Echo.
   push: (layers...) ->
     for layer in layers
-      throw "object is not a Echotron.Echo" unless layer instanceof Echotron.Echo
+      unless layer instanceof Echotron.Echo
+        throw new Error "LayerStack#push: object is not a Echotron.Echo"
+
       @layers.push layer
 
   # Convenience method to let you know if the stack has no layers.
