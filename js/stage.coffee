@@ -31,6 +31,9 @@ class Echotron.Stage
     # Layers array
     @layerStack = new Echotron.LayerStack
 
+    # resize
+    THREEx.WindowResize @renderer, @camera
+
   # Initialize the song and bind song events.
   initSong: ->
     @song = @scene.song = new Echotron.Song
@@ -83,4 +86,4 @@ class Echotron.Stage
 # Go
 $ ->
   stage = window.stage = new Echotron.Stage
-  stage.start no
+  stage.start no unless mocha?

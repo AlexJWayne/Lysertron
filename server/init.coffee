@@ -4,6 +4,7 @@ app = express()
 # Static dirs
 app.use '/js',    express.static('js')
 app.use '/songs', express.static('songs')
+app.use '/spec',  express.static('spec')
 
 # Views
 app.set 'views', '.'
