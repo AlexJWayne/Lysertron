@@ -40,7 +40,7 @@ class Echotron.LayerStack
   push: (layers...) ->
     for layer in layers
       unless layer instanceof Echotron.Echo
-        throw new Error "LayerStack#push: object is not a Echotron.Echo"
+        throw new Error "LayerStack::push() object is not a Echotron.Echo"
 
       @layers.push layer
 

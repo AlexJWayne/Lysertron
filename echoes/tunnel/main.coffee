@@ -16,6 +16,7 @@ class SingleTunnel extends Echotron.Echo
     baseColor:      'c'
     ringColor:      'c'
     ringIntensity:  'f'
+    fadeIn:         'f'
 
   constructor: ->
     super
@@ -23,14 +24,16 @@ class SingleTunnel extends Echotron.Echo
     @inward         = [1, 0].random()
     @brightness     = 1
     @ripples        = [1,0,0,0,0,0,0,0,0,0,0,0]
+    @fadeIn         = 0
 
-    @baseColor ||= new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), THREE.Math.randFloat(0.5, 1)
+    @baseColor ||= new THREE.Color().setHSV Math.random(), 0.5, THREE.Math.randFloat(0.5, 1)
     @ringColor =   new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.6, 1.0), 1
 
     @spin          = THREE.Math.randFloatSpread(180) * Math.PI/180
     @ringSize      = THREE.Math.randFloat(0.2,  1.2)
     @ringIntensity = THREE.Math.randFloat(0.05, 0.4)
     @fadeSpeed     = THREE.Math.randFloat(0.2,  0.5)
+    @fadeInTime    = 3 / stage.song.bps
 
     @ease = [
       THREE.Math.randFloat(0.75, 1.2)
@@ -71,6 +74,11 @@ class SingleTunnel extends Echotron.Echo
     @brightness = 1
 
   update: (elapsed) ->
+    if @fadeIn < 1
+      @fadeIn += elapsed / @fadeInTime
+    else
+      @fadeIn = 1 
+
     @ripples =
       for ripple in @ripples
         ripple -= @fadeSpeed * elapsed

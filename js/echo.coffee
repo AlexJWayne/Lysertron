@@ -2,7 +2,6 @@ window.Echotron ||= {}
 Echotron.Echoes ||= {}
 
 class Echotron.Echo extends THREE.Object3D
-  components: {}
   uniformAttrs: {}
 
   # Override, calling super. Setup your Echo however you need.

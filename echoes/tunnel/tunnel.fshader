@@ -3,6 +3,7 @@ uniform float brightness;
 uniform float ease;
 uniform float ringSize;
 uniform float ringIntensity;
+uniform float fadeIn;
 
 uniform float ripples[12];
 uniform vec3 baseColor;
@@ -22,5 +23,6 @@ void main() {
     rings += clamp(ringVal * (ripples[i]*0.7 + 0.3), 0.0, 1.0);
   }
 
-  gl_FragColor = vec4(dimmedColor + ringColor*rings*ringIntensity, 1.0);
+  vec3 finalColor = dimmedColor + ringColor*rings*ringIntensity;
+  gl_FragColor = vec4(fadeIn * finalColor, 1.0);
 }

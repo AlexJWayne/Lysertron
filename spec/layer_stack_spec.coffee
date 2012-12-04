@@ -79,7 +79,7 @@ describe 'LayerStack', ->
     it 'throws exception if a non Echotron.Echo object is pushed', ->
       stack = new Echotron.LayerStack
       obj = {}
-      (-> stack.push obj).should.throw "LayerStack#push: object is not a Echotron.Echo"
+      (-> stack.push obj).should.throw "LayerStack::push() object is not a Echotron.Echo"
 
   describe 'isEmpty()', ->
     it 'returns false when there are layers', ->
