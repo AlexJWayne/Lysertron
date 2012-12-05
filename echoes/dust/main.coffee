@@ -3,22 +3,20 @@ module.exports = class Dust extends Echotron.Echo
     baseColor:     'c'
     size:          'f'
     particleAlpha: 'f'
-    crispness:     'f'
 
   constructor: ->
     super
 
     @direction = 1
-    @speed = THREE.Math.randFloat(1, 3)
-    @damp  = THREE.Math.randFloat(1.5, 4)
-    @vel   = @speed * 3
+    @speed = THREE.Math.randFloat(2, 4)
+    @damp  = THREE.Math.randFloat(1, 4)
+    @vel   = @speed * 2
 
-    @size = THREE.Math.randFloat(2, 6)
+    @size = THREE.Math.randFloat(3, 8)
     @position.z = Math.random()
     @scale.setLength 0
 
-    @particleAlpha = 0.1
-    @crispness = 0.9
+    @particleAlpha = THREE.Math.randFloat(0.1, 0.3)
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
@@ -27,9 +25,9 @@ module.exports = class Dust extends Echotron.Echo
     )
 
     @spin = new THREE.Vector3(
-      THREE.Math.randFloatSpread(90) * Math.PI/180
-      THREE.Math.randFloatSpread(90) * Math.PI/180
-      THREE.Math.randFloatSpread(90) * Math.PI/180
+      THREE.Math.randFloatSpread(30) * Math.PI/180
+      THREE.Math.randFloatSpread(30) * Math.PI/180
+      THREE.Math.randFloatSpread(30) * Math.PI/180
     )
 
     @geom = new THREE.Geometry
@@ -44,14 +42,10 @@ module.exports = class Dust extends Echotron.Echo
       @geom
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
-        vertexShader:   assets["dust.vshader"]
-        fragmentShader: assets["dust.fshader"]
+        vertexShader:   assets["vert.glsl"]
+        fragmentShader: assets["frag.glsl"]
         transparent:    yes
-        depthWrite:     false
-
-        blending:       THREE.CustomBlending
-        blendSrc:       THREE.SrcAlphaFactor
-        blendDst:       THREE.OneMinusSrcAlphaFactor
+        depthWrite:     no
       )
     )
 
@@ -65,9 +59,9 @@ module.exports = class Dust extends Echotron.Echo
     super
     
     @vel -= @vel * @damp * elapsed
-    @scale.addSelf new THREE.Vector3(1,1,1).multiplyScalar(@vel * elapsed)
+    @scale.addSelf THREE.Vector3.temp(1,1,1).multiplyScalar(@vel * elapsed)
 
-    @rotation.addSelf @spin.clone().multiplyScalar(elapsed)
+    @rotation.addSelf THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
 
   kill: ->
     super
