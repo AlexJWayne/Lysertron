@@ -14,8 +14,16 @@ exports.register = (app) ->
           continue
 
         else if file is 'main.coffee'
-          coffeeCode = fs.readFileSync("echoes/#{req.params.name}/#{file}").toString()
-          code = coffee.compile coffeeCode
+          path = "echoes/#{req.params.name}/#{file}"
+          coffeeCode = fs.readFileSync(path).toString()
+
+          try
+            code = coffee.compile(coffeeCode, filename: path)
+          catch e
+            console.log e
+            res.status 500
+            res.send 'Coffeescript Compilation Error'
+            return
 
         else if file is 'main.js'
           code = fs.readFileSync "echoes/#{req.params.name}/#{file}"

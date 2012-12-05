@@ -1,7 +1,7 @@
 module.exports = class Tunnel extends Echotron.EchoStack
   constructor: ->
     super
-    for i in [0..THREE.Math.randInt(2,6)]
+    for i in [0..THREE.Math.randInt(2,4)]
       layer = new SingleTunnel
       layer.baseColor = new THREE.Color 0x000000 unless i == 0
       @push layer
