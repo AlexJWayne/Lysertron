@@ -13,7 +13,9 @@ module.exports = class Gyro extends Echotron.EchoStack
       THREE.Math.randFloat(0.3, 0.6)
       THREE.Math.randFloat(2,   3)
     ].random()
-    console.log @stretch
+
+    @direction = [1, -1].random()
+    @currentRing = if @direction is 1 then 0 else 3
 
     @stack.push(
       new Ring this, 15, 0
@@ -34,15 +36,15 @@ module.exports = class Gyro extends Echotron.EchoStack
       THREE.Math.randFloatSpread(60) * Math.PI/180
     )
 
-    @currentRing = 0
 
   beat: () ->
     layer = @stack.layers[@currentRing]
     @add layer
     layer.nudge()
 
-    @currentRing++
+    @currentRing += @direction
     @currentRing = 0 if @currentRing >= @stack.layers.length
+    @currentRing = @stack.layers.length-1 if @currentRing < 0
 
   update: (elapsed) ->
     super
