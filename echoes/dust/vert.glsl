@@ -8,9 +8,9 @@ float minmaxnorm(float min, float max, float val) {
 
 void main() {
   vec4 projectedPos = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  depth = minmaxnorm(100.0, -50.0, projectedPos.z);
+  depth = minmaxnorm(100.0, -100.0, projectedPos.z);
 
-  gl_PointSize = depth * size * 10.0;
+  gl_PointSize = depth * size * 20.0;
   gl_Position = projectedPos;
 }
 

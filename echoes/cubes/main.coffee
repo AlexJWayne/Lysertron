@@ -86,7 +86,7 @@ class Cube extends Echotron.Echo
   update: (elapsed) ->
     @beatScale -= elapsed / @parentLayer.shrinkTime
 
-    @vel.addSelf @mesh.position.clone().setLength(@accel * elapsed)
-    @mesh.position.addSelf @vel.clone().multiplyScalar(elapsed)
+    @vel.addSelf THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
+    @mesh.position.addSelf THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
 
     @kill() if @beatScale <= 0
