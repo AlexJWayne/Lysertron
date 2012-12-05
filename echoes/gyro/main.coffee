@@ -1,11 +1,14 @@
 module.exports = class Gyro extends Echotron.EchoStack
+  uniformAttrs:
+    baseColor: 'c'
+
   constructor: ->
     super    
 
     @animTime = THREE.Math.randFloat(1.5, 2.5) / stage.song.bps
     @thickness = [
-      THREE.Math.randFloat(0.75, 2.5)
-      THREE.Math.randFloat(0.75, 2.5)
+      THREE.Math.randFloat(0.75, 2)
+      THREE.Math.randFloat(0.75, 2)
     ]
     @thicknessCurve = [Curve.easeInSine, Curve.easeOutSine].random()
     @stretch = [
@@ -24,16 +27,10 @@ module.exports = class Gyro extends Echotron.EchoStack
       new Ring this, 30, 3
     )
 
-    @rotation.set(
-      THREE.Math.randFloat(0, 360) * Math.PI/180
-      THREE.Math.randFloat(0, 360) * Math.PI/180
-      THREE.Math.randFloat(0, 360) * Math.PI/180
-    )
-
     @tumble = new THREE.Vector3(
-      THREE.Math.randFloatSpread(60) * Math.PI/180
-      THREE.Math.randFloatSpread(60) * Math.PI/180
-      THREE.Math.randFloatSpread(60) * Math.PI/180
+      THREE.Math.randFloatSpread(90) * Math.PI/180
+      THREE.Math.randFloatSpread(90) * Math.PI/180
+      THREE.Math.randFloatSpread(90) * Math.PI/180
     )
 
 

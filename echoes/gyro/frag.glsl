@@ -9,6 +9,8 @@ void main() {
   float lightVal = abs(dot(vNormal, light));
   vec3 baseColor = vec3(0.5, 0.5, 0.5);
 
-  gl_FragColor = vec4(mix(vec3(lightVal), baseColor, 0.5), 1.0);
+  //lightVal = mod(lightVal, 0.5);
+
+  gl_FragColor = vec4(mix(vec3(lightVal), baseColor, 0.7), 1.0);
 
 }
