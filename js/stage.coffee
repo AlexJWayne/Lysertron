@@ -46,11 +46,10 @@ class Echotron.Stage
     
     # Transition layers on new sections
     @song.on 'section', (section) =>
-      console.log 'section', section.start
       @layerStack.transition()
 
     # Get song from URL
-    @songName = window.location.search.match(/^\?(\w+)$/)?[1] || 'Crawl'
+    @songName = window.location.search.match(/^\?(\w+)$/)?[1] || '90bpm'
   
   # Start the song and the visualization.
   start: (playAudio = yes) ->
@@ -86,4 +85,4 @@ class Echotron.Stage
 # Go
 $ ->
   stage = window.stage = new Echotron.Stage
-  stage.start no unless mocha?
+  stage.start yes unless mocha?

@@ -28,6 +28,7 @@ echo.track.upload filetype: 'm4a', track: fs.readFileSync(path), (error, respons
 
           if response.track.status is 'complete'
             request response.track.audio_summary.analysis_url, (err, res, body) ->
+              body = JSON.stringify(JSON.parse(body), null, 2)
               fs.writeFileSync "songs/#{name}.json", body
               console.log 'Done!'
               process.exit()

@@ -10,7 +10,7 @@ module.exports = class Dust extends Echotron.Echo
     @direction = 1
     @speed = THREE.Math.randFloat(2, 4)
     @damp  = THREE.Math.randFloat(1, 4)
-    @vel   = @speed * 2
+    @vel   = 3
 
     @size = THREE.Math.randFloat(3, 8)
     @position.z = Math.random()
@@ -25,9 +25,9 @@ module.exports = class Dust extends Echotron.Echo
     )
 
     @spin = new THREE.Vector3(
-      THREE.Math.randFloatSpread(30) * Math.PI/180
-      THREE.Math.randFloatSpread(30) * Math.PI/180
-      THREE.Math.randFloatSpread(30) * Math.PI/180
+      THREE.Math.randFloatSpread(30).rad
+      THREE.Math.randFloatSpread(30).rad
+      THREE.Math.randFloatSpread(30).rad
     )
 
     @geom = new THREE.Geometry
@@ -65,8 +65,8 @@ module.exports = class Dust extends Echotron.Echo
 
   kill: ->
     super
-    @vel = @speed
+    @vel = @speed * 2
     @damp = 0
 
   alive: ->
-    @scale.length() < 10
+    @scale.length() < 50

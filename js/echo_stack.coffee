@@ -15,7 +15,7 @@ class Echotron.EchoStack extends Echotron.Echo
   tatum:    (tatum)   -> @stack.tatum   tatum
 
   update: (elapsed) ->
-    @stack.update(elapsed)
+    @stack.update elapsed
 
   kill: ->
     super
