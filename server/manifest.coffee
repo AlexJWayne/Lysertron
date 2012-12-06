@@ -1,5 +1,12 @@
 fs = require 'fs'
 
+echoTypes = [
+  'background'
+  'midground'
+  'foreground'
+]
+
+
 module.exports =
   vendor: [
     'zepto'
@@ -19,8 +26,13 @@ module.exports =
     'stage'
   ]
   findEchoes: (callback) ->
-    fs.readdir "echoes", (err, echoes) ->
-      callback err, echoes
+    echoes = []
+    for echoType in echoTypes
+      for echo in fs.readdirSync("echoes/#{echoType}")
+        continue if /^\./.test echo
+        echoes.push "#{echoType}/#{echo}"
+
+    callback null, echoes
 
   findSpecs: (callback) ->
     fs.readdir "spec", (err, files) ->

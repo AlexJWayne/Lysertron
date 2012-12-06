@@ -1,5 +1,8 @@
 window.Echotron ||= {}
 Echotron.Echoes ||= {}
+Echotron.Echoes.foreground ||= []
+Echotron.Echoes.midground  ||= []
+Echotron.Echoes.background ||= []
 
 class Echotron.Echo extends THREE.Object3D
   uniformAttrs: {}

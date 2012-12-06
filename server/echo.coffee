@@ -3,9 +3,11 @@ coffee = require 'coffee-script'
 
 # Compile an echo
 exports.register = (app) ->
-  app.get '/echoes/:name.js', (req, res) ->
+  app.get '/echoes/:echoType/:name.js', (req, res) ->
     res.type 'js'
-    fs.readdir "echoes/#{req.params.name}", (err, files) ->
+
+    echoPath = "echoes/#{req.params.echoType}/#{req.params.name}"
+    fs.readdir echoPath, (err, files) ->
       code = null
       assets = {}
 
@@ -14,7 +16,7 @@ exports.register = (app) ->
           continue
 
         else if file is 'main.coffee'
-          path = "echoes/#{req.params.name}/#{file}"
+          path = "#{echoPath}/#{file}"
           coffeeCode = fs.readFileSync(path).toString()
 
           try
@@ -26,10 +28,10 @@ exports.register = (app) ->
             return
 
         else if file is 'main.js'
-          code = fs.readFileSync "echoes/#{req.params.name}/#{file}"
+          code = fs.readFileSync "#{echoPath}/#{file}"
 
         else
-          assets[file] = fs.readFileSync("echoes/#{req.params.name}/#{file}").toString()
+          assets[file] = fs.readFileSync("#{echoPath}/#{file}").toString()
 
       res.send(
         """
@@ -39,7 +41,7 @@ exports.register = (app) ->
           (function(){
             #{code}
           }.call({}));
-          window.Echotron.Echoes.#{req.params.name} = module.exports;
+          window.Echotron.Echoes.#{req.params.echoType}.push(module.exports);
         }());
         """
       )
