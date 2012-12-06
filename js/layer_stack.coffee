@@ -1,6 +1,12 @@
 class Echotron.LayerStack
   constructor: (@layers = []) ->
 
+  echoTypes: [
+    'background'
+    'midground'
+    'foreground'
+  ]
+
   # Callback handlers for each song event which delegate to layer events.
   beat:     (data) -> layer.beat(data)     for layer in @layers when layer.active; return
   bar:      (data) -> layer.bar(data)      for layer in @layers when layer.active; return
@@ -30,10 +36,13 @@ class Echotron.LayerStack
   # Kill old layers so they can decay.
   transition: ->
     layer.kill() for layer in @layers
-    for name, klass of window.Echotron.Echoes
+
+    for echoType in @echoTypes
+      klass = Echotron.Echoes[echoType].random()
       layer = new klass
       @push layer
       stage.scene.add layer
+      
     return
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.
