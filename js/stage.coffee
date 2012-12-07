@@ -49,7 +49,7 @@ class Echotron.Stage
       @layerStack.transition()
 
     # Get song from URL
-    @songName = window.location.search.match(/^\?(\w+)$/)?[1] #|| '90bpm'
+    @songName = window.location.search.match(/^\?(\w+)$/)?[1]
   
   # Start the song and the visualization.
   start: (playAudio = yes) ->
