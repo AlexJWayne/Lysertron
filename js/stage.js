@@ -52,7 +52,7 @@
       this.song.on('section', function(section) {
         return _this.layerStack.transition();
       });
-      return this.songName = ((_ref1 = window.location.search.match(/^\?(\w+)$/)) != null ? _ref1[1] : void 0) || '90bpm';
+      return this.songName = (_ref1 = window.location.search.match(/^\?(\w+)$/)) != null ? _ref1[1] : void 0;
     };
 
     Stage.prototype.start = function(playAudio) {
