@@ -29,7 +29,7 @@ module.exports =
     echoes = []
     for echoType in echoTypes
       for echo in fs.readdirSync("echoes/#{echoType}")
-        continue if /^\./.test echo
+        continue if /\./.test echo
         echoes.push "#{echoType}/#{echo}"
 
     callback null, echoes
