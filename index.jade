@@ -10,29 +10,29 @@ html
 
     // Vendor
     each name in vendor
-      script(src="/js/vendor/#{name}.js")
+      script(src="js/vendor/#{name}.js")
 
     // Echotron
     each name in app
-      script(src="/js/#{name}.js")
+      script(src="js/#{name}.js")
 
     // Echoes
     each echo in echoes
-      script(src="/echoes/#{echo}.js")
+      script(src="echoes/#{echo}.js")
 
     // Spec
     if specRun
-      script(src="/js/vendor/mocha.js")
-      script(src="/js/vendor/chai.js")
-      script(src="/js/vendor/sinon.js")
-      script(src="/spec/spec_helper.js")
+      script(src="js/vendor/mocha.js")
+      script(src="js/vendor/chai.js")
+      script(src="js/vendor/sinon.js")
+      script(src="spec/spec_helper.js")
 
-      link(rel='stylesheet', type="text/css", href="/js/vendor/mocha.css")
+      link(rel='stylesheet', type="text/css", href="js/vendor/mocha.css")
       style(type="text/css")
         canvas { width: 0; height: 0 }
 
       each spec in specs
-        script(src="/spec/#{spec}.js")
+        script(src="spec/#{spec}.js")
 
   body
 
