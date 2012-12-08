@@ -42,8 +42,8 @@ class Echotron.LayerStack
       layer = new klass
       @push layer
       stage.scene.add layer
-      
-    return
+    
+    console.log @layers
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.
   push: (layers...) ->
