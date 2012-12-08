@@ -91,6 +91,7 @@
         this.push(layer);
         stage.scene.add(layer);
       }
+      return console.log(this.layers);
     };
 
     LayerStack.prototype.push = function() {
