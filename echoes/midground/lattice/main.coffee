@@ -9,7 +9,6 @@ module.exports = class Lattice extends Echotron.EchoStack
     @push @spiral1
 
     if @doubled
-      console.log 'doubled'
       @spiral2 = new Spiral !@flipped, @spiral1
       @push @spiral2
 
@@ -50,9 +49,7 @@ class Spiral extends Echotron.EchoStack
     @rotation.z += @rotSpeed      * @rotDirection * elapsed / stage.song.bps
 
   beat: ->
-    console.log 'before', @rotSpeed
     @rotSpeed = @rotSpeedTarget
-    console.log 'after', @rotSpeed
 
 class Strut extends Echotron.Echo
   uniformAttrs:
@@ -80,11 +77,9 @@ class Strut extends Echotron.Echo
       new THREE.ShaderMaterial(
         uniforms: @uniforms
         side: THREE.BackSide
-        wireframe: no
         fragmentShader: assets["frag.glsl"]
         vertexShader: assets['vert.glsl']
         transparent: yes
-        depthWrite: no
       )
     )
 

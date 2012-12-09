@@ -16,7 +16,7 @@ void main() {
   vec3 twisted = vec3(
     (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),
     (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),
-    transPos.z
+    transPos.z + twistDir
   );
 
   gl_Position =  projectionMatrix * vec4(twisted, 1.0);
