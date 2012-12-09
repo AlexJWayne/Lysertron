@@ -11,7 +11,7 @@ module.exports = class Cubes extends Echotron.EchoStack
     @shader = ['lit', 'bright'].random()
 
     @spawnQty   = THREE.Math.randInt(3, 8)
-    @shrinkTime = THREE.Math.randInt(3, 6) / stage.scene.song.bps
+    @shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps
     
     direction = [1, -1].random()
     @speed      = THREE.Math.randFloat(20, 50)  * -direction
