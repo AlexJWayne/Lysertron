@@ -24,16 +24,24 @@ module.exports = class Gyro extends Echotron.EchoStack
       THREE.Math.randFloat(-0.5, -1.0)
     ].random()
 
+    @color = new THREE.Color().setHSV(
+      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0.5, 1)
+    )
+
     @fanAngle = THREE.Math.randFloat(10, 45).rad
+
+    @radialDistance = THREE.Math.randFloat 3, 10
     
-    @direction = [1, -1].random()
+    @direction = 1 #[1, -1].random()
     @currentRing = if @direction is 1 then 0 else 3
 
     @stack.push(
-      new Ring this, 15, 0
-      new Ring this, 20, 1
-      new Ring this, 25, 2
-      new Ring this, 30, 3
+      new Ring this, 10 + @radialDistance * 0, 0
+      new Ring this, 10 + @radialDistance * 1, 1
+      new Ring this, 10 + @radialDistance * 2, 2
+      new Ring this, 10 + @radialDistance * 3, 3
     )
 
     @tumble = new THREE.Vector3(
@@ -62,6 +70,7 @@ class Ring extends Echotron.Echo
   uniformAttrs:
     progress: 'f'
     pulse: 'f'
+    color: 'c'
 
   constructor: (@gyro, @radius, @ringIndex) ->
     super
@@ -69,6 +78,7 @@ class Ring extends Echotron.Echo
     @animTime = @gyro.animTime
     @pulse = @gyro.pulse
     @visible = yes
+    @color = @gyro.color
 
     @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).rad
 
