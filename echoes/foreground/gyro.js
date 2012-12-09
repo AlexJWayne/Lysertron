@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"uniform vec4 color;\n\nvarying vec3 vPos;\nvarying vec3 vNormal;\n\nvoid main() {\n\n  vec3 light = vec3(0.0, 0.0, 1.0);\n  float lightVal = abs(dot(vNormal, light));\n  vec3 baseColor = vec3(0.5, 0.5, 0.5);\n\n  //lightVal = mod(lightVal, 0.5);\n\n  gl_FragColor = vec4(mix(vec3(lightVal), baseColor, 0.7), 1.0);\n\n}\n","vert.glsl":"varying vec3 vPos;\nvarying vec3 vNormal;\n\nuniform float pulse;\nuniform float progress;\n\nvoid main() {\n  // Pass to fragment shader\n  vPos = position;\n  vNormal = normal;\n\n  float growth = smoothstep(0.0, 0.2, clamp(progress, 0.0, 1.0));\n  vec3 pulsed = position + normal * (1.0 - growth) * pulse;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(pulsed, 1.0);\n}\n"};
+  var assets = {"frag.glsl":"uniform vec3 color;\n\nvarying vec3 vPos;\nvarying vec3 vNormal;\n\nvoid main() {\n  float lightVal = 1.0;\n  if (vNormal.y > 0.5) lightVal = 0.0;\n\n  gl_FragColor = vec4(mix(vec3(lightVal), color, 0.7), 1.0);\n\n}\n","vert.glsl":"varying vec3 vPos;\nvarying vec3 vNormal;\n\nuniform float pulse;\nuniform float progress;\n\nvoid main() {\n  // Pass to fragment shader\n  vPos = position;\n  vNormal = (projectionMatrix * modelViewMatrix * vec4(normal, 1.0)).xyz;\n\n  float growth = smoothstep(0.0, 0.2, clamp(progress, 0.0, 1.0));\n  vec3 pulsed = position + normal * (1.0 - growth) * pulse;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(pulsed, 1.0);\n}\n"};
   var module = {};
   (function(){
     (function() {
@@ -18,10 +18,12 @@
       this.thicknessCurve = [Curve.easeInSine, Curve.easeOutSine].random();
       this.stretch = [[THREE.Math.randFloat(0.3, 0.6), THREE.Math.randFloat(1.5, 3)].random(), [THREE.Math.randFloat(0.3, 0.6), THREE.Math.randFloat(1.5, 3)].random()];
       this.pulse = [THREE.Math.randFloat(1.0, 2.5), THREE.Math.randFloat(-0.5, -1.0)].random();
+      this.color = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0.5, 1));
       this.fanAngle = THREE.Math.randFloat(10, 45).rad;
-      this.direction = [1, -1].random();
+      this.radialDistance = THREE.Math.randFloat(3, 10);
+      this.direction = 1;
       this.currentRing = this.direction === 1 ? 0 : 3;
-      this.stack.push(new Ring(this, 15, 0), new Ring(this, 20, 1), new Ring(this, 25, 2), new Ring(this, 30, 3));
+      this.stack.push(new Ring(this, 10 + this.radialDistance * 0, 0), new Ring(this, 10 + this.radialDistance * 1, 1), new Ring(this, 10 + this.radialDistance * 2, 2), new Ring(this, 10 + this.radialDistance * 3, 3));
       this.tumble = new THREE.Vector3(THREE.Math.randFloatSpread(90).rad, THREE.Math.randFloatSpread(90).rad, THREE.Math.randFloatSpread(90).rad);
     }
 
@@ -54,7 +56,8 @@
 
     Ring.prototype.uniformAttrs = {
       progress: 'f',
-      pulse: 'f'
+      pulse: 'f',
+      color: 'c'
     };
 
     function Ring(gyro, radius, ringIndex) {
@@ -66,6 +69,7 @@
       this.animTime = this.gyro.animTime;
       this.pulse = this.gyro.pulse;
       this.visible = true;
+      this.color = this.gyro.color;
       this.rotation.z = this.gyro.fanAngle * this.ringIndex;
       thicknessMix = this.gyro.thicknessCurve(this.ringIndex / 3);
       thickness = this.gyro.thickness[0] * (1 - thicknessMix) + this.gyro.thickness[1] * thicknessMix;
