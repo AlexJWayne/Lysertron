@@ -4,8 +4,10 @@
 
   Echotron.LayerStack = (function() {
 
-    function LayerStack(layers) {
+    function LayerStack(scene, layers, echoType) {
+      this.scene = scene;
       this.layers = layers != null ? layers : [];
+      this.echoType = echoType;
     }
 
     LayerStack.prototype.echoTypes = ['background', 'midground', 'foreground'];
@@ -61,7 +63,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.expired()) {
-          stage.scene.remove(layer);
+          this.scene.remove(layer);
         } else {
           livingLayers.push(layer);
         }
@@ -77,19 +79,20 @@
     };
 
     LayerStack.prototype.transition = function() {
-      var echoType, klass, layer, _i, _j, _len, _len1, _ref, _ref1;
+      var klass, layer, _i, _len, _ref, _ref1;
+      if (!this.echoType) {
+        return;
+      }
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         layer.kill();
       }
-      _ref1 = this.echoTypes;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        echoType = _ref1[_j];
-        klass = Echotron.Echoes[echoType].random();
-        layer = new klass;
-        this.push(layer);
-        stage.scene.add(layer);
+      klass = Echotron.Echoes[this.echoType].random();
+      layer = new klass;
+      this.push(layer);
+      if ((_ref1 = this.scene) != null) {
+        _ref1.add(layer);
       }
       return console.log(this.layers);
     };

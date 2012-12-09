@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  gl_FragColor = vec4(color * uvCoord.y, 1.0);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
+  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  gl_FragColor = vec4(color, uvCoord.y);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z + twistDir\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
   var module = {};
   (function(){
     (function() {
@@ -18,7 +18,6 @@
       this.spiral1 = new Spiral(this.flipped);
       this.push(this.spiral1);
       if (this.doubled) {
-        console.log('doubled');
         this.spiral2 = new Spiral(!this.flipped, this.spiral1);
         this.push(this.spiral2);
       }
@@ -78,9 +77,7 @@
     };
 
     Spiral.prototype.beat = function() {
-      console.log('before', this.rotSpeed);
-      this.rotSpeed = this.rotSpeedTarget;
-      return console.log('after', this.rotSpeed);
+      return this.rotSpeed = this.rotSpeedTarget;
     };
 
     return Spiral;
@@ -110,11 +107,9 @@
       this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(this.lattice.width, 800, 1, 100), new THREE.ShaderMaterial({
         uniforms: this.uniforms,
         side: THREE.BackSide,
-        wireframe: false,
         fragmentShader: assets["frag.glsl"],
         vertexShader: assets['vert.glsl'],
-        transparent: true,
-        depthWrite: false
+        transparent: true
       }));
       this.mesh.rotation.x = 90..rad;
       this.rotation.z = this.angle;

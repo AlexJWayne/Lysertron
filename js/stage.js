@@ -16,33 +16,49 @@
 
     Stage.prototype.initEngine = function() {
       var container;
-      this.scene = new THREE.Scene;
-      this.scene.fog = new THREE.Fog(0x111111, 0, 5000);
+      this.logicalLayers = {
+        background: {
+          scene: new THREE.Scene
+        },
+        midground: {
+          scene: new THREE.Scene
+        },
+        foreground: {
+          scene: new THREE.Scene
+        }
+      };
+      this.logicalLayers.background.stack = new Echotron.LayerStack(this.logicalLayers.background.scene, [], 'background');
+      this.logicalLayers.midground.stack = new Echotron.LayerStack(this.logicalLayers.midground.scene, [], 'midground');
+      this.logicalLayers.foreground.stack = new Echotron.LayerStack(this.logicalLayers.foreground.scene, [], 'foreground');
       this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
       this.camera.position.set(0, 0, -60);
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-      this.scene.add(this.camera);
+      this.logicalLayers.background.scene.add(this.camera);
+      this.logicalLayers.midground.scene.add(this.camera);
+      this.logicalLayers.foreground.scene.add(this.camera);
       container = document.createElement('div');
       document.body.appendChild(container);
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.autoClear = false;
       container.appendChild(this.renderer.domElement);
       this.stats = new Stats;
       $(document.body).append(this.stats.domElement);
-      this.layerStack = new Echotron.LayerStack;
       return THREEx.WindowResize(this.renderer, this.camera);
     };
 
     Stage.prototype.initSong = function() {
       var eventType, _fn, _i, _len, _ref, _ref1,
         _this = this;
-      this.song = this.scene.song = new Echotron.Song;
+      this.song = new Echotron.Song;
       _ref = ['bar', 'beat', 'tatum', 'segment'];
       _fn = function(eventType) {
         return _this.song.on(eventType, function(eventData) {
-          return _this.layerStack[eventType](eventData);
+          _this.logicalLayers.background.stack[eventType](eventData);
+          _this.logicalLayers.midground.stack[eventType](eventData);
+          return _this.logicalLayers.foreground.stack[eventType](eventData);
         });
       };
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -50,7 +66,9 @@
         _fn(eventType);
       }
       this.song.on('section', function(section) {
-        return _this.layerStack.transition();
+        _this.logicalLayers.background.stack.transition();
+        _this.logicalLayers.midground.stack.transition();
+        return _this.logicalLayers.foreground.stack.transition();
       });
       return this.songName = (_ref1 = window.location.search.match(/^\?(\w+)$/)) != null ? _ref1[1] : void 0;
     };
@@ -68,11 +86,17 @@
     };
 
     Stage.prototype.update = function() {
-      var elapsed, now;
+      var echoType, elapsed, logicalLayer, now, _ref, _results;
       now = Date.now() / 1000;
       elapsed = now - this.lastFrame;
       this.lastFrame = now;
-      return this.layerStack.update(elapsed);
+      _ref = this.logicalLayers;
+      _results = [];
+      for (echoType in _ref) {
+        logicalLayer = _ref[echoType];
+        _results.push(logicalLayer.stack.update(elapsed));
+      }
+      return _results;
     };
 
     Stage.prototype.animate = function() {
@@ -84,7 +108,10 @@
     };
 
     Stage.prototype.render = function() {
-      return this.renderer.render(this.scene, this.camera);
+      this.renderer.clear();
+      this.renderer.render(this.logicalLayers.background.scene, this.camera);
+      this.renderer.render(this.logicalLayers.midground.scene, this.camera);
+      return this.renderer.render(this.logicalLayers.foreground.scene, this.camera);
     };
 
     return Stage;

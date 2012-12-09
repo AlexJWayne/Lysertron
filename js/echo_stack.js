@@ -10,7 +10,7 @@
 
     function EchoStack() {
       EchoStack.__super__.constructor.apply(this, arguments);
-      this.stack = new Echotron.LayerStack;
+      this.stack = new Echotron.LayerStack(this);
     }
 
     EchoStack.prototype.push = function() {

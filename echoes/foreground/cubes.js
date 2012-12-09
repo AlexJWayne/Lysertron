@@ -18,7 +18,7 @@
       this.type = 'Cube';
       this.shader = ['lit', 'bright'].random();
       this.spawnQty = THREE.Math.randInt(3, 8);
-      this.shrinkTime = THREE.Math.randInt(3, 6) / stage.scene.song.bps;
+      this.shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps;
       direction = [1, -1].random();
       this.speed = THREE.Math.randFloat(20, 50) * -direction;
       this.accel = THREE.Math.randFloat(50, 100) * direction;
