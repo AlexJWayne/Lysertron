@@ -1,5 +1,5 @@
 class Echotron.LayerStack
-  constructor: (@layers = []) ->
+  constructor: (@scene, @layers = [], @echoType) ->
 
   echoTypes: [
     'background'
@@ -21,7 +21,7 @@ class Echotron.LayerStack
     for layer in @layers
       if layer.expired()
         # Layer is dead, remove it.
-        stage.scene.remove layer
+        @scene.remove layer
       else
         # Layer is still alive, keep it.
         livingLayers.push layer
@@ -35,14 +35,14 @@ class Echotron.LayerStack
   # Add a stack of new Echo layers, creating a new scene.
   # Kill old layers so they can decay.
   transition: ->
+    return unless @echoType
     layer.kill() for layer in @layers
 
-    for echoType in @echoTypes
-      klass = Echotron.Echoes[echoType].random()
-      layer = new klass
-      @push layer
-      stage.scene.add layer
-    
+    klass = Echotron.Echoes[@echoType].random()
+    layer = new klass
+    @push layer
+    @scene?.add layer
+  
     console.log @layers
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.

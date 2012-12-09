@@ -77,11 +77,9 @@ class Strut extends Echotron.Echo
       new THREE.ShaderMaterial(
         uniforms: @uniforms
         side: THREE.BackSide
-        wireframe: no
         fragmentShader: assets["frag.glsl"]
         vertexShader: assets['vert.glsl']
         transparent: yes
-        depthWrite: no
       )
     )
 
