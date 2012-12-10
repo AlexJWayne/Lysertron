@@ -1,41 +1,53 @@
-module.exports = class Holo extends Echotron.Echo
+module.exports = class Holo extends Echotron.EchoStack
   constructor: ->
     super
 
-    @count =
-      u: 60 # Chip fidelity
-      v: 12 # Chip count
+    @spin = new THREE.Vector3(
+      THREE.Math.randFloatSpread(3.0).rad
+      THREE.Math.randFloatSpread(3.0).rad
+      THREE.Math.randFloatSpread(3.0).rad
+    )
+
+    @rotation.x = 45.rad
+
+    for i in [0...12]
+      @push new Chip(this, i/12, new THREE.Color().setHSV i/12, 0.75, 1)
+
+
+  update: (elapsed) ->
+    super
+    @rotation.addSelf THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
+
+
+class Chip extends Echotron.Echo
+  uniformAttrs:
+    color: 'c'
+
+  constructor: (@holo, angle, color) ->
+    super
+
+    @color = color
+    
+    qty = 60 # Chip fidelity
 
     @geom = new THREE.Geometry
-    for u in [0...@count.u]
-      for v in [0...@count.v]
-        @geom.vertices.push new THREE.Vector3(
-          (u / @count.u * 360).rad # use as angle1
-          (v / @count.v * 360).rad # use as angle2
-          0                   # ignore
-        )
+    for i in [0...qty]
+      @geom.vertices.push new THREE.Vector3(
+        (i / qty * 360).rad # use as angle1
+        (angle * 360).rad   # use as angle2
+        0 # ignore
+      )
 
     @particles = new THREE.ParticleSystem(
       @geom
       new THREE.ShaderMaterial(
-        # uniforms:       @uniforms
+        uniforms:       @uniforms
         vertexShader:   assets["vert.glsl"]
         fragmentShader: assets["frag.glsl"]
         transparent:    yes
-        # depthWrite:     no
-        blending:       THREE.AdditiveBlending
+        # depthTest:      no
+        # blending:       THREE.AdditiveBlending
       )
     )
 
     @add @particles
-
-    @spin = new THREE.Vector3(
-      THREE.Math.randFloatSpread(30).rad
-      THREE.Math.randFloatSpread(30).rad
-      THREE.Math.randFloatSpread(30).rad
-    )
-
-    @rotation.x = 90.rad
-
-  update: (elapsed) ->
-    @rotation.addSelf THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
