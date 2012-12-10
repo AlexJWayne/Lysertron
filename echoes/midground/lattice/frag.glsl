@@ -4,5 +4,6 @@ varying vec3 vPos;
 uniform vec3 color;
 
 void main() {
-  gl_FragColor = vec4(color, uvCoord.y);
+  float alpha = 1.0 - pow(1.0 - uvCoord.y, 2.0);
+  gl_FragColor = vec4(color, alpha);
 }
