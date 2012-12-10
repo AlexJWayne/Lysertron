@@ -1,9 +1,9 @@
-# get a random element form an array
+# Get a random element form an array.
 Array::random || Object.defineProperty Array::, 'random',
   value: ->
     this[Math.floor Math.random() * @length]
 
-# Temporary vector for use in vector math
+# Temporary vector for use in vector math.
 THREE.Vector3.temp = (x, y, z) ->
   v = THREE.Vector3._temp ||= new THREE.Vector3
   
@@ -26,3 +26,14 @@ Number::rad || Object.defineProperty Number::, 'rad',
 Number::deg || Object.defineProperty Number::, 'deg',
   get: ->
     this * 180/Math.PI
+
+# Return the value of a query string parameter.
+window.getParam = (name) ->
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]")
+  regexS = "[\\?&]" + name + "=([^&#]*)"
+  regex = new RegExp regexS
+  results = regex.exec window.location.search
+  if results
+    decodeURIComponent results[1].replace(/\+/g, " ")
+  else
+    null
