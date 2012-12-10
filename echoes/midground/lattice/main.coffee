@@ -80,6 +80,7 @@ class Strut extends Echotron.Echo
         fragmentShader: assets["frag.glsl"]
         vertexShader: assets['vert.glsl']
         transparent: yes
+        depthTest: no
       )
     )
 
