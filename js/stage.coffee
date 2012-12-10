@@ -66,7 +66,7 @@ class Echotron.Stage
       @logicalLayers.foreground.stack.transition()
 
     # Get song from URL
-    @songName = window.location.search.match(/^\?(\w+)$/)?[1]
+    @songName = getParam 'song'
   
   # Start the song and the visualization.
   start: (playAudio = yes) ->
