@@ -16,11 +16,11 @@ module.exports = class Dust extends Echotron.Echo
     @position.z = Math.random()
     @scale.setLength 0
 
-    @particleAlpha = THREE.Math.randFloat(0.1, 0.3)
+    @particleAlpha = THREE.Math.randFloat(0.2, 0.4)
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
-      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0, 0.25)
       1
     )
 
@@ -31,7 +31,7 @@ module.exports = class Dust extends Echotron.Echo
     )
 
     @geom = new THREE.Geometry
-    for i in [0..THREE.Math.randFloat(150, 750)]
+    for i in [0..THREE.Math.randFloat(250, 1000)]
       @geom.vertices.push new THREE.Vector3(
         THREE.Math.randFloat(-1, 1)
         THREE.Math.randFloat(-1, 1)

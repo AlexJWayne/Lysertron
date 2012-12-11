@@ -38,12 +38,26 @@ class Echotron.LayerStack
     return unless @echoType
     layer.kill() for layer in @layers
 
-    klass = Echotron.Echoes[@echoType].random()
-    layer = new klass
-    @push layer
-    @scene?.add layer
-  
-    console.log @layers
+
+    # Force a specific echo via page query string.
+    forcedEchoName = getParam(@echoType) || getParam(@echoType.replace /ground$/, '')
+    if forcedEchoName
+      klass = (echoClass for echoClass in Echotron.Echoes[@echoType] when echoClass.id is forcedEchoName)[0]
+      if klass
+        console.log "Forced #{@echoType}:", forcedEchoName
+      else
+        console.error "Forced #{@echoType} not found:", forcedEchoName
+
+    # Nothing forced, pick a random one.
+    else
+      klass = Echotron.Echoes[@echoType].random()
+
+    if klass
+      layer = new klass
+      @push layer
+      @scene?.add layer
+    
+      console.log @layers
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.
   push: (layers...) ->

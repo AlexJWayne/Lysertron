@@ -66,7 +66,7 @@ class Echotron.Stage
       @logicalLayers.foreground.stack.transition()
 
     # Get song from URL
-    @songName = window.location.search.match(/^\?(\w+)$/)?[1]
+    @songName = getParam 'song'
   
   # Start the song and the visualization.
   start: (playAudio = yes) ->
@@ -98,9 +98,13 @@ class Echotron.Stage
 
   # Render the scene.
   render: =>
-    @renderer.clear()
+    @renderer.clear yes, yes, yes
     @renderer.render @logicalLayers.background.scene, @camera
+
+    @renderer.clear no, yes, yes
     @renderer.render @logicalLayers.midground.scene,  @camera
+
+    @renderer.clear no, yes, yes
     @renderer.render @logicalLayers.foreground.scene, @camera
 
 # Go

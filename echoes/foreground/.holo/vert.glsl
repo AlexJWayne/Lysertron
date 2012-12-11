@@ -15,6 +15,8 @@ void main() {
 
   vec3 torusPos = torus(position.x, position.y);
 
-  gl_PointSize = 10.0;
+  float scale = -cameraPosition.z / (-cameraPosition.z + torusPos.z);
+
+  gl_PointSize = 15.0 * scale;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(torusPos, 1.0);
 }

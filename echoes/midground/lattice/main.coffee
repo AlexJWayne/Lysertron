@@ -24,7 +24,7 @@ class Spiral extends Echotron.EchoStack
       THREE.Math.randFloat(0.6, 1)
     )
     @qty   = source.qty   || THREE.Math.randInt 5, 12
-    @width = source.width || THREE.Math.randFloat(40, 175) / @qty
+    @width = source.width || THREE.Math.randFloat(80, 200) / @qty
     @twist = source.twist || THREE.Math.randFloat 2, 12
     @skew  = source.skew  || [1, 3].random()
 
@@ -32,7 +32,7 @@ class Spiral extends Echotron.EchoStack
 
     @rotDirection   = source.rotDirection   || [1, -1].random()
     @rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 75).rad
-    @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * THREE.Math.randFloat(4, 12)
+    @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * THREE.Math.randFloat(3, 9)
     @rotSpeed       = 0
 
 
@@ -80,6 +80,7 @@ class Strut extends Echotron.Echo
         fragmentShader: assets["frag.glsl"]
         vertexShader: assets['vert.glsl']
         transparent: yes
+        depthTest: no
       )
     )
 
@@ -87,6 +88,6 @@ class Strut extends Echotron.Echo
     @rotation.z = @angle
 
     @mesh.position.z = 400
-    @mesh.position.y = -75
+    @mesh.position.y = -60
 
     @add @mesh

@@ -41,6 +41,7 @@ exports.compile = compile = (echoType, name) ->
     (function(){
       #{code}
     }.call({}));
+    module.exports.id = "#{name}";
     window.Echotron.Echoes.#{echoType}.push(module.exports);
   }());
   """
