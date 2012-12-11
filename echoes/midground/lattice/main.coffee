@@ -24,7 +24,7 @@ class Spiral extends Echotron.EchoStack
       THREE.Math.randFloat(0.6, 1)
     )
     @qty   = source.qty   || THREE.Math.randInt 5, 12
-    @width = source.width || THREE.Math.randFloat(40, 175) / @qty
+    @width = source.width || THREE.Math.randFloat(80, 200) / @qty
     @twist = source.twist || THREE.Math.randFloat 2, 12
     @skew  = source.skew  || [1, 3].random()
 
