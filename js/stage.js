@@ -50,7 +50,7 @@
     };
 
     Stage.prototype.initSong = function() {
-      var eventType, _fn, _i, _len, _ref, _ref1,
+      var eventType, _fn, _i, _len, _ref,
         _this = this;
       this.song = new Echotron.Song;
       _ref = ['bar', 'beat', 'tatum', 'segment'];
@@ -70,7 +70,7 @@
         _this.logicalLayers.midground.stack.transition();
         return _this.logicalLayers.foreground.stack.transition();
       });
-      return this.songName = (_ref1 = window.location.search.match(/^\?(\w+)$/)) != null ? _ref1[1] : void 0;
+      return this.songName = getParam('song');
     };
 
     Stage.prototype.start = function(playAudio) {
@@ -108,9 +108,11 @@
     };
 
     Stage.prototype.render = function() {
-      this.renderer.clear();
+      this.renderer.clear(true, true, true);
       this.renderer.render(this.logicalLayers.background.scene, this.camera);
+      this.renderer.clear(false, true, true);
       this.renderer.render(this.logicalLayers.midground.scene, this.camera);
+      this.renderer.clear(false, true, true);
       return this.renderer.render(this.logicalLayers.foreground.scene, this.camera);
     };
 

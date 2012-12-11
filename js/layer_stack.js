@@ -79,7 +79,7 @@
     };
 
     LayerStack.prototype.transition = function() {
-      var klass, layer, _i, _len, _ref, _ref1;
+      var echoClass, forcedEchoName, klass, layer, _i, _len, _ref, _ref1;
       if (!this.echoType) {
         return;
       }
@@ -88,13 +88,36 @@
         layer = _ref[_i];
         layer.kill();
       }
-      klass = Echotron.Echoes[this.echoType].random();
-      layer = new klass;
-      this.push(layer);
-      if ((_ref1 = this.scene) != null) {
-        _ref1.add(layer);
+      forcedEchoName = getParam(this.echoType) || getParam(this.echoType.replace(/ground$/, ''));
+      if (forcedEchoName) {
+        klass = ((function() {
+          var _j, _len1, _ref1, _results;
+          _ref1 = Echotron.Echoes[this.echoType];
+          _results = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            echoClass = _ref1[_j];
+            if (echoClass.id === forcedEchoName) {
+              _results.push(echoClass);
+            }
+          }
+          return _results;
+        }).call(this))[0];
+        if (klass) {
+          console.log("Forced " + this.echoType + ":", forcedEchoName);
+        } else {
+          console.error("Forced " + this.echoType + " not found:", forcedEchoName);
+        }
+      } else {
+        klass = Echotron.Echoes[this.echoType].random();
       }
-      return console.log(this.layers);
+      if (klass) {
+        layer = new klass;
+        this.push(layer);
+        if ((_ref1 = this.scene) != null) {
+          _ref1.add(layer);
+        }
+        return console.log(this.layers);
+      }
     };
 
     LayerStack.prototype.push = function() {

@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  gl_FragColor = vec4(color, uvCoord.y);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z + twistDir\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
+  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  float alpha = 1.0 - pow(1.0 - uvCoord.y, 6.0);\n  vec3 depthTint = color + vec3(smoothstep(0.0, 1.0, uvCoord.y));\n  gl_FragColor = vec4(depthTint, alpha);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z + twistDir\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
   var module = {};
   (function(){
     (function() {
@@ -40,13 +40,13 @@
       Spiral.__super__.constructor.apply(this, arguments);
       this.color = source.color || new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0.6, 1));
       this.qty = source.qty || THREE.Math.randInt(5, 12);
-      this.width = source.width || THREE.Math.randFloat(40, 175) / this.qty;
+      this.width = source.width || THREE.Math.randFloat(80, 200) / this.qty;
       this.twist = source.twist || THREE.Math.randFloat(2, 12);
       this.skew = source.skew || [1, 3].random();
       this.flippedDir = this.flipped ? -1 : 1;
       this.rotDirection = source.rotDirection || [1, -1].random();
       this.rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 75).rad;
-      this.rotSpeedDecay = source.rotSpeedDecay || this.rotSpeedTarget * THREE.Math.randFloat(4, 12);
+      this.rotSpeedDecay = source.rotSpeedDecay || this.rotSpeedTarget * THREE.Math.randFloat(3, 9);
       this.rotSpeed = 0;
       this.push.apply(this, (function() {
         var _i, _ref, _results;
@@ -109,12 +109,13 @@
         side: THREE.BackSide,
         fragmentShader: assets["frag.glsl"],
         vertexShader: assets['vert.glsl'],
-        transparent: true
+        transparent: true,
+        depthTest: false
       }));
       this.mesh.rotation.x = 90..rad;
       this.rotation.z = this.angle;
       this.mesh.position.z = 400;
-      this.mesh.position.y = -75;
+      this.mesh.position.y = -60;
       this.add(this.mesh);
     }
 
@@ -125,5 +126,6 @@
 }).call(this);
 
   }.call({}));
+  module.exports.id = "lattice";
   window.Echotron.Echoes.midground.push(module.exports);
 }());

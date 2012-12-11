@@ -32,4 +32,17 @@
     }
   });
 
+  window.getParam = function(name) {
+    var regex, regexS, results;
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    regexS = "[\\?&]" + name + "=([^&#]*)";
+    regex = new RegExp(regexS);
+    results = regex.exec(window.location.search);
+    if (results) {
+      return decodeURIComponent(results[1].replace(/\+/g, " "));
+    } else {
+      return null;
+    }
+  };
+
 }).call(this);

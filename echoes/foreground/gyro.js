@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"uniform vec3 color;\n\nvarying vec3 vPos;\nvarying vec3 vNormal;\n\nvoid main() {\n  float lightVal = 1.0;\n  if (vNormal.y > 0.5) lightVal = 0.0;\n\n  gl_FragColor = vec4(mix(vec3(lightVal), color, 0.7), 1.0);\n\n}\n","vert.glsl":"varying vec3 vPos;\nvarying vec3 vNormal;\n\nuniform float pulse;\nuniform float progress;\n\nvoid main() {\n  // Pass to fragment shader\n  vPos = position;\n  vNormal = (projectionMatrix * modelViewMatrix * vec4(normal, 1.0)).xyz;\n\n  float growth = smoothstep(0.0, 0.2, clamp(progress, 0.0, 1.0));\n  vec3 pulsed = position + normal * (1.0 - growth) * pulse;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(pulsed, 1.0);\n}\n"};
+  var assets = {"frag.glsl":"uniform vec3 color;\n\nvarying vec3 vPos;\nvarying vec3 vNormal;\nvarying vec2 uvCoord;\n\nvoid main() {\n  float lightVal = smoothstep(0.45, 0.5, vNormal.y);\n  vec3 litColor = mix(vec3(lightVal), color, 0.7);\n  gl_FragColor = vec4(litColor, 1.0);\n}\n","vert.glsl":"varying vec3 vPos;\nvarying vec3 vNormal;\nvarying vec2 uvCoord;\n\nuniform float pulse;\nuniform float progress;\n\nvoid main() {\n  // Pass to fragment shader\n  vPos = position;\n  vNormal = (projectionMatrix * modelViewMatrix * vec4(normal, 1.0)).xyz;\n  uvCoord = uv;\n\n  float growth = smoothstep(0.0, 0.2, clamp(progress, 0.0, 1.0));\n  vec3 pulsed = position + normal * (1.0 - growth) * pulse;\n\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(pulsed, 1.0);\n}\n"};
   var module = {};
   (function(){
     (function() {
@@ -119,5 +119,6 @@
 }).call(this);
 
   }.call({}));
+  module.exports.id = "gyro";
   window.Echotron.Echoes.foreground.push(module.exports);
 }());

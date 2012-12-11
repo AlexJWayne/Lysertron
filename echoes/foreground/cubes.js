@@ -117,5 +117,6 @@
 }).call(this);
 
   }.call({}));
+  module.exports.id = "cubes";
   window.Echotron.Echoes.foreground.push(module.exports);
 }());
