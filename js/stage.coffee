@@ -98,9 +98,13 @@ class Echotron.Stage
 
   # Render the scene.
   render: =>
-    @renderer.clear()
+    @renderer.clear yes, yes, yes
     @renderer.render @logicalLayers.background.scene, @camera
+
+    @renderer.clear no, yes, yes
     @renderer.render @logicalLayers.midground.scene,  @camera
+
+    @renderer.clear no, yes, yes
     @renderer.render @logicalLayers.foreground.scene, @camera
 
 # Go
