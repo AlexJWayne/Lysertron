@@ -20,7 +20,7 @@ module.exports = class Dust extends Echotron.Echo
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
-      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0, 0.25)
       1
     )
 

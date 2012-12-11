@@ -32,7 +32,7 @@ class Spiral extends Echotron.EchoStack
 
     @rotDirection   = source.rotDirection   || [1, -1].random()
     @rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 75).rad
-    @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * THREE.Math.randFloat(4, 12)
+    @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * THREE.Math.randFloat(3, 9)
     @rotSpeed       = 0
 
 
@@ -88,6 +88,6 @@ class Strut extends Echotron.Echo
     @rotation.z = @angle
 
     @mesh.position.z = 400
-    @mesh.position.y = -75
+    @mesh.position.y = -60
 
     @add @mesh

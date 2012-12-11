@@ -49,8 +49,8 @@ class SingleTunnel extends Echotron.Echo
       new THREE.CylinderGeometry 0, THREE.Math.randFloat(150, 250), 2000, @sides, 50
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
-        vertexShader:   assets["tunnel.vshader"]
-        fragmentShader: assets["tunnel.fshader"]
+        vertexShader:   assets["vert.glsl"]
+        fragmentShader: assets["frag.glsl"]
         transparent:    true
         blending:       THREE.AdditiveBlending
       )
