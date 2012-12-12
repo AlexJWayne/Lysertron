@@ -20,7 +20,7 @@ void main() {
     float progress = pow(abs(inward - ripples[i]), ease);
     float ringPos = abs(vPos.y / 1000.0 - progress);
     float ringVal = 1.0 - smoothstep(0.0, 0.1 * ringSize, ringPos);
-    rings += clamp(ringVal * (ripples[i]*0.7 + 0.3), 0.0, 1.0);
+    rings += clamp(ringVal * (ripples[i] * 0.85 + 0.3), 0.0, 1.0);
   }
 
   vec3 finalColor = dimmedColor + ringColor*rings*ringIntensity;
