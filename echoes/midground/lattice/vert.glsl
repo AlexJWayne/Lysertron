@@ -10,6 +10,8 @@ void main() {
   vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;
   uvCoord = uv;
 
+  vec3 origin = vec3(0.0, -40.0, 0.0);
+
   float depth = uv.y;
   float swirl = pow(depth, skew) * twist * twistDir;
 

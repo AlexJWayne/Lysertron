@@ -9,23 +9,30 @@ module.exports = class Gridstort extends Echotron.Echo
     spinSpeed: 'f'
     drift:     'v2'
     intensity: 'f'
+    birth:     'f'
+    death:     'f'
 
 
   constructor: ->
     super
 
-    @time       = THREE.Math.randFloat 0, 10
-    @amplitude  = 1
-    @density    = THREE.Math.randFloat 20, 60
-    @opacityMax = THREE.Math.randFloat 0.15, 0.3
-    @opacity    = @opacityMax
-    @speed      = THREE.Math.randFloat 5, 20
-    @spinSpeed  = THREE.Math.randFloatSpread(45).rad
-    @intensity  = THREE.Math.randFloat 10, 60
-    @drift      = new THREE.Vector2(
+    @time         = THREE.Math.randFloat 0, 10
+    @amplitude    = 0
+    @amplitudeDir = 1
+    @density      = THREE.Math.randFloat 20, 60
+    @opacityMax   = THREE.Math.randFloat 0.15, 0.3
+    @opacity      = @opacityMax
+    @speed        = THREE.Math.randFloat 5, 20
+    @spinSpeed    = THREE.Math.randFloatSpread(45).rad
+    @intensity    = THREE.Math.randFloat 15, 75
+    @birth        = 0
+    @death        = 0
+
+    @drift        = new THREE.Vector2(
       THREE.Math.randFloatSpread 0.1
       THREE.Math.randFloatSpread 0.1
     )
+
 
     @baseColor  = new THREE.Color().setHSV(
       THREE.Math.randFloat 0, 1
@@ -34,30 +41,47 @@ module.exports = class Gridstort extends Echotron.Echo
     )
 
     @mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(175, 175)
+      new THREE.PlaneGeometry(1750, 1750)
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
         vertexShader:   assets["vert.glsl"]
         fragmentShader: assets["frag.glsl"]
+        depthTest:      no
       )
     )
     @add @mesh
 
 
-    @rotation.x = -180.rad
+    @rotation.x = THREE.Math.randFloat(-130, -210).rad
+    console.log @rotation.x
 
   beat: ->
     @opacity = @opacityMax
 
   bar: ->
-    @amplitude = 1
+    @amplitudeDir = 1
 
   update: (elapsed) ->
+    @birth += elapsed
     @time += elapsed
 
-    @amplitude -= (elapsed * stage.song.bps) / 4
-    @amplitude = 0 if @amplitude < 0
-    
-    @opacity -= @opacityMax * elapsed * stage.song.bps * 0.85
-    @opacity = 0 if @opacity < 0
+    unless @active
+      @death += elapsed
 
+    if @amplitudeDir is 1
+      @amplitude += elapsed * stage.song.bps * 4
+      if @amplitude > 1
+        @amplitude = 1
+        @amplitudeDir = -1
+
+    else
+      @amplitude -= (elapsed * stage.song.bps) / 4
+      @amplitude = 0 if @amplitude < 0
+    
+    @opacity -= @opacityMax * elapsed * stage.song.bps * 0.65
+    @opacity = 0.1 if @opacity < 0.1
+
+    @rotation.z += elapsed / 4.0
+
+  alive: ->
+    @death < 1
