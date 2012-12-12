@@ -45,7 +45,10 @@ class Spiral extends Echotron.EchoStack
   update: (elapsed) ->
     super
 
-    @rotSpeed   -= @rotSpeedDecay * @rotDirection * @flippedDir * elapsed / stage.song.bps
+    @rotSpeed -= @rotSpeedDecay * @rotDirection * @flippedDir * elapsed / stage.song.bps
+    @rotSpeed  = @rotSpeedTarget  * 3 if @rotSpeed >  @rotSpeedTarget * 3
+    @rotSpeed  = -@rotSpeedTarget * 3 if @rotSpeed < -@rotSpeedTarget * 3
+
     @rotation.z += @rotSpeed      * @rotDirection * elapsed / stage.song.bps
 
   beat: ->

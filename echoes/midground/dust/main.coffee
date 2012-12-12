@@ -16,7 +16,7 @@ module.exports = class Dust extends Echotron.Echo
     @position.z = Math.random()
     @scale.setLength 0
 
-    @particleAlpha = THREE.Math.randFloat(0.2, 0.4)
+    @particleAlpha = THREE.Math.randFloat(0.3, 0.6)
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
