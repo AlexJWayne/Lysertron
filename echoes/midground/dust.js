@@ -27,7 +27,7 @@
       this.size = THREE.Math.randFloat(3, 8);
       this.position.z = Math.random();
       this.scale.setLength(0);
-      this.particleAlpha = THREE.Math.randFloat(0.2, 0.4);
+      this.particleAlpha = THREE.Math.randFloat(0.3, 0.6);
       this.baseColor = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 0.25), 1);
       this.spin = new THREE.Vector3(THREE.Math.randFloatSpread(30).rad, THREE.Math.randFloatSpread(30).rad, THREE.Math.randFloatSpread(30).rad);
       this.geom = new THREE.Geometry;

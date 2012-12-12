@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  float alpha = 1.0 - pow(1.0 - uvCoord.y, 6.0);\n  vec3 depthTint = color + vec3(smoothstep(0.0, 1.0, uvCoord.y));\n  gl_FragColor = vec4(depthTint, alpha);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z + twistDir\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
+  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  float alpha = 1.0 - pow(1.0 - uvCoord.y, 6.0);\n  vec3 depthTint = color + vec3(smoothstep(0.0, 1.0, uvCoord.y));\n  gl_FragColor = vec4(depthTint, alpha);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nvoid main() {\n  // Pass to fragment shader\n  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;\n  uvCoord = uv;\n\n  vec3 origin = vec3(0.0, -40.0, 0.0);\n\n  float depth = uv.y;\n  float swirl = pow(depth, skew) * twist * twistDir;\n\n  vec3 twisted = vec3(\n    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),\n    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),\n    transPos.z + twistDir\n  );\n\n  gl_Position =  projectionMatrix * vec4(twisted, 1.0);\n}\n"};
   var module = {};
   (function(){
     (function() {
@@ -73,6 +73,12 @@
     Spiral.prototype.update = function(elapsed) {
       Spiral.__super__.update.apply(this, arguments);
       this.rotSpeed -= this.rotSpeedDecay * this.rotDirection * this.flippedDir * elapsed / stage.song.bps;
+      if (this.rotSpeed > this.rotSpeedTarget * 3) {
+        this.rotSpeed = this.rotSpeedTarget * 3;
+      }
+      if (this.rotSpeed < -this.rotSpeedTarget * 3) {
+        this.rotSpeed = -this.rotSpeedTarget * 3;
+      }
       return this.rotation.z += this.rotSpeed * this.rotDirection * elapsed / stage.song.bps;
     };
 
