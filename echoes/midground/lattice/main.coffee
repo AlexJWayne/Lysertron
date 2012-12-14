@@ -85,6 +85,7 @@ class Strut extends Echotron.Echo
     super
 
     @angle *= 360.rad
+    @widthScale = 0
     
     # snag shader props from parent
     {
@@ -114,6 +115,20 @@ class Strut extends Echotron.Echo
     @rotation.z = @angle
 
     @add @mesh
+
+  update: (elapsed) ->
+    if @active
+      @widthScale += elapsed
+      @widthScale = 1 if @widthScale > 1
+
+    else
+      @widthScale -= elapsed
+      @widthScale = 0 if @widthScale < 0
+
+    @scale.x = 1 - Math.pow(1 - @widthScale, 3)
+
+  alive: ->
+    @widthScale > 0
 
   twistVertices: ->
     for vert in @geom.vertices
