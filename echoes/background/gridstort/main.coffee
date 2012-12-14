@@ -53,7 +53,6 @@ module.exports = class Gridstort extends Echotron.Echo
 
 
     @rotation.x = THREE.Math.randFloat(-130, -210).rad
-    console.log @rotation.x
 
   beat: ->
     @opacity = @opacityMax
