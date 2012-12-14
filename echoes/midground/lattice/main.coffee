@@ -7,7 +7,7 @@ module.exports = class Lattice extends Echotron.EchoStack
 
     @time = THREE.Math.randFloat(1, 360).rad
     @offset = THREE.Math.randFloat(1, 4).rad
-    @offsetSpeed = THREE.Math.randFloat(30, 130).rad
+    @offsetSpeed = THREE.Math.randFloat(20, 90).rad
     @offsetShape = [
       THREE.Math.randFloat(0.5, 1)
       THREE.Math.randFloat(1,   2)

@@ -10,7 +10,7 @@ module.exports = class Cubes extends Echotron.EchoStack
     @type = 'Cube' #['Cube', 'Sphere'].random()
     @shader = ['lit', 'bright'].random()
 
-    @spawnQty   = THREE.Math.randInt(3, 8)
+    @spawnQty   = THREE.Math.randInt(5, 20)
     @shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps
     
     direction = [1, -1].random()
@@ -32,7 +32,7 @@ module.exports = class Cubes extends Echotron.EchoStack
     return
 
   bar: ->
-    for i in [1..@spawnQty*5]
+    for i in [1..@spawnQty*4]
       @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
   
   update: (elapsed) ->
