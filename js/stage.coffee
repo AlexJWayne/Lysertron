@@ -83,6 +83,8 @@ class Echotron.Stage
     elapsed = now - @lastFrame
     @lastFrame = now
 
+    TWEEN.update()
+
     # Update all layers
     for echoType, logicalLayer of @logicalLayers
       logicalLayer.stack.update elapsed

@@ -5,14 +5,19 @@ module.exports = class Lattice extends Echotron.EchoStack
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
 
-    @time = THREE.Math.randFloat(1, 360).rad
-    @offset = THREE.Math.randFloat(1, 4).rad
-    @offsetSpeed = THREE.Math.randFloat(20, 90).rad
-    @offsetShape = [
-      THREE.Math.randFloat(0.5, 1)
-      THREE.Math.randFloat(1,   2)
-    ].random()
+    @spinSpeed = THREE.Math.randFloatSpread(180).rad
+
+    @offsetTime = 10
+    qty = THREE.Math.randInt(4, 12)
+    @offsetValues = 
+      x: (THREE.Math.randFloatSpread(7).rad for i in [0...qty])
+      y: (THREE.Math.randFloatSpread(7).rad for i in [0...qty])
+
+    @offsetValues.x.push @offsetValues.x[@offsetValues.x.length - 1]
+    @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
     
+    @animateOffsets()
+
     @position.z = 750
 
     @spiral1 = new Spiral @flipped
@@ -22,14 +27,16 @@ module.exports = class Lattice extends Echotron.EchoStack
       @spiral2 = new Spiral !@flipped, @spiral1
       @push @spiral2
 
+  animateOffsets: ->
+    new TWEEN.Tween(@rotation)
+      .to(@offsetValues, @offsetTime.ms)
+      .interpolation(TWEEN.Interpolation.CatmullRom)
+      .onComplete(=> @animateOffsets() if @active)
+      .start()
 
   update: (elapsed) ->
     super
-    @time += elapsed
-    @rotation.z = @time
-
-    @rotation.x = @offset * Math.cos(@time * @offsetSpeed / @offsetShape)
-    @rotation.y = @offset * Math.sin(@time * @offsetSpeed / (1 / @offsetShape))
+    @rotation.z += elapsed * @spinSpeed
 
 
 
@@ -39,7 +46,7 @@ class Spiral extends Echotron.EchoStack
 
     @color = source.color || new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
-      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0.5, 1)
       THREE.Math.randFloat(0.6, 1)
     )
     @qty   = source.qty   || THREE.Math.randInt 3, 15
