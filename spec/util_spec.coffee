@@ -39,10 +39,10 @@ describe 'Utils', ->
       v.y.should.equal 8
       v.z.should.equal 9
 
-  describe 'Number::rad', ->
+  describe 'Number::degToRad', ->
     it "returns the radian value of this number, assuming it's in degrees", ->
-      180.rad.should.equal Math.PI
+      180.degToRad.should.equal Math.PI
   
-  describe 'Number::deg', ->
+  describe 'Number::radToDeg', ->
     it "returns the degree value of this number, assuming it's in radians", ->
-      Math.PI.deg.should.equal 180
+      Math.PI.radToDeg.should.equal 180

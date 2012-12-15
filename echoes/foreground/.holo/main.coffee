@@ -3,12 +3,12 @@ module.exports = class Holo extends Echotron.EchoStack
     super
 
     @spin = new THREE.Vector3(
-      THREE.Math.randFloatSpread(3.0).rad
-      THREE.Math.randFloatSpread(3.0).rad
-      THREE.Math.randFloatSpread(3.0).rad
+      THREE.Math.randFloatSpread(3.0).degToRad
+      THREE.Math.randFloatSpread(3.0).degToRad
+      THREE.Math.randFloatSpread(3.0).degToRad
     )
 
-    @rotation.x = 45.rad
+    @rotation.x = 45.degToRad
 
     for i in [0...12]
       @push new Chip(this, i/12, new THREE.Color().setHSV i/12, 0.75, 1)
@@ -33,8 +33,8 @@ class Chip extends Echotron.Echo
     @geom = new THREE.Geometry
     for i in [0...qty]
       @geom.vertices.push new THREE.Vector3(
-        (i / qty * 360).rad # use as angle1
-        (angle * 360).rad   # use as angle2
+        (i / qty * 360).degToRad # use as angle1
+        (angle * 360).degToRad   # use as angle2
         0 # ignore
       )
 

@@ -25,9 +25,9 @@ module.exports = class Dust extends Echotron.Echo
     )
 
     @spin = new THREE.Vector3(
-      THREE.Math.randFloatSpread(30).rad
-      THREE.Math.randFloatSpread(30).rad
-      THREE.Math.randFloatSpread(30).rad
+      THREE.Math.randFloatSpread(30).degToRad
+      THREE.Math.randFloatSpread(30).degToRad
+      THREE.Math.randFloatSpread(30).degToRad
     )
 
     @geom = new THREE.Geometry

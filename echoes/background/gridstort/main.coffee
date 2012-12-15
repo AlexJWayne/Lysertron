@@ -23,7 +23,7 @@ module.exports = class Gridstort extends Echotron.Echo
     @opacityMax   = THREE.Math.randFloat 0.15, 0.3
     @opacity      = @opacityMax
     @speed        = THREE.Math.randFloat 5, 20
-    @spinSpeed    = THREE.Math.randFloatSpread(45).rad
+    @spinSpeed    = THREE.Math.randFloatSpread(45).degToRad
     @intensity    = THREE.Math.randFloat 15, 75
     @birth        = 0
     @death        = 0
@@ -52,7 +52,7 @@ module.exports = class Gridstort extends Echotron.Echo
     @add @mesh
 
 
-    @rotation.x = THREE.Math.randFloat(-130, -210).rad
+    @rotation.x = THREE.Math.randFloat(-130, -210).degToRad
 
   beat: ->
     @opacity = @opacityMax

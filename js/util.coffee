@@ -18,12 +18,12 @@ THREE.Vector3.temp = (x, y, z) ->
 
 
 # degrees to radians
-Number::rad || Object.defineProperty Number::, 'rad',
+Number::degToRad || Object.defineProperty Number::, 'degToRad',
   get: ->
     this * Math.PI/180
 
 # radians to degrees
-Number::deg || Object.defineProperty Number::, 'deg',
+Number::radToDeg || Object.defineProperty Number::, 'radToDeg',
   get: ->
     this * 180/Math.PI
 
