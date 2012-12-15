@@ -29,8 +29,8 @@ module.exports = class Gridstort extends Echotron.Echo
     @death        = 0
 
     @drift        = new THREE.Vector2(
-      THREE.Math.randFloatSpread 0.1
-      THREE.Math.randFloatSpread 0.1
+      THREE.Math.randFloatSpread 0.3
+      THREE.Math.randFloatSpread 0.3
     )
 
 
