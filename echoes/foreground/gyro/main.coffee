@@ -39,7 +39,7 @@ module.exports = class Gyro extends Echotron.EchoStack
     # Elastic curve is steeper, it needs more time to keep from being jarring.
     @animTime *= 1.5 if @motionCurve is TWEEN.Easing.Elastic.Out
 
-    @fanAngle = THREE.Math.randFloat(10, 45).rad
+    @fanAngle = THREE.Math.randFloat(10, 45).degToRad
 
     @radialDistance = THREE.Math.randFloat 3, 10
     
@@ -54,9 +54,9 @@ module.exports = class Gyro extends Echotron.EchoStack
     )
 
     @tumble = new THREE.Vector3(
-      THREE.Math.randFloatSpread(90).rad
-      THREE.Math.randFloatSpread(90).rad
-      THREE.Math.randFloatSpread(90).rad
+      THREE.Math.randFloatSpread(90).degToRad
+      THREE.Math.randFloatSpread(90).degToRad
+      THREE.Math.randFloatSpread(90).degToRad
     )
 
 
@@ -93,7 +93,7 @@ class Ring extends Echotron.Echo
       @motionCurve
     } = @gyro
 
-    @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).rad
+    @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).degToRad
 
     thicknessMix = @gyro.thicknessCurve(@ringIndex / 3)
     thickness = @gyro.thickness[0] * (1 - thicknessMix) + @gyro.thickness[1] * thicknessMix
@@ -126,7 +126,7 @@ class Ring extends Echotron.Echo
       .start()
 
   update: (elapsed) ->
-    @mesh.rotation.x = @progress * 180.rad
+    @mesh.rotation.x = @progress * 180.degToRad
 
   alive: ->
     @visible

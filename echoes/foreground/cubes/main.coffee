@@ -17,12 +17,12 @@ module.exports = class Cubes extends Echotron.EchoStack
     @speed      = THREE.Math.randFloat(20, 50)  * -direction
     @accel      = THREE.Math.randFloat(50, 100) *  direction
 
-    @roll   = [0, THREE.Math.randFloatSpread(180)].random().rad
-    @tumble = [0, THREE.Math.randFloatSpread( 90)].random().rad
+    @roll   = [0, THREE.Math.randFloatSpread(180)].random().degToRad
+    @tumble = [0, THREE.Math.randFloatSpread( 90)].random().degToRad
 
-    @rotation.x = THREE.Math.randFloat(0, 360).rad
-    @rotation.y = THREE.Math.randFloat(0, 360).rad
-    @rotation.z = THREE.Math.randFloat(0, 360).rad
+    @rotation.x = THREE.Math.randFloat(0, 360).degToRad
+    @rotation.y = THREE.Math.randFloat(0, 360).degToRad
+    @rotation.z = THREE.Math.randFloat(0, 360).degToRad
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 

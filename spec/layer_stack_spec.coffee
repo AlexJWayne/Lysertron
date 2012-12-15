@@ -1,12 +1,17 @@
 describe 'LayerStack', ->
+  scene = null
+
+  beforeEach ->
+    scene = new THREE.Scene
+
   describe 'constructor', ->
     it 'creates @layers as an empty array by default', ->
-      stack = new Echotron.LayerStack
+      stack = new Echotron.LayerStack scene
       stack.layers.should.deep.equal []
 
     it 'accepts an array of layers to populate @layers', ->
       echo = new Echotron.Echo
-      stack = new Echotron.LayerStack [echo]
+      stack = new Echotron.LayerStack scene, [echo]
       stack.layers.should.deep.equal [echo]
 
   describe 'song events', ->
@@ -24,7 +29,7 @@ describe 'LayerStack', ->
       beforeEach ->
         echo1 = new Specho
         echo2 = new Specho
-        stack = new Echotron.LayerStack [echo1, echo2]
+        stack = new Echotron.LayerStack scene, [echo1, echo2]
     
       it 'on beat', ->
         stack.beat()
@@ -50,7 +55,7 @@ describe 'LayerStack', ->
 
       echo1 = new Specho
       echo2 = new Specho
-      stack = new Echotron.LayerStack [echo1, echo2]
+      stack = new Echotron.LayerStack scene, [echo1, echo2]
 
       stack.update()
 
@@ -64,7 +69,7 @@ describe 'LayerStack', ->
 
       echo1 = new Specho no
       echo2 = new Specho yes
-      stack = new Echotron.LayerStack [echo1, echo2]
+      stack = new Echotron.LayerStack scene, [echo1, echo2]
       stack.update()
 
       stack.layers.should.deep.equal [echo1]
@@ -83,11 +88,11 @@ describe 'LayerStack', ->
 
   describe 'isEmpty()', ->
     it 'returns false when there are layers', ->
-      stack = new Echotron.LayerStack(new Echotron.Echo)
+      stack = new Echotron.LayerStack scene, new Echotron.Echo
       stack.isEmpty().should.be.false
 
     it 'returns true when there are no layers', ->
-      stack = new Echotron.LayerStack
+      stack = new Echotron.LayerStack scene
       stack.isEmpty().should.be.true
 
   describe 'transition()', ->

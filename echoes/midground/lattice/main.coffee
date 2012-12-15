@@ -5,13 +5,13 @@ module.exports = class Lattice extends Echotron.EchoStack
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
 
-    @spinSpeed = THREE.Math.randFloatSpread(180).rad
+    @spinSpeed = THREE.Math.randFloatSpread(180).degToRad
 
     @offsetTime = 10
     qty = THREE.Math.randInt(4, 12)
     @offsetValues = 
-      x: (THREE.Math.randFloatSpread(7).rad for i in [0...qty])
-      y: (THREE.Math.randFloatSpread(7).rad for i in [0...qty])
+      x: (THREE.Math.randFloatSpread(7).degToRad for i in [0...qty])
+      y: (THREE.Math.randFloatSpread(7).degToRad for i in [0...qty])
 
     @offsetValues.x.push @offsetValues.x[@offsetValues.x.length - 1]
     @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
@@ -57,7 +57,7 @@ class Spiral extends Echotron.EchoStack
     @flippedDir = if @flipped then -1 else 1
 
     @rotDirection   = source.rotDirection   || [1, -1].random()
-    @rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 50).rad
+    @rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 50).degToRad
     @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * @rotDirection * 8
     @rotSpeed       = 0
 
@@ -91,7 +91,7 @@ class Strut extends Echotron.Echo
   constructor: (@lattice, @angle, @flipped) ->
     super
 
-    @angle *= 360.rad
+    @angle *= 360.degToRad
     @widthScale = 0
     
     # snag shader props from parent
@@ -118,7 +118,7 @@ class Strut extends Echotron.Echo
       )
     )
 
-    @mesh.rotation.x = 90.rad
+    @mesh.rotation.x = 90.degToRad
     @rotation.z = @angle
 
     @add @mesh
