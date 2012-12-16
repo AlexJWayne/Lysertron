@@ -8,30 +8,43 @@ module.exports = class Lattice extends Echotron.EchoStack
     @spinSpeed = THREE.Math.randFloatSpread(180).degToRad
 
     @offsetTime = 10
-    qty = THREE.Math.randInt(4, 12)
-    @offsetValues = 
-      x: (THREE.Math.randFloatSpread(7).degToRad for i in [0...qty])
-      y: (THREE.Math.randFloatSpread(7).degToRad for i in [0...qty])
-
-    @offsetValues.x.push @offsetValues.x[@offsetValues.x.length - 1]
-    @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
     
-    @animateOffsets()
+    @bulge = new THREE.Vector3
+
+    @animateTweens()
 
     @position.z = 750
 
-    @spiral1 = new Spiral @flipped
+    @spiral1 = new Spiral this, @flipped
     @push @spiral1
 
     if @doubled
-      @spiral2 = new Spiral !@flipped, @spiral1
+      @spiral2 = new Spiral this, !@flipped, @spiral1
       @push @spiral2
 
-  animateOffsets: ->
+  animateTweens: ->
+    qty = THREE.Math.randInt(4, 12)
+    @offsetValues = 
+      x: (THREE.Math.randFloatSpread(10).degToRad for i in [0...qty])
+      y: (THREE.Math.randFloatSpread(10).degToRad for i in [0...qty])
+
+    @offsetValues.x.push @offsetValues.x[@offsetValues.x.length - 1]
+    @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
+
+    @bulgevalues = {
+      x: (THREE.Math.randFloatSpread(100) for i in [0...4])
+      y: (THREE.Math.randFloatSpread(100) for i in [0...4])
+    }
+
     new TWEEN.Tween(@rotation)
       .to(@offsetValues, @offsetTime.ms)
       .interpolation(TWEEN.Interpolation.CatmullRom)
-      .onComplete(=> @animateOffsets() if @active)
+      .onComplete(=> @animateTweens() if @active)
+      .start()
+
+    new TWEEN.Tween(@bulge)
+      .to(@bulgevalues, @offsetTime.ms)
+      .interpolation(TWEEN.Interpolation.CatmullRom)
       .start()
 
   update: (elapsed) ->
@@ -41,8 +54,10 @@ module.exports = class Lattice extends Echotron.EchoStack
 
 
 class Spiral extends Echotron.EchoStack
-  constructor: (@flipped, source = {}) ->
+  constructor: (@lattice, @flipped, source = {}) ->
     super
+
+    @bulge = @lattice.bulge
 
     @color = source.color || new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
@@ -87,8 +102,9 @@ class Strut extends Echotron.Echo
     twist: 'f'
     skew:  'f'
     twistDir: 'f'
+    bulge: 'v3'
 
-  constructor: (@lattice, @angle, @flipped) ->
+  constructor: (@spiral, @angle, @flipped) ->
     super
 
     @angle *= 360.degToRad
@@ -99,22 +115,23 @@ class Strut extends Echotron.Echo
       @color
       @twist
       @skew
-    } = @lattice
+      @bulge
+    } = @spiral
 
     @twistDir = if @flipped then -1 else 1
 
-    @geom = new THREE.PlaneGeometry(@lattice.width, 800, 1, 100)
+    @geom = new THREE.PlaneGeometry(@spiral.width, 800, 1, 100)
     @twistVertices()
 
     @mesh = new THREE.Mesh(
       @geom
       new THREE.ShaderMaterial(
         uniforms: @uniforms
-        side: THREE.BackSide
+        side: THREE.DoubleSide
         fragmentShader: assets["frag.glsl"]
-        vertexShader: assets['vert.glsl']
-        transparent: yes
-        depthTest: no
+        vertexShader:   assets['vert.glsl']
+        transparent:    yes
+        depthTest:      no
       )
     )
 
@@ -130,12 +147,12 @@ class Strut extends Echotron.Echo
 
     else
       @widthScale -= elapsed
-      @widthScale = 0 if @widthScale < 0
+      @widthScale = .001 if @widthScale < .001
 
-    @scale.x = 1 - Math.pow(1 - @widthScale, 3)
+    @scale.x = 1 - Math.pow(1 - @widthScale, 2)
 
   alive: ->
-    @widthScale > 0
+    @widthScale > .001
 
   twistVertices: ->
     for vert in @geom.vertices
