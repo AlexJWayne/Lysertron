@@ -17,10 +17,10 @@ describe 'LayerStack', ->
   describe 'song events', ->
     describe 'delegates to each layer', ->
       class Specho extends Echotron.Echo
-        beat: -> @beated = yes
-        bar: -> @barred = yes
-        segment: -> @segmented = yes
-        tatum: -> @tatumed = yes
+        onBeat:    -> @beated    = yes
+        onBar:     -> @barred    = yes
+        onSegment: -> @segmented = yes
+        onTatum:   -> @tatumed   = yes
 
       echo1 = null
       echo2 = null
@@ -31,20 +31,20 @@ describe 'LayerStack', ->
         echo2 = new Specho
         stack = new Echotron.LayerStack scene, [echo1, echo2]
     
-      it 'on beat', ->
-        stack.beat()
+      it 'onBeat', ->
+        stack.onBeat()
         echo1.beated.should.be.true
     
-      it 'on bar', ->
-        stack.bar()
+      it 'onBar', ->
+        stack.onBar()
         echo1.barred.should.be.true
     
-      it 'on segment', ->
-        stack.segment()
+      it 'onSegment', ->
+        stack.onSegment()
         echo1.segmented.should.be.true
     
-      it 'on tatum', ->
-        stack.tatum()
+      it 'onTatum', ->
+        stack.onTatum()
         echo1.tatumed.should.be.true
 
   describe 'update()', ->

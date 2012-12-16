@@ -66,11 +66,11 @@ class SingleTunnel extends Echotron.Echo
   alive: ->
     @brightness > 0 || _.max(@ripples) > 0
 
-  beat: (beat) ->
+  onBeat: (beat) ->
     @ripples.unshift 1
     @ripples = @ripples[0..7]
 
-  bar: (bar) ->
+  onBar: (bar) ->
     @brightness = 1
 
   update: (elapsed) ->

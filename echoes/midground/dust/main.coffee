@@ -51,7 +51,7 @@ module.exports = class Dust extends Echotron.Echo
 
     @add @particles
 
-  beat: ->
+  onBeat: ->
     @vel = @speed * @direction
     @direction *= -1
 

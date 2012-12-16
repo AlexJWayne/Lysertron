@@ -78,7 +78,7 @@ class Spiral extends Echotron.EchoStack
 
     @rotation.z += @rotSpeed      * @rotDirection * elapsed / stage.song.bps
 
-  beat: ->
+  onBeat: ->
     @rotSpeed = @rotSpeedTarget
 
 class Strut extends Echotron.Echo

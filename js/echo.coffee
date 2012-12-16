@@ -43,16 +43,16 @@ class Echotron.Echo extends THREE.Object3D
   alive: -> @active
 
   # Override. Do stuff on beats.
-  beat: ->
+  onBeat: ->
 
   # Override. Do stuff on bars.
-  bar: ->
+  onBar: ->
 
   # Override. Do stuff on segment.
-  segment: ->
+  onSegment: ->
 
   # Override. Do stuff on bars.
-  tatum: ->
+  onTatum: ->
 
   # Override. Update state per frame.
   update: (elapsed) ->
