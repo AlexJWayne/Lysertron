@@ -66,7 +66,7 @@ class Echotron.Stage
       @logicalLayers.foreground.stack.transition()
 
     # Get song from URL
-    @songName = getParam 'song'
+    @songName = @getParam 'song'
   
   # Start the song and the visualization.
   start: (playAudio = yes) ->
@@ -108,6 +108,20 @@ class Echotron.Stage
 
     @renderer.clear no, yes, yes
     @renderer.render @logicalLayers.foreground.scene, @camera
+
+  # Return the value of a query string parameter.
+  getParam: (name) ->
+    name = name
+      .replace(/[\[]/, "\\\[")
+      .replace(/[\]]/, "\\\]")
+
+    regexS = "[\\?&]" + name + "=([^&#]*)"
+    regex = new RegExp regexS
+    results = regex.exec window.location.search
+    if results
+      decodeURIComponent results[1].replace(/\+/g, " ")
+    else
+      null
 
 # Go
 $ ->

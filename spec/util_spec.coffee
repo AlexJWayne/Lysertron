@@ -46,3 +46,7 @@ describe 'Utils', ->
   describe 'Number::radToDeg', ->
     it "returns the degree value of this number, assuming it's in radians", ->
       Math.PI.radToDeg.should.equal 180
+
+  describe 'Number::ms', ->
+    it "returns milliseconds, assuming its in seconds", ->
+      6.ms.should == 6000
