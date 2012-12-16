@@ -40,7 +40,7 @@ class Echotron.LayerStack
 
 
     # Force a specific echo via page query string.
-    forcedEchoName = getParam(@echoType) || getParam(@echoType.replace /ground$/, '')
+    forcedEchoName = stage.getParam(@echoType) || stage.getParam(@echoType.replace /ground$/, '')
     if forcedEchoName
       klass = (echoClass for echoClass in Echotron.Echoes[@echoType] when echoClass.id is forcedEchoName)[0]
       if klass

@@ -31,14 +31,3 @@ Number::radToDeg || Object.defineProperty Number::, 'radToDeg',
 Number::ms || Object.defineProperty Number::, 'ms',
   get: ->
     this * 1000
-
-# Return the value of a query string parameter.
-window.getParam = (name) ->
-  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]")
-  regexS = "[\\?&]" + name + "=([^&#]*)"
-  regex = new RegExp regexS
-  results = regex.exec window.location.search
-  if results
-    decodeURIComponent results[1].replace(/\+/g, " ")
-  else
-    null
