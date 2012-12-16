@@ -55,9 +55,10 @@ class Echotron.Stage
     for eventType in ['bar', 'beat', 'tatum', 'segment']
       do (eventType) =>
         @song.on eventType, (eventData) =>
-          @logicalLayers.background.stack[eventType](eventData)
-          @logicalLayers.midground.stack[eventType](eventData)
-          @logicalLayers.foreground.stack[eventType](eventData)
+          handlerName = @getHandlerName eventType
+          @logicalLayers.background.stack[handlerName](eventData)
+          @logicalLayers.midground .stack[handlerName](eventData)
+          @logicalLayers.foreground.stack[handlerName](eventData)
     
     # Transition layers on new sections
     @song.on 'section', (section) =>
@@ -88,6 +89,8 @@ class Echotron.Stage
     # Update all layers
     for echoType, logicalLayer of @logicalLayers
       logicalLayer.stack.update elapsed
+
+    return
 
   # This is the main run loop.
   animate: =>
@@ -122,6 +125,11 @@ class Echotron.Stage
       decodeURIComponent results[1].replace(/\+/g, " ")
     else
       null
+
+  # Convert event name into a standardized handler name.
+  #   beat -> onBeat
+  getHandlerName: (eventName) ->
+    "on#{ eventName.charAt(0).toUpperCase() }#{ eventName[1...eventName.length] }"
 
 # Go
 $ ->

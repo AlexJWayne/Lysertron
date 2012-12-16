@@ -26,12 +26,12 @@ module.exports = class Cubes extends Echotron.EchoStack
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
-  beat: ->
+  onBeat: ->
     for i in [1..@spawnQty]
       @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
     return
 
-  bar: ->
+  onBar: ->
     for i in [1..@spawnQty*4]
       @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
   

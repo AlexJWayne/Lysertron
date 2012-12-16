@@ -60,7 +60,7 @@ module.exports = class Gyro extends Echotron.EchoStack
     )
 
 
-  beat: ->
+  onBeat: ->
     layer = @stack.layers[@currentRing]
     @add layer
     layer.nudge()
