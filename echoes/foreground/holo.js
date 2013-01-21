@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nuniform float borderStart;\nuniform float borderEnd;\n\nvoid main() {\n  float depthCue = 1.0 - smoothstep(100.0, 225.0, depth);\n\n  float distance = length(gl_PointCoord - vec2(0.5)) * 2.0;\n  float alphaCircle = smoothstep(1.0, 0.9, distance);\n  float colorCircle = smoothstep(borderStart, borderEnd, distance);\n\n  gl_FragColor = vec4(baseColor * depthCue * colorCircle + vec3(whiteningAmount), alphaCircle);\n}","vert.glsl":"attribute vec3 vertexColor;\nattribute float whitening;\n\nuniform float size;\n\nvarying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  \n  whiteningAmount = whitening;\n  baseColor = vertexColor;\n  depth = gl_Position.z - cameraPosition.z;\n\n  float fl = 180.0;\n  float scale = fl / (fl + gl_Position.z);\n  gl_PointSize = size * scale;\n}"};
+  var assets = {"frag.glsl":"varying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  float depthCue = 1.0 - smoothstep(100.0, 225.0, depth);\n\n  float distance = length(gl_PointCoord - vec2(0.5)) * 2.0;\n  float alphaCircle = smoothstep(1.0, 0.9, distance);\n\n  gl_FragColor = vec4(baseColor * depthCue + vec3(whiteningAmount), alphaCircle);\n}","vert.glsl":"attribute vec3 vertexColor;\nattribute float whitening;\n\nuniform float size;\n\nvarying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  \n  whiteningAmount = whitening;\n  baseColor = vertexColor;\n  depth = gl_Position.z - cameraPosition.z;\n\n  float fl = 180.0;\n  float scale = fl / (fl + gl_Position.z);\n  gl_PointSize = size * scale;\n}"};
   var module = {};
   (function(){
     (function() {
@@ -12,9 +12,7 @@
     __extends(Holo, _super);
 
     Holo.prototype.uniformAttrs = {
-      size: 'f',
-      borderStart: 'f',
-      borderEnd: 'f'
+      size: 'f'
     };
 
     function Holo() {
@@ -39,7 +37,7 @@
           vert.v = v / this.qty.chips;
           this.geometry.vertices.push(vert);
           this.vertexAttrs.whitening.value.push(0);
-          this.vertexAttrs.vertexColor.value.push(this.solidColor ? this.solidColor : new THREE.Color().setHSV(vert.v, 1, 1));
+          this.vertexAttrs.vertexColor.value.push(new THREE.Color().setHSV(vert.v, 1, 1).lerpSelf(this.baseColor, this.baseColorBlend));
         }
       }
       this.particles = new THREE.ParticleSystem(this.geometry, new THREE.ShaderMaterial({
@@ -57,30 +55,14 @@
     }
 
     Holo.prototype.initParams = function() {
-      var borderWidth,
-        _this = this;
+      var borderWidth;
       borderWidth = THREE.Math.randFloat(0.05, 0.4);
-      [
-        function() {
-          _this.borderStart = 1.0 - borderWidth;
-          return _this.borderEnd = 0.9 - borderWidth;
-        }, function() {
-          _this.borderStart = 0.9 - borderWidth;
-          return _this.borderEnd = 1.0 - borderWidth;
-        }, function() {
-          _this.borderStart = 1.1;
-          return _this.borderEnd = 1;
-        }, function() {
-          _this.borderStart = 1.1;
-          _this.borderEnd = 1;
-          return _this.solidColor = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 0.5), 1);
-        }
-      ].random()();
+      this.baseColor = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0.25, 1));
+      this.baseColorBlend = [THREE.Math.randFloat(0, 1), 1].random();
       this.rotationSpeedX = THREE.Math.randFloatSpread(60..degToRad);
       this.rotationSpeedY = THREE.Math.randFloatSpread(60..degToRad);
       this.rotationSpeedZ = THREE.Math.randFloatSpread(60..degToRad);
-      this.involutionSpeedOnBar = THREE.Math.randFloat(0.1, 0.3);
-      this.involutionSpeed = this.involutionSpeedOnBar;
+      this.involutionSpeed = THREE.Math.randFloat(0.05, 0.2) * [1, -1].random();
       this.involution = 0;
       this.sizeOnBeat = THREE.Math.randFloat(25, 85);
       this.size = this.sizeOnBeat;
@@ -109,7 +91,7 @@
 
     Holo.prototype.update = function(elapsed) {
       var amount, i, vert, _i, _j, _len, _ref, _ref1;
-      this.size -= this.sizeOnBeat * elapsed / 2;
+      this.size -= this.sizeOnBeat * elapsed / 3;
       if (this.size < 0) {
         this.size = 0;
       }
@@ -117,10 +99,6 @@
       this.particles.rotation.x += this.rotationSpeedX * elapsed;
       this.particles.rotation.y += this.rotationSpeedY * elapsed;
       this.particles.rotation.z += this.rotationSpeedZ * elapsed;
-      this.involutionSpeed -= this.involutionSpeedOnBar * elapsed / 3;
-      if (this.involutionSpeed < 0) {
-        this.involutionSpeed = 0;
-      }
       this.involution += this.involutionSpeed * elapsed;
       _ref = this.geometry.vertices;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -129,7 +107,7 @@
       }
       for (i = _j = 0, _ref1 = this.vertexAttrs.whitening.value.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
         amount = this.vertexAttrs.whitening.value[i];
-        amount -= elapsed * 4;
+        amount -= elapsed * 3;
         if (amount < 0) {
           amount = 0;
         }
@@ -149,10 +127,6 @@
 
     Holo.prototype.onBeat = function() {
       return this.size = this.sizeOnBeat;
-    };
-
-    Holo.prototype.onBar = function() {
-      return this.involutionSpeed = this.involutionSpeedOnBar;
     };
 
     Holo.prototype.onSegment = function(segment) {
