@@ -18,22 +18,16 @@ THREE.Vector3.temp = (x, y, z) ->
 
 
 # degrees to radians
-Number::rad || Object.defineProperty Number::, 'rad',
+Number::degToRad || Object.defineProperty Number::, 'degToRad',
   get: ->
     this * Math.PI/180
 
 # radians to degrees
-Number::deg || Object.defineProperty Number::, 'deg',
+Number::radToDeg || Object.defineProperty Number::, 'radToDeg',
   get: ->
     this * 180/Math.PI
 
-# Return the value of a query string parameter.
-window.getParam = (name) ->
-  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]")
-  regexS = "[\\?&]" + name + "=([^&#]*)"
-  regex = new RegExp regexS
-  results = regex.exec window.location.search
-  if results
-    decodeURIComponent results[1].replace(/\+/g, " ")
-  else
-    null
+# seconds to milliseconds
+Number::ms || Object.defineProperty Number::, 'ms',
+  get: ->
+    this * 1000

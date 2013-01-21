@@ -10,29 +10,29 @@ module.exports = class Cubes extends Echotron.EchoStack
     @type = 'Cube' #['Cube', 'Sphere'].random()
     @shader = ['lit', 'bright'].random()
 
-    @spawnQty   = THREE.Math.randInt(3, 8)
+    @spawnQty   = THREE.Math.randInt(5, 20)
     @shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps
     
     direction = [1, -1].random()
     @speed      = THREE.Math.randFloat(20, 50)  * -direction
     @accel      = THREE.Math.randFloat(50, 100) *  direction
 
-    @roll   = [0, THREE.Math.randFloatSpread(180)].random().rad
-    @tumble = [0, THREE.Math.randFloatSpread( 90)].random().rad
+    @roll   = [0, THREE.Math.randFloatSpread(180)].random().degToRad
+    @tumble = [0, THREE.Math.randFloatSpread( 90)].random().degToRad
 
-    @rotation.x = THREE.Math.randFloat(0, 360).rad
-    @rotation.y = THREE.Math.randFloat(0, 360).rad
-    @rotation.z = THREE.Math.randFloat(0, 360).rad
+    @rotation.x = THREE.Math.randFloat(0, 360).degToRad
+    @rotation.y = THREE.Math.randFloat(0, 360).degToRad
+    @rotation.z = THREE.Math.randFloat(0, 360).degToRad
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
-  beat: ->
+  onBeat: ->
     for i in [1..@spawnQty]
       @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
     return
 
-  bar: ->
-    for i in [1..@spawnQty*5]
+  onBar: ->
+    for i in [1..@spawnQty*4]
       @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
   
   update: (elapsed) ->

@@ -34,9 +34,6 @@ void main() {
   // death alpha
   alpha *= (1.0 - death);
 
-  // Drift
-  coords += drift * time;
-
   // Highlight
   float highlight = dot(
     vec3(cos(spinSpeed * time), sin(spinSpeed * time), 0.0),
@@ -54,6 +51,9 @@ void main() {
     coords.x * cos(spin) - coords.y * sin(spin),
     coords.x * sin(spin) + coords.y * cos(spin)
   );
+
+  // Drift
+  coords += drift * time;
 
   // Grid
   float value = smoothstep(0.65, 0.75, abs(mod(coords.x, 1.0 / density) * density - 0.5) * 2.0);

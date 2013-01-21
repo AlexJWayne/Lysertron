@@ -16,6 +16,7 @@ module.exports =
     'underscore'
     'backbone'
     'tweencurve'
+    'tween'
   ]
   app: [
     'echo'

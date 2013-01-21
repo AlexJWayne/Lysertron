@@ -2,7 +2,7 @@ module.exports = class Gyro extends Echotron.EchoStack
   constructor: ->
     super    
 
-    @animTime = THREE.Math.randFloat(1, 2.5) / stage.song.bps
+    @animTime = THREE.Math.randFloat(2, 4) / stage.song.bps
     @thickness = [
       THREE.Math.randFloat(0.75, 2)
       THREE.Math.randFloat(0.75, 2)
@@ -30,7 +30,16 @@ module.exports = class Gyro extends Echotron.EchoStack
       THREE.Math.randFloat(0.5, 1)
     )
 
-    @fanAngle = THREE.Math.randFloat(10, 45).rad
+    @motionCurve = [
+      TWEEN.Easing.Elastic.Out
+      TWEEN.Easing.Back.Out
+      TWEEN.Easing.Exponential.Out
+    ].random()
+
+    # Elastic curve is steeper, it needs more time to keep from being jarring.
+    @animTime *= 1.5 if @motionCurve is TWEEN.Easing.Elastic.Out
+
+    @fanAngle = THREE.Math.randFloat(10, 45).degToRad
 
     @radialDistance = THREE.Math.randFloat 3, 10
     
@@ -45,13 +54,13 @@ module.exports = class Gyro extends Echotron.EchoStack
     )
 
     @tumble = new THREE.Vector3(
-      THREE.Math.randFloatSpread(90).rad
-      THREE.Math.randFloatSpread(90).rad
-      THREE.Math.randFloatSpread(90).rad
+      THREE.Math.randFloatSpread(90).degToRad
+      THREE.Math.randFloatSpread(90).degToRad
+      THREE.Math.randFloatSpread(90).degToRad
     )
 
 
-  beat: ->
+  onBeat: ->
     layer = @stack.layers[@currentRing]
     @add layer
     layer.nudge()
@@ -75,12 +84,16 @@ class Ring extends Echotron.Echo
   constructor: (@gyro, @radius, @ringIndex) ->
     super
 
-    @animTime = @gyro.animTime
-    @pulse = @gyro.pulse
     @visible = yes
-    @color = @gyro.color
 
-    @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).rad
+    {
+      @animTime
+      @pulse
+      @color
+      @motionCurve
+    } = @gyro
+
+    @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).degToRad
 
     thicknessMix = @gyro.thicknessCurve(@ringIndex / 3)
     thickness = @gyro.thickness[0] * (1 - thicknessMix) + @gyro.thickness[1] * thicknessMix
@@ -97,29 +110,23 @@ class Ring extends Echotron.Echo
     # @mesh.scale.z = @gyro.stretch[0] * (1 - thicknessMix) + @gyro.stretch[1] * thicknessMix
 
   nudge: ->
-    @lastNudgeAt = Date.now()/1000
+    @progress = 0
+    new TWEEN.Tween(this)
+      .to({progress: 1}, @animTime.ms)
+      .easing(@motionCurve)
+      .start()
 
-  update: (elapsed) ->
-    sinceNudge = new Date().getTime()/1000 - @lastNudgeAt
-    @progress = sinceNudge / @animTime
-
-    if sinceNudge < @animTime
-      @mesh.rotation.x = Tween.easeOutSine sinceNudge, 0, 180.rad, @animTime
-    else
-      @mesh.rotation.x = 0
-
-    if not @active
-      shrinkAmount = elapsed / stage.song.bps
-
-      if shrinkAmount < @scale.length() and @scale.x > 0
-        @scale.subSelf THREE.Vector3.temp(shrinkAmount)
-      else
-        @scale.set .001, .001, .001
-        @visible = no
 
   kill: ->
     super
+    new TWEEN.Tween(@scale)
+      .to({x:0, y:0, z:0}, (1.5/stage.song.bps + @ringIndex/4).ms)
+      .easing(TWEEN.Easing.Back.In)
+      .onComplete(=> @visible = no)
+      .start()
 
+  update: (elapsed) ->
+    @mesh.rotation.x = @progress * 180.degToRad
 
   alive: ->
     @visible

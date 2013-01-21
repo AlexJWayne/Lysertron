@@ -1,21 +1,26 @@
 describe 'LayerStack', ->
+  scene = null
+
+  beforeEach ->
+    scene = new THREE.Scene
+
   describe 'constructor', ->
     it 'creates @layers as an empty array by default', ->
-      stack = new Echotron.LayerStack
+      stack = new Echotron.LayerStack scene
       stack.layers.should.deep.equal []
 
     it 'accepts an array of layers to populate @layers', ->
       echo = new Echotron.Echo
-      stack = new Echotron.LayerStack [echo]
+      stack = new Echotron.LayerStack scene, [echo]
       stack.layers.should.deep.equal [echo]
 
   describe 'song events', ->
     describe 'delegates to each layer', ->
       class Specho extends Echotron.Echo
-        beat: -> @beated = yes
-        bar: -> @barred = yes
-        segment: -> @segmented = yes
-        tatum: -> @tatumed = yes
+        onBeat:    -> @beated    = yes
+        onBar:     -> @barred    = yes
+        onSegment: -> @segmented = yes
+        onTatum:   -> @tatumed   = yes
 
       echo1 = null
       echo2 = null
@@ -24,22 +29,22 @@ describe 'LayerStack', ->
       beforeEach ->
         echo1 = new Specho
         echo2 = new Specho
-        stack = new Echotron.LayerStack [echo1, echo2]
+        stack = new Echotron.LayerStack scene, [echo1, echo2]
     
-      it 'on beat', ->
-        stack.beat()
+      it 'onBeat', ->
+        stack.onBeat()
         echo1.beated.should.be.true
     
-      it 'on bar', ->
-        stack.bar()
+      it 'onBar', ->
+        stack.onBar()
         echo1.barred.should.be.true
     
-      it 'on segment', ->
-        stack.segment()
+      it 'onSegment', ->
+        stack.onSegment()
         echo1.segmented.should.be.true
     
-      it 'on tatum', ->
-        stack.tatum()
+      it 'onTatum', ->
+        stack.onTatum()
         echo1.tatumed.should.be.true
 
   describe 'update()', ->
@@ -50,7 +55,7 @@ describe 'LayerStack', ->
 
       echo1 = new Specho
       echo2 = new Specho
-      stack = new Echotron.LayerStack [echo1, echo2]
+      stack = new Echotron.LayerStack scene, [echo1, echo2]
 
       stack.update()
 
@@ -64,7 +69,7 @@ describe 'LayerStack', ->
 
       echo1 = new Specho no
       echo2 = new Specho yes
-      stack = new Echotron.LayerStack [echo1, echo2]
+      stack = new Echotron.LayerStack scene, [echo1, echo2]
       stack.update()
 
       stack.layers.should.deep.equal [echo1]
@@ -83,11 +88,11 @@ describe 'LayerStack', ->
 
   describe 'isEmpty()', ->
     it 'returns false when there are layers', ->
-      stack = new Echotron.LayerStack(new Echotron.Echo)
+      stack = new Echotron.LayerStack scene, new Echotron.Echo
       stack.isEmpty().should.be.false
 
     it 'returns true when there are no layers', ->
-      stack = new Echotron.LayerStack
+      stack = new Echotron.LayerStack scene
       stack.isEmpty().should.be.true
 
   describe 'transition()', ->

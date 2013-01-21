@@ -9,10 +9,10 @@ class Echotron.EchoStack extends Echotron.Echo
       @stack.push echo
     return
 
-  beat:     (beat)    -> @stack.beat    beat
-  bar:      (bar)     -> @stack.bar     bar
-  segment:  (segment) -> @stack.segment segment
-  tatum:    (tatum)   -> @stack.tatum   tatum
+  onBeat:     (beat)    -> @stack.onBeat    beat
+  onBar:      (bar)     -> @stack.onBar     bar
+  onSegment:  (segment) -> @stack.onSegment segment
+  onTatum:    (tatum)   -> @stack.onTatum   tatum
 
   update: (elapsed) ->
     @stack.update elapsed

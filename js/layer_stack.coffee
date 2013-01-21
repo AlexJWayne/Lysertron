@@ -8,10 +8,10 @@ class Echotron.LayerStack
   ]
 
   # Callback handlers for each song event which delegate to layer events.
-  beat:     (data) -> layer.beat(data)     for layer in @layers when layer.active; return
-  bar:      (data) -> layer.bar(data)      for layer in @layers when layer.active; return
-  segment:  (data) -> layer.segment(data)  for layer in @layers when layer.active; return
-  tatum:    (data) -> layer.tatum(data)    for layer in @layers when layer.active; return
+  onBeat:     (data) -> layer.onBeat(data)     for layer in @layers when layer.active; return
+  onBar:      (data) -> layer.onBar(data)      for layer in @layers when layer.active; return
+  onSegment:  (data) -> layer.onSegment(data)  for layer in @layers when layer.active; return
+  onTatum:    (data) -> layer.onTatum(data)    for layer in @layers when layer.active; return
 
   # Update all layers for a single frame.
   update: (elapsed) ->
@@ -40,7 +40,7 @@ class Echotron.LayerStack
 
 
     # Force a specific echo via page query string.
-    forcedEchoName = getParam(@echoType) || getParam(@echoType.replace /ground$/, '')
+    forcedEchoName = stage.getParam(@echoType) || stage.getParam(@echoType.replace /ground$/, '')
     if forcedEchoName
       klass = (echoClass for echoClass in Echotron.Echoes[@echoType] when echoClass.id is forcedEchoName)[0]
       if klass

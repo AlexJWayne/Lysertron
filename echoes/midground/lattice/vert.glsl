@@ -5,21 +5,15 @@ uniform float twist;
 uniform float skew;
 uniform float twistDir;
 
+uniform vec3 bulge;
+
 void main() {
-  // Pass to fragment shader
-  vec3 transPos = (modelViewMatrix * vec4(position, 1.0)).xyz;
+
   uvCoord = uv;
+  vec4 vPos = modelViewMatrix * vec4(position, 1.0);
+  vPos.xyz += sin(uv.y * 3.14159) * bulge;
+  
+  vPos.xy *= 0.9 + abs(uv.x * 2.0 - 1.0) * 0.1;
 
-  vec3 origin = vec3(0.0, -40.0, 0.0);
-
-  float depth = uv.y;
-  float swirl = pow(depth, skew) * twist * twistDir;
-
-  vec3 twisted = vec3(
-    (transPos.x * cos(swirl) - transPos.y * sin(swirl)) * (1.0 - depth),
-    (transPos.x * sin(swirl) + transPos.y * cos(swirl)) * (1.0 - depth),
-    transPos.z + twistDir
-  );
-
-  gl_Position =  projectionMatrix * vec4(twisted, 1.0);
+  gl_Position =  projectionMatrix * vPos;
 }
