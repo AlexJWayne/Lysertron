@@ -57,7 +57,7 @@
           var _i, _results;
           _results = [];
           for (i = _i = 0; _i < 4; i = ++_i) {
-            _results.push(THREE.Math.randFloatSpread(100));
+            _results.push(THREE.Math.randFloatSpread(75));
           }
           return _results;
         })(),
@@ -65,7 +65,7 @@
           var _i, _results;
           _results = [];
           for (i = _i = 0; _i < 4; i = ++_i) {
-            _results.push(THREE.Math.randFloatSpread(100));
+            _results.push(THREE.Math.randFloatSpread(75));
           }
           return _results;
         })()

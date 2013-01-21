@@ -60,7 +60,6 @@
       var borderWidth,
         _this = this;
       borderWidth = THREE.Math.randFloat(0.05, 0.4);
-      console.log(borderWidth);
       [
         function() {
           _this.borderStart = 1.0 - borderWidth;
@@ -86,7 +85,6 @@
       this.sizeOnBeat = THREE.Math.randFloat(25, 85);
       this.size = this.sizeOnBeat;
       this.r1 = 15 + TWEEN.Easing.Quadratic.In(Math.random()) * 25;
-      console.log(this.r1);
       this.r2 = THREE.Math.randFloat(this.r1 / 4, this.r1);
       this.border = false;
       return this.qty = {
@@ -127,13 +125,7 @@
       _ref = this.geometry.vertices;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         vert = _ref[_i];
-        vert.copy(this.placeVert({
-          u: vert.u,
-          v: vert.v,
-          r1: this.r1,
-          r2: this.r2,
-          involution: this.involution
-        }));
+        this.placeVert(vert);
       }
       for (i = _j = 0, _ref1 = this.vertexAttrs.whitening.value.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
         amount = this.vertexAttrs.whitening.value[i];
@@ -146,18 +138,13 @@
       return this.geometry.verticesNeedUpdate = true;
     };
 
-    Holo.prototype.placeVert = function(options) {
-      var r1, r2, u, v;
-      if (options == null) {
-        options = {};
-      }
-      r1 = options.r1;
-      r2 = options.r2;
-      u = options.u * 2 * Math.PI;
-      v = options.v * 2 * Math.PI;
+    Holo.prototype.placeVert = function(vert) {
+      var u, v;
+      u = vert.u * 2 * Math.PI;
+      v = vert.v * 2 * Math.PI;
       v += u;
-      u += options.involution * 2 * Math.PI;
-      return new THREE.Vector3((r1 + r2 * Math.cos(u)) * Math.cos(v), (r1 + r2 * Math.cos(u)) * Math.sin(v), r2 * Math.sin(u) * 1.6180339887);
+      u += this.involution * 2 * Math.PI;
+      return vert.set((this.r1 + this.r2 * Math.cos(u)) * Math.cos(v), (this.r1 + this.r2 * Math.cos(u)) * Math.sin(v), this.r2 * Math.sin(u) * 1.6180339887);
     };
 
     Holo.prototype.onBeat = function() {
@@ -205,7 +192,7 @@
 
     return Holo;
 
-  })(Echotron.EchoStack);
+  })(Echotron.Echo);
 
 }).call(this);
 
