@@ -2,8 +2,6 @@ module.exports = class Holo extends Echotron.Echo
 
   uniformAttrs:
     size: 'f'
-    borderStart: 'f'
-    borderEnd:   'f'
 
   constructor: ->
     super
@@ -35,10 +33,9 @@ module.exports = class Holo extends Echotron.Echo
         @geometry.vertices.push vert
         @vertexAttrs.whitening.value.push 0
         @vertexAttrs.vertexColor.value.push(
-          if @solidColor
-            @solidColor
-          else
-            new THREE.Color().setHSV(vert.v, 1, 1)
+          new THREE.Color()
+            .setHSV(vert.v, 1, 1)
+            .lerpSelf(@baseColor, @baseColorBlend)
         )
 
     # Create the particle system with our geometry and a simple material
@@ -74,34 +71,12 @@ module.exports = class Holo extends Echotron.Echo
   initParams: ->
     borderWidth = THREE.Math.randFloat 0.05, 0.4
 
-    # Pick a snazzy display mode
-    [
-      # black outline
-      =>
-        @borderStart = 1.0 - borderWidth
-        @borderEnd   = 0.9 - borderWidth
-
-      # colored outline, black center
-      =>
-        @borderStart = 0.9 - borderWidth
-        @borderEnd   = 1.0 - borderWidth
-
-      # no outline
-      =>
-        @borderStart = 1.1
-        @borderEnd   = 1
-
-      # Solid color
-      =>
-        @borderStart = 1.1
-        @borderEnd   = 1
-        @solidColor = new THREE.Color().setHSV(
-          THREE.Math.randFloat(0, 1)
-          THREE.Math.randFloat(0, 0.5)
-          1
-        )
-
-    ].random()()
+    @baseColor = new THREE.Color().setHSV(
+      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0, 1)
+      THREE.Math.randFloat(0.25, 1)
+    )
+    @baseColorBlend = [THREE.Math.randFloat(0, 1), 1].random()
 
     # rotation speeds on all 3 axes
     @rotationSpeedX = THREE.Math.randFloatSpread 60.degToRad
@@ -109,8 +84,7 @@ module.exports = class Holo extends Echotron.Echo
     @rotationSpeedZ = THREE.Math.randFloatSpread 60.degToRad
 
     # speed of torus involution
-    @involutionSpeedOnBar = THREE.Math.randFloat 0.1, 0.3
-    @involutionSpeed = @involutionSpeedOnBar
+    @involutionSpeed = THREE.Math.randFloat(0.05, 0.2) * [1, -1].random()
     @involution = 0
 
     # Size of each particle
@@ -159,7 +133,7 @@ module.exports = class Holo extends Echotron.Echo
 
   update: (elapsed) ->
     # update the particle size
-    @size -= @sizeOnBeat * elapsed / 2
+    @size -= @sizeOnBeat * elapsed / 3
     @size = 0 if @size < 0
     @particles.material.size = @size
 
@@ -169,8 +143,6 @@ module.exports = class Holo extends Echotron.Echo
     @particles.rotation.z += @rotationSpeedZ * elapsed
 
     # add involution speed to curent involution amount
-    @involutionSpeed -= @involutionSpeedOnBar * elapsed / 3
-    @involutionSpeed = 0 if @involutionSpeed < 0
     @involution += @involutionSpeed * elapsed
 
     # loop through each vertex and update the position according to current torus config
@@ -179,7 +151,7 @@ module.exports = class Holo extends Echotron.Echo
 
     for i in [0...@vertexAttrs.whitening.value.length]
       amount = @vertexAttrs.whitening.value[i]
-      amount -= elapsed * 4
+      amount -= elapsed * 3
       amount = 0 if amount < 0
       @vertexAttrs.whitening.value[i] = amount
 
@@ -208,9 +180,6 @@ module.exports = class Holo extends Echotron.Echo
 
   onBeat: ->
     @size = @sizeOnBeat
-
-  onBar: ->
-    @involutionSpeed = @involutionSpeedOnBar
 
   onSegment: (segment) ->
     pitches = segment.pitches
