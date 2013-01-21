@@ -27,9 +27,9 @@
       this.size = THREE.Math.randFloat(3, 8);
       this.position.z = Math.random();
       this.scale.setLength(0);
-      this.particleAlpha = THREE.Math.randFloat(0.3, 0.6);
+      this.particleAlpha = THREE.Math.randFloat(0.4, 0.75);
       this.baseColor = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 0.25), 1);
-      this.spin = new THREE.Vector3(THREE.Math.randFloatSpread(30).rad, THREE.Math.randFloatSpread(30).rad, THREE.Math.randFloatSpread(30).rad);
+      this.spin = new THREE.Vector3(THREE.Math.randFloatSpread(30).degToRad, THREE.Math.randFloatSpread(30).degToRad, THREE.Math.randFloatSpread(30).degToRad);
       this.geom = new THREE.Geometry;
       for (i = _i = 0, _ref = THREE.Math.randFloat(250, 1000); 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
         this.geom.vertices.push(new THREE.Vector3(THREE.Math.randFloat(-1, 1), THREE.Math.randFloat(-1, 1), THREE.Math.randFloat(-1, 1)).setLength(THREE.Math.randFloat(4, 70)));
@@ -44,7 +44,7 @@
       this.add(this.particles);
     }
 
-    Dust.prototype.beat = function() {
+    Dust.prototype.onBeat = function() {
       this.vel = this.speed * this.direction;
       return this.direction *= -1;
     };

@@ -2,6 +2,13 @@
 (function() {
 
   describe('Stage', function() {
+    describe('getHandlerName', function() {
+      return it('translates an event name to a standardized handler name', function() {
+        stage.getHandlerName('foo').should === 'onFoo';
+        stage.getHandlerName('omgWtf').should === 'onOmgWtf';
+        return stage.getHandlerName('segment').should === 'onSegment';
+      });
+    });
     return it('needs specs');
   });
 

@@ -17,20 +17,20 @@
       this.size = [THREE.Math.randFloat(3, 8), THREE.Math.randFloat(3, 8)];
       this.type = 'Cube';
       this.shader = ['lit', 'bright'].random();
-      this.spawnQty = THREE.Math.randInt(3, 8);
+      this.spawnQty = THREE.Math.randInt(5, 20);
       this.shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps;
       direction = [1, -1].random();
       this.speed = THREE.Math.randFloat(20, 50) * -direction;
       this.accel = THREE.Math.randFloat(50, 100) * direction;
-      this.roll = [0, THREE.Math.randFloatSpread(180)].random().rad;
-      this.tumble = [0, THREE.Math.randFloatSpread(90)].random().rad;
-      this.rotation.x = THREE.Math.randFloat(0, 360).rad;
-      this.rotation.y = THREE.Math.randFloat(0, 360).rad;
-      this.rotation.z = THREE.Math.randFloat(0, 360).rad;
+      this.roll = [0, THREE.Math.randFloatSpread(180)].random().degToRad;
+      this.tumble = [0, THREE.Math.randFloatSpread(90)].random().degToRad;
+      this.rotation.x = THREE.Math.randFloat(0, 360).degToRad;
+      this.rotation.y = THREE.Math.randFloat(0, 360).degToRad;
+      this.rotation.z = THREE.Math.randFloat(0, 360).degToRad;
       this.color = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.5, 1), Math.random());
     }
 
-    Cubes.prototype.beat = function() {
+    Cubes.prototype.onBeat = function() {
       var i, _i, _ref;
       for (i = _i = 1, _ref = this.spawnQty; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         this.push(new Cube(this, {
@@ -42,10 +42,10 @@
       }
     };
 
-    Cubes.prototype.bar = function() {
+    Cubes.prototype.onBar = function() {
       var i, _i, _ref, _results;
       _results = [];
-      for (i = _i = 1, _ref = this.spawnQty * 5; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+      for (i = _i = 1, _ref = this.spawnQty * 4; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
         _results.push(this.push(new Cube(this, {
           color: this.color,
           speed: Math.abs(this.speed * 2),

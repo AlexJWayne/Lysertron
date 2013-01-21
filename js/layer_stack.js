@@ -12,46 +12,46 @@
 
     LayerStack.prototype.echoTypes = ['background', 'midground', 'foreground'];
 
-    LayerStack.prototype.beat = function(data) {
+    LayerStack.prototype.onBeat = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.beat(data);
+          layer.onBeat(data);
         }
       }
     };
 
-    LayerStack.prototype.bar = function(data) {
+    LayerStack.prototype.onBar = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.bar(data);
+          layer.onBar(data);
         }
       }
     };
 
-    LayerStack.prototype.segment = function(data) {
+    LayerStack.prototype.onSegment = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.segment(data);
+          layer.onSegment(data);
         }
       }
     };
 
-    LayerStack.prototype.tatum = function(data) {
+    LayerStack.prototype.onTatum = function(data) {
       var layer, _i, _len, _ref;
       _ref = this.layers;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         layer = _ref[_i];
         if (layer.active) {
-          layer.tatum(data);
+          layer.onTatum(data);
         }
       }
     };
@@ -88,7 +88,7 @@
         layer = _ref[_i];
         layer.kill();
       }
-      forcedEchoName = getParam(this.echoType) || getParam(this.echoType.replace(/ground$/, ''));
+      forcedEchoName = stage.getParam(this.echoType) || stage.getParam(this.echoType.replace(/ground$/, ''));
       if (forcedEchoName) {
         klass = ((function() {
           var _j, _len1, _ref1, _results;

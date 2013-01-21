@@ -23,20 +23,20 @@
       }
     };
 
-    EchoStack.prototype.beat = function(beat) {
-      return this.stack.beat(beat);
+    EchoStack.prototype.onBeat = function(beat) {
+      return this.stack.onBeat(beat);
     };
 
-    EchoStack.prototype.bar = function(bar) {
-      return this.stack.bar(bar);
+    EchoStack.prototype.onBar = function(bar) {
+      return this.stack.onBar(bar);
     };
 
-    EchoStack.prototype.segment = function(segment) {
-      return this.stack.segment(segment);
+    EchoStack.prototype.onSegment = function(segment) {
+      return this.stack.onSegment(segment);
     };
 
-    EchoStack.prototype.tatum = function(tatum) {
-      return this.stack.tatum(tatum);
+    EchoStack.prototype.onTatum = function(tatum) {
+      return this.stack.onTatum(tatum);
     };
 
     EchoStack.prototype.update = function(elapsed) {

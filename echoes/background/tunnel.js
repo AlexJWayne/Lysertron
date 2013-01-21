@@ -51,7 +51,7 @@
       this.fadeIn = 0;
       this.baseColor || (this.baseColor = new THREE.Color().setHSV(Math.random(), 0.5, THREE.Math.randFloat(0.5, 1)));
       this.ringColor = new THREE.Color().setHSV(Math.random(), THREE.Math.randFloat(0.6, 1.0), 1);
-      this.spin = THREE.Math.randFloatSpread(180).rad;
+      this.spin = THREE.Math.randFloatSpread(180).degToRad;
       this.ringSize = THREE.Math.randFloat(0.2, 1.2);
       this.ringIntensity = THREE.Math.randFloat(0.05, 0.4);
       this.fadeSpeed = THREE.Math.randFloat(0.2, 0.5);
@@ -67,7 +67,7 @@
       }));
       this.mesh.material.side = THREE.BackSide;
       this.mesh.material.depthWrite = false;
-      this.rotation.x = 90..rad;
+      this.rotation.x = 90..degToRad;
       this.position.z = -60;
       this.add(this.mesh);
     }
@@ -76,12 +76,12 @@
       return this.brightness > 0 || _.max(this.ripples) > 0;
     };
 
-    SingleTunnel.prototype.beat = function(beat) {
+    SingleTunnel.prototype.onBeat = function(beat) {
       this.ripples.unshift(1);
       return this.ripples = this.ripples.slice(0, 8);
     };
 
-    SingleTunnel.prototype.bar = function(bar) {
+    SingleTunnel.prototype.onBar = function(bar) {
       return this.brightness = 1;
     };
 

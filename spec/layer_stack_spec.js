@@ -4,16 +4,21 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   describe('LayerStack', function() {
+    var scene;
+    scene = null;
+    beforeEach(function() {
+      return scene = new THREE.Scene;
+    });
     describe('constructor', function() {
       it('creates @layers as an empty array by default', function() {
         var stack;
-        stack = new Echotron.LayerStack;
+        stack = new Echotron.LayerStack(scene);
         return stack.layers.should.deep.equal([]);
       });
       return it('accepts an array of layers to populate @layers', function() {
         var echo, stack;
         echo = new Echotron.Echo;
-        stack = new Echotron.LayerStack([echo]);
+        stack = new Echotron.LayerStack(scene, [echo]);
         return stack.layers.should.deep.equal([echo]);
       });
     });
@@ -28,19 +33,19 @@
             return Specho.__super__.constructor.apply(this, arguments);
           }
 
-          Specho.prototype.beat = function() {
+          Specho.prototype.onBeat = function() {
             return this.beated = true;
           };
 
-          Specho.prototype.bar = function() {
+          Specho.prototype.onBar = function() {
             return this.barred = true;
           };
 
-          Specho.prototype.segment = function() {
+          Specho.prototype.onSegment = function() {
             return this.segmented = true;
           };
 
-          Specho.prototype.tatum = function() {
+          Specho.prototype.onTatum = function() {
             return this.tatumed = true;
           };
 
@@ -53,22 +58,22 @@
         beforeEach(function() {
           echo1 = new Specho;
           echo2 = new Specho;
-          return stack = new Echotron.LayerStack([echo1, echo2]);
+          return stack = new Echotron.LayerStack(scene, [echo1, echo2]);
         });
-        it('on beat', function() {
-          stack.beat();
+        it('onBeat', function() {
+          stack.onBeat();
           return echo1.beated.should.be["true"];
         });
-        it('on bar', function() {
-          stack.bar();
+        it('onBar', function() {
+          stack.onBar();
           return echo1.barred.should.be["true"];
         });
-        it('on segment', function() {
-          stack.segment();
+        it('onSegment', function() {
+          stack.onSegment();
           return echo1.segmented.should.be["true"];
         });
-        return it('on tatum', function() {
-          stack.tatum();
+        return it('onTatum', function() {
+          stack.onTatum();
           return echo1.tatumed.should.be["true"];
         });
       });
@@ -93,7 +98,7 @@
         })(Echotron.Echo);
         echo1 = new Specho;
         echo2 = new Specho;
-        stack = new Echotron.LayerStack([echo1, echo2]);
+        stack = new Echotron.LayerStack(scene, [echo1, echo2]);
         stack.update();
         echo1.updated.should.be["true"];
         return echo2.updated.should.be["true"];
@@ -118,7 +123,7 @@
         })(Echotron.Echo);
         echo1 = new Specho(false);
         echo2 = new Specho(true);
-        stack = new Echotron.LayerStack([echo1, echo2]);
+        stack = new Echotron.LayerStack(scene, [echo1, echo2]);
         stack.update();
         return stack.layers.should.deep.equal([echo1]);
       });
@@ -143,12 +148,12 @@
     describe('isEmpty()', function() {
       it('returns false when there are layers', function() {
         var stack;
-        stack = new Echotron.LayerStack(new Echotron.Echo);
+        stack = new Echotron.LayerStack(scene, new Echotron.Echo);
         return stack.isEmpty().should.be["false"];
       });
       return it('returns true when there are no layers', function() {
         var stack;
-        stack = new Echotron.LayerStack;
+        stack = new Echotron.LayerStack(scene);
         return stack.isEmpty().should.be["true"];
       });
     });

@@ -56,9 +56,11 @@
       _ref = ['bar', 'beat', 'tatum', 'segment'];
       _fn = function(eventType) {
         return _this.song.on(eventType, function(eventData) {
-          _this.logicalLayers.background.stack[eventType](eventData);
-          _this.logicalLayers.midground.stack[eventType](eventData);
-          return _this.logicalLayers.foreground.stack[eventType](eventData);
+          var handlerName;
+          handlerName = _this.getHandlerName(eventType);
+          _this.logicalLayers.background.stack[handlerName](eventData);
+          _this.logicalLayers.midground.stack[handlerName](eventData);
+          return _this.logicalLayers.foreground.stack[handlerName](eventData);
         });
       };
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -70,7 +72,7 @@
         _this.logicalLayers.midground.stack.transition();
         return _this.logicalLayers.foreground.stack.transition();
       });
-      return this.songName = getParam('song');
+      return this.songName = this.getParam('song');
     };
 
     Stage.prototype.start = function(playAudio) {
@@ -86,17 +88,16 @@
     };
 
     Stage.prototype.update = function() {
-      var echoType, elapsed, logicalLayer, now, _ref, _results;
+      var echoType, elapsed, logicalLayer, now, _ref;
       now = Date.now() / 1000;
       elapsed = now - this.lastFrame;
       this.lastFrame = now;
+      TWEEN.update();
       _ref = this.logicalLayers;
-      _results = [];
       for (echoType in _ref) {
         logicalLayer = _ref[echoType];
-        _results.push(logicalLayer.stack.update(elapsed));
+        logicalLayer.stack.update(elapsed);
       }
-      return _results;
     };
 
     Stage.prototype.animate = function() {
@@ -114,6 +115,23 @@
       this.renderer.render(this.logicalLayers.midground.scene, this.camera);
       this.renderer.clear(false, true, true);
       return this.renderer.render(this.logicalLayers.foreground.scene, this.camera);
+    };
+
+    Stage.prototype.getParam = function(name) {
+      var regex, regexS, results;
+      name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+      regexS = "[\\?&]" + name + "=([^&#]*)";
+      regex = new RegExp(regexS);
+      results = regex.exec(window.location.search);
+      if (results) {
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+      } else {
+        return null;
+      }
+    };
+
+    Stage.prototype.getHandlerName = function(eventName) {
+      return "on" + (eventName.charAt(0).toUpperCase()) + eventName.slice(1, eventName.length);
     };
 
     return Stage;

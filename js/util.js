@@ -20,29 +20,22 @@
     return v;
   };
 
-  Number.prototype.rad || Object.defineProperty(Number.prototype, 'rad', {
+  Number.prototype.degToRad || Object.defineProperty(Number.prototype, 'degToRad', {
     get: function() {
       return this * Math.PI / 180;
     }
   });
 
-  Number.prototype.deg || Object.defineProperty(Number.prototype, 'deg', {
+  Number.prototype.radToDeg || Object.defineProperty(Number.prototype, 'radToDeg', {
     get: function() {
       return this * 180 / Math.PI;
     }
   });
 
-  window.getParam = function(name) {
-    var regex, regexS, results;
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    regexS = "[\\?&]" + name + "=([^&#]*)";
-    regex = new RegExp(regexS);
-    results = regex.exec(window.location.search);
-    if (results) {
-      return decodeURIComponent(results[1].replace(/\+/g, " "));
-    } else {
-      return null;
+  Number.prototype.ms || Object.defineProperty(Number.prototype, 'ms', {
+    get: function() {
+      return this * 1000;
     }
-  };
+  });
 
 }).call(this);

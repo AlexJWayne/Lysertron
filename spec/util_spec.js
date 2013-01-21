@@ -52,14 +52,19 @@
         return v.z.should.equal(9);
       });
     });
-    describe('Number::rad', function() {
+    describe('Number::degToRad', function() {
       return it("returns the radian value of this number, assuming it's in degrees", function() {
-        return 180..rad.should.equal(Math.PI);
+        return 180..degToRad.should.equal(Math.PI);
       });
     });
-    return describe('Number::deg', function() {
+    describe('Number::radToDeg', function() {
       return it("returns the degree value of this number, assuming it's in radians", function() {
-        return Math.PI.deg.should.equal(180);
+        return Math.PI.radToDeg.should.equal(180);
+      });
+    });
+    return describe('Number::ms', function() {
+      return it("returns milliseconds, assuming its in seconds", function() {
+        return 6..ms.should === 6000;
       });
     });
   });

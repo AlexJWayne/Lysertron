@@ -64,13 +64,13 @@
       return this.active;
     };
 
-    Echo.prototype.beat = function() {};
+    Echo.prototype.onBeat = function() {};
 
-    Echo.prototype.bar = function() {};
+    Echo.prototype.onBar = function() {};
 
-    Echo.prototype.segment = function() {};
+    Echo.prototype.onSegment = function() {};
 
-    Echo.prototype.tatum = function() {};
+    Echo.prototype.onTatum = function() {};
 
     Echo.prototype.update = function(elapsed) {};
 
