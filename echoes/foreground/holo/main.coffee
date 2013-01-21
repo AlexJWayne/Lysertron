@@ -1,4 +1,4 @@
-module.exports = class Holo extends Echotron.EchoStack
+module.exports = class Holo extends Echotron.Echo
 
   uniformAttrs:
     size: 'f'
@@ -73,7 +73,6 @@ module.exports = class Holo extends Echotron.EchoStack
 
   initParams: ->
     borderWidth = THREE.Math.randFloat 0.05, 0.4
-    console.log borderWidth
 
     # Pick a snazzy display mode
     [
@@ -120,7 +119,6 @@ module.exports = class Holo extends Echotron.EchoStack
 
     # radius to the center of the ring
     @r1 = 15 + TWEEN.Easing.Quadratic.In(Math.random()) * 25
-    console.log @r1
 
     # radius of the ring
     @r2 = THREE.Math.randFloat @r1/4, @r1
@@ -138,7 +136,6 @@ module.exports = class Holo extends Echotron.EchoStack
       segments: THREE.Math.randInt 32, 80
 
   animateBirth: ->
-    # Animate birth
     r1 = @r1
     r2 = @r2
     @r1 = @r2 = 0
@@ -178,13 +175,7 @@ module.exports = class Holo extends Echotron.EchoStack
 
     # loop through each vertex and update the position according to current torus config
     for vert in @geometry.vertices
-      vert.copy @placeVert(
-        u: vert.u
-        v: vert.v
-        r1: @r1
-        r2: @r2
-        involution: @involution
-      )
+      @placeVert vert
 
     for i in [0...@vertexAttrs.whitening.value.length]
       amount = @vertexAttrs.whitening.value[i]
@@ -195,29 +186,23 @@ module.exports = class Holo extends Echotron.EchoStack
     # bust vertex cache so the new vertex data is loaded
     @geometry.verticesNeedUpdate = yes
   
-  # Given a u, v and involution, it returns a vector that represents the position of point on the torus.
-  # Each is key in `options` normalized zero to one, representing how far around the circle the value is.
-  #
-  #   Required keys: u, v, involution
-  placeVert: (options = {}) ->
-    r1 = options.r1
-    r2 = options.r2
-
+  # Toroidalize!
+  placeVert: (vert) ->
     # convert from 0 to 1 to 0 to 2*PI
-    u = options.u * 2 * Math.PI
-    v = options.v * 2 * Math.PI
+    u = vert.u * 2 * Math.PI
+    v = vert.v * 2 * Math.PI
 
     # update v to make a holochip, instead of a simple ring
     v += u
 
     # update u with current involution amount
-    u += options.involution * 2 * Math.PI
+    u += @involution * 2 * Math.PI
 
     # convert u, v to torus coordinates according to the standard torus formula
-    new THREE.Vector3(
-      (r1 + r2 * Math.cos(u)) * Math.cos(v)
-      (r1 + r2 * Math.cos(u)) * Math.sin(v)
-      r2 * Math.sin(u) * 1.6180339887 # PHI
+    vert.set(
+      (@r1 + @r2 * Math.cos(u)) * Math.cos(v)
+      (@r1 + @r2 * Math.cos(u)) * Math.sin(v)
+      @r2 * Math.sin(u) * 1.6180339887 # PHI
     )
 
 

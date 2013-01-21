@@ -32,8 +32,8 @@ module.exports = class Lattice extends Echotron.EchoStack
     @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
 
     @bulgevalues = {
-      x: (THREE.Math.randFloatSpread(100) for i in [0...4])
-      y: (THREE.Math.randFloatSpread(100) for i in [0...4])
+      x: (THREE.Math.randFloatSpread(75) for i in [0...4])
+      y: (THREE.Math.randFloatSpread(75) for i in [0...4])
     }
 
     new TWEEN.Tween(@rotation)
