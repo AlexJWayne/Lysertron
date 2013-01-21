@@ -60,11 +60,22 @@ class Echotron.Stage
           @logicalLayers.midground .stack[handlerName](eventData)
           @logicalLayers.foreground.stack[handlerName](eventData)
     
-    # Transition layers on new sections
-    @song.on 'section', (section) =>
+    # trigger scene transitions
+    barCount = 0
+    fullTransition = =>
+      barCount = 0
       @logicalLayers.background.stack.transition()
       @logicalLayers.midground.stack.transition()
       @logicalLayers.foreground.stack.transition()
+
+    # Transition layers on new sections
+    @song.on 'section', fullTransition
+
+    # Force a transition on the 8th bar if one hasnt' happened yet.
+    @song.on 'bar', =>
+      console.log 'bar count', barCount
+      barCount++
+      fullTransition() if barCount > 8
 
     # Get song from URL
     @songName = @getParam 'song'
