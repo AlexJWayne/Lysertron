@@ -190,7 +190,7 @@ module.exports = class Holo extends Echotron.Echo
       whitenings = @vertexAttrs.whitening.value
 
       for i in [0...pitches.length]
-        if i == Math.floor(vertex.v * 12)
+        if i == Math.floor(vertex.v * 12) && pitches[i] > whitenings[vertIndex]
           whitenings[vertIndex] = pitches[i]
 
   kill: ->
