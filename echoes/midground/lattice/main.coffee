@@ -25,8 +25,8 @@ module.exports = class Lattice extends Echotron.EchoStack
   animateTweens: ->
     qty = THREE.Math.randInt(4, 12)
     @offsetValues = 
-      x: (THREE.Math.randFloatSpread(10).degToRad for i in [0...qty])
-      y: (THREE.Math.randFloatSpread(10).degToRad for i in [0...qty])
+      x: (THREE.Math.randFloatSpread(5).degToRad for i in [0...qty])
+      y: (THREE.Math.randFloatSpread(5).degToRad for i in [0...qty])
 
     @offsetValues.x.push @offsetValues.x[@offsetValues.x.length - 1]
     @offsetValues.y.push @offsetValues.y[@offsetValues.y.length - 1]
@@ -101,6 +101,7 @@ class Strut extends Echotron.Echo
     color: 'c'
     twist: 'f'
     skew:  'f'
+    glow:  'f'
     twistDir: 'f'
     bulge: 'v3'
 
@@ -109,6 +110,7 @@ class Strut extends Echotron.Echo
 
     @angle *= 360.degToRad
     @widthScale = 0
+    @glow = 0
     
     # snag shader props from parent
     {
@@ -141,6 +143,9 @@ class Strut extends Echotron.Echo
     @add @mesh
 
   update: (elapsed) ->
+    @glow -= elapsed * 3
+    @glow = 0 if @glow < 0
+
     if @active
       @widthScale += elapsed
       @widthScale = 1 if @widthScale > 1
@@ -150,6 +155,15 @@ class Strut extends Echotron.Echo
       @widthScale = .001 if @widthScale < .001
 
     @scale.x = 1 - Math.pow(1 - @widthScale, 2)
+
+  onSegment: (segment) ->
+    return unless segment.pitches
+
+    @strutStart ?= 0               + @angle / (2*Math.PI)
+    @strutEnd   ?= 1 / @spiral.qty + @angle / (2*Math.PI)
+
+    newGlow = _.max segment.pitches[Math.floor(@strutStart * 12)...Math.floor(@strutEnd * 12)]
+    @glow = newGlow if newGlow > @glow
 
   alive: ->
     @widthScale > .001

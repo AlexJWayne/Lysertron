@@ -73,7 +73,6 @@ class Echotron.Stage
 
     # Force a transition on the 8th bar if one hasnt' happened yet.
     @song.on 'bar', =>
-      console.log 'bar count', barCount
       barCount++
       fullTransition() if barCount > 8
 

@@ -9,11 +9,11 @@ float snoise(vec2 v);
 
 void main() {
   vec3 noisedPos = position;
-  height = snoise(
-    position.xy/smoothness +
-    travel/(smoothness/100.0)
-  );
-  
+
+  vec2 smoothedTravel = travel / (smoothness/100.0);
+  height  = snoise(  position.xy        / smoothness + smoothedTravel) * 0.7;
+  height += snoise(-(position.xy / 2.0) / smoothness + smoothedTravel) * 0.3;
+
   noisedPos.z = height * maxHeight;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(noisedPos, 1.0);
 
