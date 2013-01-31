@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\n\nvoid main() {\n  float alpha = 1.0 - pow(1.0 - uvCoord.y, 7.0);\n  vec3 depthTint = color + vec3(smoothstep(0.0, 1.0, uvCoord.y));\n\n  float shadow = abs(uvCoord.x * 2.0 - 1.0) * 0.15;\n  \n  gl_FragColor = vec4(depthTint - vec3(shadow), alpha);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nuniform vec3 bulge;\n\nvoid main() {\n\n  uvCoord = uv;\n  vec4 vPos = modelViewMatrix * vec4(position, 1.0);\n  vPos.xyz += sin(uv.y * 3.14159) * bulge;\n  \n  vPos.xy *= 0.9 + abs(uv.x * 2.0 - 1.0) * 0.1;\n\n  gl_Position =  projectionMatrix * vPos;\n}"};
+  var assets = {"frag.glsl":"varying vec2 uvCoord;\nvarying vec3 vPos;\n\nuniform vec3 color;\nuniform float glow;\n\nvoid main() {\n  float alpha = 1.0 - pow(1.0 - uvCoord.y, 7.0);\n  vec3 depthTint = color + vec3(smoothstep(0.0, 1.0, uvCoord.y));\n\n  float shadow = abs(uvCoord.x * 2.0 - 1.0) * 0.15;\n  \n  gl_FragColor = vec4(depthTint - vec3(shadow) + vec3(glow), alpha);\n}","vert.glsl":"varying vec3 vPos;\nvarying vec2 uvCoord;\n\nuniform float twist;\nuniform float skew;\nuniform float twistDir;\n\nuniform vec3 bulge;\n\nvoid main() {\n\n  uvCoord = uv;\n  vec4 vPos = modelViewMatrix * vec4(position, 1.0);\n  vPos.xyz += sin(uv.y * 3.14159) * bulge;\n  \n  vPos.xy *= 0.9 + abs(uv.x * 2.0 - 1.0) * 0.1;\n\n  gl_Position =  projectionMatrix * vPos;\n}"};
   var module = {};
   (function(){
     (function() {
@@ -37,7 +37,7 @@
           var _i, _results;
           _results = [];
           for (i = _i = 0; 0 <= qty ? _i < qty : _i > qty; i = 0 <= qty ? ++_i : --_i) {
-            _results.push(THREE.Math.randFloatSpread(10).degToRad);
+            _results.push(THREE.Math.randFloatSpread(5).degToRad);
           }
           return _results;
         })(),
@@ -45,7 +45,7 @@
           var _i, _results;
           _results = [];
           for (i = _i = 0; 0 <= qty ? _i < qty : _i > qty; i = 0 <= qty ? ++_i : --_i) {
-            _results.push(THREE.Math.randFloatSpread(10).degToRad);
+            _results.push(THREE.Math.randFloatSpread(5).degToRad);
           }
           return _results;
         })()
@@ -161,6 +161,7 @@
       color: 'c',
       twist: 'f',
       skew: 'f',
+      glow: 'f',
       twistDir: 'f',
       bulge: 'v3'
     };
@@ -173,6 +174,7 @@
       Strut.__super__.constructor.apply(this, arguments);
       this.angle *= 360..degToRad;
       this.widthScale = 0;
+      this.glow = 0;
       _ref = this.spiral, this.color = _ref.color, this.twist = _ref.twist, this.skew = _ref.skew, this.bulge = _ref.bulge;
       this.twistDir = this.flipped ? -1 : 1;
       this.geom = new THREE.PlaneGeometry(this.spiral.width, 800, 1, 100);
@@ -191,6 +193,10 @@
     }
 
     Strut.prototype.update = function(elapsed) {
+      this.glow -= elapsed * 3;
+      if (this.glow < 0) {
+        this.glow = 0;
+      }
       if (this.active) {
         this.widthScale += elapsed;
         if (this.widthScale > 1) {
@@ -203,6 +209,23 @@
         }
       }
       return this.scale.x = 1 - Math.pow(1 - this.widthScale, 2);
+    };
+
+    Strut.prototype.onSegment = function(segment) {
+      var newGlow, _ref, _ref1;
+      if (!segment.pitches) {
+        return;
+      }
+      if ((_ref = this.strutStart) == null) {
+        this.strutStart = 0 + this.angle / (2 * Math.PI);
+      }
+      if ((_ref1 = this.strutEnd) == null) {
+        this.strutEnd = 1 / this.spiral.qty + this.angle / (2 * Math.PI);
+      }
+      newGlow = _.max(segment.pitches.slice(Math.floor(this.strutStart * 12), Math.floor(this.strutEnd * 12)));
+      if (newGlow > this.glow) {
+        return this.glow = newGlow;
+      }
     };
 
     Strut.prototype.alive = function() {

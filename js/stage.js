@@ -76,7 +76,6 @@
       };
       this.song.on('section', fullTransition);
       this.song.on('bar', function() {
-        console.log('bar count', barCount);
         barCount++;
         if (barCount > 8) {
           return fullTransition();

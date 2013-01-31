@@ -1,5 +1,5 @@
 (function() {
-  var assets = {"frag.glsl":"varying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  float depthCue = 1.0 - smoothstep(100.0, 225.0, depth);\n\n  float distance = length(gl_PointCoord - vec2(0.5)) * 2.0;\n  float alphaCircle = smoothstep(1.0, 0.9, distance);\n\n  gl_FragColor = vec4(baseColor * depthCue + vec3(whiteningAmount), alphaCircle);\n}","vert.glsl":"attribute vec3 vertexColor;\nattribute float whitening;\n\nuniform float size;\n\nvarying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  \n  whiteningAmount = whitening;\n  baseColor = vertexColor;\n  depth = gl_Position.z - cameraPosition.z;\n\n  float fl = 180.0;\n  float scale = fl / (fl + gl_Position.z);\n  gl_PointSize = size * scale;\n}"};
+  var assets = {"frag.glsl":"varying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nuniform vec3 light;\nuniform float specular;\n\nvoid main() {\n\n  // Fade color with distance\n  float depthCue = 1.0 - smoothstep(100.0, 225.0, depth);\n\n  // 2d coordinate form [1,1] to [-1,-1]\n  vec2 coord = 2.0 * gl_PointCoord - vec2(1.0);\n\n  // create a 3d normal as if particle is a sphere\n  vec3 normal = normalize(vec3(\n    coord.x,\n    coord.y,\n    1.0 - length(coord)\n  ));\n\n  // Compute lighting amount based on light position in uniform\n  float lighting = dot(normal, light);\n  lighting = clamp(lighting, 0.0, 1.0);\n  lighting = pow(lighting, 3.0);\n\n  // Constrain square particle to a circle\n  float alphaCircle = smoothstep(1.0, 0.9, length(coord));\n\n  // Make the very center a bit transparent\n  float centerFade = (1.0 - clamp(length(coord), 0.0, 1.0)) * 0.5;\n\n  gl_FragColor = vec4(\n    // Color darkened by depth\n    baseColor * depthCue\n\n    // Lighting onSegment\n    + vec3(whiteningAmount)\n\n    // Lighten by the light source\n    + vec3(lighting * specular),\n\n    // Alpha\n    alphaCircle\n    + alphaCircle * (\n      lighting * specular\n      - centerFade\n    )\n  );\n}","vert.glsl":"attribute vec3 vertexColor;\nattribute float whitening;\n\nuniform float size;\n\nvarying vec3 baseColor;\nvarying float depth;\nvarying float whiteningAmount;\n\nvoid main() {\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n  \n  whiteningAmount = whitening;\n  baseColor = vertexColor;\n  depth = gl_Position.z - cameraPosition.z;\n\n  float fl = 180.0;\n  float scale = fl / (fl + gl_Position.z);\n  gl_PointSize = size * scale;\n}"};
   var module = {};
   (function(){
     (function() {
@@ -12,7 +12,9 @@
     __extends(Holo, _super);
 
     Holo.prototype.uniformAttrs = {
-      size: 'f'
+      size: 'f',
+      specular: 'f',
+      light: 'v3'
     };
 
     function Holo() {
@@ -46,7 +48,8 @@
         attributes: this.vertexAttrs,
         vertexShader: assets["vert.glsl"],
         fragmentShader: assets["frag.glsl"],
-        transparent: true
+        transparent: true,
+        depthTest: false
       }));
       this.particles.rotation.set(THREE.Math.randFloat(0, 360..degToRad), THREE.Math.randFloat(0, 360..degToRad), THREE.Math.randFloat(0, 360..degToRad));
       this.animateBirth();
@@ -57,6 +60,8 @@
     Holo.prototype.initParams = function() {
       var borderWidth;
       borderWidth = THREE.Math.randFloat(0.05, 0.4);
+      this.light = new THREE.Vector3(THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1), THREE.Math.randFloatSpread(1)).normalize();
+      this.specular = THREE.Math.randFloat(0.0, 0.75);
       this.baseColor = new THREE.Color().setHSV(THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0, 1), THREE.Math.randFloat(0.25, 1));
       this.baseColorBlend = [THREE.Math.randFloat(0, 1), 1].random();
       this.rotationSpeedX = THREE.Math.randFloatSpread(60..degToRad);
@@ -143,7 +148,7 @@
           var _j, _ref1, _results1;
           _results1 = [];
           for (i = _j = 0, _ref1 = pitches.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-            if (i === Math.floor(vertex.v * 12)) {
+            if (i === Math.floor(vertex.v * 12) && pitches[i] > whitenings[vertIndex]) {
               _results1.push(whitenings[vertIndex] = pitches[i]);
             } else {
               _results1.push(void 0);
