@@ -2,6 +2,8 @@ module.exports = class Holo extends Echotron.Echo
 
   uniformAttrs:
     size: 'f'
+    specular: 'f'
+    light: 'v3'
 
   constructor: ->
     super
@@ -48,6 +50,7 @@ module.exports = class Holo extends Echotron.Echo
         vertexShader:   assets["vert.glsl"]
         fragmentShader: assets["frag.glsl"]
         transparent:    yes
+        depthTest:      no
       )
     )
 
@@ -70,6 +73,14 @@ module.exports = class Holo extends Echotron.Echo
 
   initParams: ->
     borderWidth = THREE.Math.randFloat 0.05, 0.4
+
+    @light = new THREE.Vector3(
+      THREE.Math.randFloatSpread 1
+      THREE.Math.randFloatSpread 1
+      THREE.Math.randFloatSpread 1
+    ).normalize()
+
+    @specular = THREE.Math.randFloat 0.0, 0.75
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
@@ -190,7 +201,7 @@ module.exports = class Holo extends Echotron.Echo
       whitenings = @vertexAttrs.whitening.value
 
       for i in [0...pitches.length]
-        if i == Math.floor(vertex.v * 12)
+        if i == Math.floor(vertex.v * 12) && pitches[i] > whitenings[vertIndex]
           whitenings[vertIndex] = pitches[i]
 
   kill: ->

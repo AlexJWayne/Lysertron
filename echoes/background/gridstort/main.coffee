@@ -19,8 +19,8 @@ module.exports = class Gridstort extends Echotron.Echo
     @time         = THREE.Math.randFloat 0, 10
     @amplitude    = 0
     @amplitudeDir = 1
-    @density      = THREE.Math.randFloat 20, 60
-    @opacityMax   = THREE.Math.randFloat 0.15, 0.3
+    @density      = THREE.Math.randFloat 10, 30
+    @opacityMax   = THREE.Math.randFloat 0.05, 0.2
     @opacity      = @opacityMax
     @speed        = THREE.Math.randFloat 5, 20
     @spinSpeed    = THREE.Math.randFloatSpread(45).degToRad
@@ -78,7 +78,7 @@ module.exports = class Gridstort extends Echotron.Echo
       @amplitude = 0 if @amplitude < 0
     
     @opacity -= @opacityMax * elapsed * stage.song.bps * 0.65
-    @opacity = 0.1 if @opacity < 0.1
+    @opacity = 0.02 if @opacity < 0.02
 
     @rotation.z += elapsed / 4.0
 

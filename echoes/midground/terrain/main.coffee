@@ -23,9 +23,10 @@ class Terrain extends Echotron.Echo
   constructor: ->
     super
 
-    @smoothness = THREE.Math.randFloat 150, 400
-    @maxHeight  = THREE.Math.randFloat 75, 160
-    @baseColor  = new THREE.Color().setHSV(
+    @undulation    = THREE.Math.randFloat 0.5, 1.5
+    @smoothness    = THREE.Math.randFloat 125, 300
+    @maxHeight     = THREE.Math.randFloat 75, 160
+    @baseColor     = new THREE.Color().setHSV(
       Math.random()
       THREE.Math.randFloat 0.5, 1
       1
@@ -59,7 +60,7 @@ class Terrain extends Echotron.Echo
     @beatValue -= elapsed * 2
     @beatValue = 0 if @beatValue < 0
     
-    @travel.y -= elapsed * 2
+    @travel.y -= @undulation * elapsed
 
   onBeat: ->
     @beatValue = 1

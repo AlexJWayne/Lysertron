@@ -17,6 +17,7 @@ module.exports =
     'backbone'
     'tweencurve'
     'tween'
+    'sparks'
   ]
   app: [
     'echo'

@@ -3,15 +3,14 @@ module.exports = class Cubes extends Echotron.EchoStack
     super
     
     @size = [
-      THREE.Math.randFloat(3, 8)
-      THREE.Math.randFloat(3, 8)
+      THREE.Math.randFloat(5, 16)
+      THREE.Math.randFloat(5, 16)
     ]
     
-    @type = 'Cube' #['Cube', 'Sphere'].random()
     @shader = ['lit', 'bright'].random()
 
-    @spawnQty   = THREE.Math.randInt(5, 20)
-    @shrinkTime = THREE.Math.randInt(3, 6) / stage.song.bps
+    @spawnQty   = THREE.Math.randInt(10, 50)
+    @shrinkTime = THREE.Math.randFloat(2, 5) / stage.song.bps
     
     direction = [1, -1].random()
     @speed      = THREE.Math.randFloat(20, 50)  * -direction
@@ -32,8 +31,9 @@ module.exports = class Cubes extends Echotron.EchoStack
     return
 
   onBar: ->
-    for i in [1..@spawnQty*4]
-      @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel, size: @size.map((s)-> s/3)
+    for i in [1..@spawnQty*8]
+      @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
+    return
   
   update: (elapsed) ->
     super
@@ -46,22 +46,18 @@ class Cube extends Echotron.Echo
     beatScale: 'f'
     tint:      'c'
 
+  geom: new THREE.CubeGeometry 1, 1, 1, 1, 1, 1
+
   constructor: (@parentLayer, { @color, @speed, @accel, @size })->
     super
 
     @beatScale = 1
     @tint      = @color
 
-    size = THREE.Math.randFloat @size...
-
-    geom =
-      if @parentLayer.type is 'Cube'
-        new THREE.CubeGeometry size, size, size, 1, 1, 1
-      else
-        new THREE.SphereGeometry size/2, 16, 12
+    @finalSize = THREE.Math.randFloat @size...
 
     @mesh = new THREE.Mesh(
-      geom
+      @geom
       new THREE.ShaderMaterial(
         uniforms:       @uniforms
         vertexShader:   assets["scaler.vshader"]
@@ -72,19 +68,19 @@ class Cube extends Echotron.Echo
     @add @mesh
     
     @mesh.position.set(
-      THREE.Math.randFloatSpread 30
-      THREE.Math.randFloatSpread 30
-      THREE.Math.randFloatSpread 30
+      THREE.Math.randFloatSpread 40
+      THREE.Math.randFloatSpread 40
+      THREE.Math.randFloatSpread 40
     )
 
-    @accel = @accel
     @vel = @mesh.position.clone().setLength @speed
 
   alive: ->
-    @uniforms.beatScale.value > 0
+    @beatScale.value > 0
 
   update: (elapsed) ->
     @beatScale -= elapsed / @parentLayer.shrinkTime
+    @mesh.scale.setLength @finalSize * @beatScale * @beatScale
 
     @vel.addSelf THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
     @mesh.position.addSelf THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
