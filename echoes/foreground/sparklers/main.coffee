@@ -37,14 +37,13 @@ class Resistance
 class Gravity
   constructor: (@force) ->
   update: (emitter, particle, time) ->
-    distSquare = Math.pow particle.position.length(), 2
-    distSquare = particle.position.length()
+    influence = particle.position.length() / 100
 
     particle.velocity.subSelf(
       THREE.Vector3.temp(particle.position)
-        .setLength(@force * time / distSquare)
+        .setLength(@force * time / influence)
     )
-    
+
 
 module.exports = class Sparkler extends Echotron.Echo
   uniformAttrs:
@@ -76,13 +75,13 @@ module.exports = class Sparkler extends Echotron.Echo
     @emitterZone = new MirrorPointZone(new THREE.Vector3 0, 0, 0)
     @emitter.addInitializer new SPARKS.Position(@emitterZone)
     @emitter.addInitializer new SPARKS.Velocity(new SphereZone(0, 0, 0, 50))
-    @emitter.addInitializer new SPARKS.Lifetime .4, 1.25
+    @emitter.addInitializer new SPARKS.Lifetime .2, 1.5
 
     @emitter.addAction      new SPARKS.Age
     @emitter.addAction      new SPARKS.RandomDrift @drift, @drift, @drift
     @emitter.addAction      new SPARKS.Move
     @emitter.addAction      new Resistance 40
-    @emitter.addAction      new Gravity 2000
+    @emitter.addAction      new Gravity 30
 
     @emitter.addCallback "created", @onParticleCreated
     @emitter.addCallback "dead",    @onParticleDead
@@ -116,7 +115,6 @@ module.exports = class Sparkler extends Echotron.Echo
     )
 
     @darkening = THREE.Math.randFloat 0.5, 3
-    console.log @darkening
 
   onParticleCreated: (p) =>
     console.log "Exceeded Particle max! #{@emitter._particles.length}" if @emitter._particles.length > @geom.vertices.length
