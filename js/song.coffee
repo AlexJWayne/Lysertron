@@ -4,6 +4,9 @@ class Echotron.Song
   _.extend @::, Backbone.Events
 
   constructor: ->
+    @lastScheduledIndices = {}
+    for eventType in @eventTypes
+      @lastScheduledIndices[eventType] = 0
 
   # Each kind of event the song can emit
   eventTypes: [
@@ -65,22 +68,60 @@ class Echotron.Song
 
   # Schedule the song's event callbacks
   scheduleEvents: ->
+    # Current time of the audio playback.
+    playHead =
+      if @audio
+        @audio[0].currentTime
+      else
+        @startedAt ||= Date.now()
+        (Date.now() - @startedAt) / 1000
+
+    # Cycle through all event types.
     for eventType in @eventTypes
-      for eventData in @data["#{eventType}s"]
+
+      # The array of events of this eventType.
+      events = @data["#{eventType}s"]
+
+      # Loop until we find a break condition.
+      while true
+
+        # Find the earliest unprocessed event.
+        eventData = events[@lastScheduledIndices[eventType]]
+
+        # Out of events! Abort while loop.
+        break unless eventData
+
+        # Event too far away! Abort while loop.
+        break unless eventData.start < playHead + 1
+
+        # Increment event index for next loop iteration.
+        @lastScheduledIndices[eventType]++
+
+        # Close over event type and data
         do (eventType, eventData) =>
           setTimeout =>
+
+            # Regularly log out how far behind we are.
+            if @audio && eventType is 'bar'
+              console.log 'audio sync', @audio[0].currentTime - eventData.start
+
+            # What it's all about, trigger the event of this type and pass in the event data.
             @trigger eventType, eventData
-          , eventData.start * 1000
+
+          # Schedule the event trigger in the future.
+          , (eventData.start - playHead) * 1000
 
     return
 
   # Start the audio player
   start: (playAudio = yes) ->
     if @noSong
-      @scheduleEvents()
+      setInterval =>
+        @scheduleEvents()
+      , 250
 
     else
-      @audio.on 'playing', => @scheduleEvents()
+      @audio.on 'timeupdate', => @scheduleEvents()
 
       @audio[0].volume = if playAudio then 0.25 else 0
       @audio[0].play()
