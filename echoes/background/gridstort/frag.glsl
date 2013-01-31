@@ -56,8 +56,8 @@ void main() {
   coords += drift * time;
 
   // Grid
-  float value = smoothstep(0.65, 0.75, abs(mod(coords.x, 1.0 / density) * density - 0.5) * 2.0);
-  value      -= smoothstep(0.65, 0.75, abs(mod(coords.y, 1.0 / density) * density - 0.5) * 2.0);
+  float value = smoothstep(0.75, 0.85, abs(mod(coords.x, 1.0 / density) * density - 0.5) * 2.0);
+  value      -= smoothstep(0.75, 0.85, abs(mod(coords.y, 1.0 / density) * density - 0.5) * 2.0) * 0.75;
 
   // Trough shadow
   float shadow = length(theRipple) * 0.75;
