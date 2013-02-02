@@ -18,9 +18,7 @@ class SingleTunnel extends Echotron.Echo
     ringIntensity:  'f'
     fadeIn:         'f'
 
-  constructor: ->
-    super
-
+  initialize: ->
     @inward         = [1, 0].random()
     @brightness     = 1
     @ripples        = [1,0,0,0,0,0,0,0,0,0,0,0]

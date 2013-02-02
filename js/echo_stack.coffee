@@ -1,7 +1,7 @@
 class Echotron.EchoStack extends Echotron.Echo
   constructor: ->
-    super
     @stack = new Echotron.LayerStack this
+    super
 
   push: (echoes...) ->
     for echo in echoes

@@ -1,8 +1,5 @@
 module.exports = class Terrains extends Echotron.EchoStack
-
-  constructor: ->
-    super
-
+  initialize: ->
     @bottom = new Terrain
     @top    = new Terrain
     @top.rotation.z = 180.degToRad

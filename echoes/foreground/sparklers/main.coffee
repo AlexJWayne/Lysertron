@@ -50,9 +50,7 @@ module.exports = class Sparkler extends Echotron.Echo
     baseColor: 'c'
     darkening: 'f'
 
-  constructor: ->
-    super
-
+  initialize: ->
     @setupValues()
 
     @vertexAttributes =

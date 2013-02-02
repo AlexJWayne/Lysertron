@@ -13,9 +13,7 @@ module.exports = class Gridstort extends Echotron.Echo
     death:     'f'
 
 
-  constructor: ->
-    super
-
+  initialize: ->
     @time         = THREE.Math.randFloat 0, 10
     @amplitude    = 0
     @amplitudeDir = 1

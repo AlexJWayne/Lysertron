@@ -1,7 +1,5 @@
 module.exports = class Lattice extends Echotron.EchoStack
-  constructor: ->
-    super
-
+  initialize: ->
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
 

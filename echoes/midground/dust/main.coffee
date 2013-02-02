@@ -4,9 +4,7 @@ module.exports = class Dust extends Echotron.Echo
     size:          'f'
     particleAlpha: 'f'
 
-  constructor: ->
-    super
-
+  initialize: ->
     @direction = 1
     @speed = THREE.Math.randFloat(2, 4)
     @damp  = THREE.Math.randFloat(1, 4)

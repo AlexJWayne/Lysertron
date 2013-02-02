@@ -1,7 +1,5 @@
 module.exports = class Cubes extends Echotron.EchoStack
-  constructor: ->
-    super
-    
+  initialize: ->
     @size = [
       THREE.Math.randFloat(5, 16)
       THREE.Math.randFloat(5, 16)

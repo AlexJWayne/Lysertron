@@ -1,7 +1,5 @@
 module.exports = class Gyro extends Echotron.EchoStack
-  constructor: ->
-    super    
-
+  initialize: ->
     @animTime = THREE.Math.randFloat(2, 4) / stage.song.bps
     @thickness = [
       THREE.Math.randFloat(0.75, 2)

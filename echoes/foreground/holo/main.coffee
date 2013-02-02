@@ -5,9 +5,7 @@ module.exports = class Holo extends Echotron.Echo
     specular: 'f'
     light: 'v3'
 
-  constructor: ->
-    super
-
+  initialize: ->
     @initParams()
 
     # Vertex attributes used in the vertex shader
