@@ -13,6 +13,9 @@ class Echotron.Echo extends THREE.Object3D
     @active = yes
     @initUniforms()
 
+    # Call a non-constructor init function.
+    @initialize?()
+
   # Setup list of uniforms sent to shaders.
   initUniforms: ->
     @uniforms = {}
