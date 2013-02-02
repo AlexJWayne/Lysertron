@@ -77,3 +77,9 @@ Echotron music must be pre-processed by **Echonest**.
 5. Wait a minute or two for uploading plus analyzation on their servers.
 5. When it completes you should have an `ShortSongName.m4a` and `ShortSongName.json` files in your `songs` directory.
 6. To play the song with visuals, simply navigate to: `http://localhost:3001/?song=ShortSongName`
+
+## Contributing
+
+Eventually, there is plans to treat layers more like content with support for keeping them in a database on a server somewhere.
+
+But for now, I encourage anyone simply fork this repo, make some really cool layers, and send me back a pull request.
