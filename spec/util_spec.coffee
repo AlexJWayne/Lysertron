@@ -49,4 +49,4 @@ describe 'Utils', ->
 
   describe 'Number::ms', ->
     it "returns milliseconds, assuming its in seconds", ->
-      6.ms.should == 6000
+      6.ms.should.equal 6000

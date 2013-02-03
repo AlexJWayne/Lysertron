@@ -1,5 +1,12 @@
 describe 'Echo', ->
   describe 'constructor', ->
+    class Specho extends Echotron.Echo
+      initialize: ->
+        @initialized = yes
+
+    it 'calls the initialize()', ->
+      echo = new Specho
+      echo.initialized.should.be.true
 
   describe 'uniformAttrs', ->
     class Specho extends Echotron.Echo
@@ -59,5 +66,3 @@ describe 'Echo', ->
       echo.alive().should.be.true
       echo.kill()
       echo.alive().should.be.false
-
-  it 'needs specs'
