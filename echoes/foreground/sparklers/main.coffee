@@ -39,7 +39,7 @@ class Gravity
   update: (emitter, particle, time) ->
     influence = particle.position.length() / 100
 
-    particle.velocity.subSelf(
+    particle.velocity.sub(
       THREE.Vector3.temp(particle.position)
         .setLength(@force * time / influence)
     )

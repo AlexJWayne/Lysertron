@@ -57,9 +57,9 @@ module.exports = class Dust extends Echotron.Echo
     super
     
     @vel -= @vel * @damp * elapsed
-    @scale.addSelf THREE.Vector3.temp(1,1,1).multiplyScalar(@vel * elapsed)
+    @scale.add THREE.Vector3.temp(1,1,1).multiplyScalar(@vel * elapsed)
 
-    @rotation.addSelf THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
+    @rotation.add THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
 
   kill: ->
     super

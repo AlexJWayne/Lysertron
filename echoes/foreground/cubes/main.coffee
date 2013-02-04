@@ -80,7 +80,7 @@ class Cube extends Echotron.Echo
     @beatScale -= elapsed / @parentLayer.shrinkTime
     @mesh.scale.setLength @finalSize * @beatScale * @beatScale
 
-    @vel.addSelf THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
-    @mesh.position.addSelf THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
+    @vel.add THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
+    @mesh.position.add THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
 
     @kill() if @beatScale <= 0

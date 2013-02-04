@@ -44,6 +44,7 @@ class Terrain extends Echotron.Echo
         uniforms: @uniforms
         vertexShader: assets['vert.glsl']
         fragmentShader: assets['frag.glsl']
+        transparent: yes
       )
     )
 

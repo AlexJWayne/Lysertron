@@ -69,7 +69,7 @@ module.exports = class Gyro extends Echotron.EchoStack
 
   update: (elapsed) ->
     super
-    @rotation.addSelf THREE.Vector3.temp(@tumble).multiplyScalar(elapsed)
+    @rotation.add THREE.Vector3.temp(@tumble).multiplyScalar(elapsed)
 
 
     

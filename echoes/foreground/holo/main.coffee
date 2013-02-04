@@ -35,7 +35,7 @@ module.exports = class Holo extends Echotron.Echo
         @vertexAttrs.vertexColor.value.push(
           new THREE.Color()
             .setHSV(vert.v, 1, 1)
-            .lerpSelf(@baseColor, @baseColorBlend)
+            .lerp(@baseColor, @baseColorBlend)
         )
 
     # Create the particle system with our geometry and a simple material
