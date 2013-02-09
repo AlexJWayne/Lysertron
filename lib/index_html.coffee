@@ -1,3 +1,7 @@
+path = require 'path'
+fs   = require 'fs'
+indexPath = path.join path.dirname(fs.realpathSync(__filename)), '../index.jade'
+
 manifest = require './manifest'
 
 # Index HTML
@@ -6,7 +10,7 @@ renderContent = (req, res, { specRun, specs }) ->
   specs ||= []
 
   manifest.findEchoes (err, echoes) ->
-    res.render 'index.jade',
+    res.render indexPath,
       vendor:   manifest.vendor
       app:      manifest.app
       specs:    specs

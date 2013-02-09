@@ -1,5 +1,10 @@
 fs = require 'fs'
+path = require 'path'
 coffee = require 'coffee-script'
+
+rootPath    = path.join path.dirname(fs.realpathSync(__filename)), '..'
+echoesPath  = path.join rootPath, 'echoes'
+currentPath = process.cwd()
 
 # Compile an echo
 exports.register = (app) ->
@@ -8,7 +13,13 @@ exports.register = (app) ->
     res.send compile(req.params.echoType, req.params.name)
 
 exports.compile = compile = (echoType, name) ->
-  echoPath = "echoes/#{echoType}/#{name}"
+  # Search for a local echo direcotry
+  echoPath = path.join currentPath, echoType, name
+
+  # Then search for one in the framework
+  unless fs.existsSync echoPath
+    echoPath = path.join echoesPath, echoType, name
+  
   files = fs.readdirSync echoPath
   code = null
   assets = {}
@@ -18,8 +29,8 @@ exports.compile = compile = (echoType, name) ->
       continue
 
     else if file is 'main.coffee'
-      path = "#{echoPath}/#{file}"
-      coffeeCode = fs.readFileSync(path).toString()
+      mainPath = path.join echoPath, file
+      coffeeCode = fs.readFileSync(mainPath).toString()
 
       try
         code = coffee.compile(coffeeCode, filename: path)

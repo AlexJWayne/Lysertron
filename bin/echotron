@@ -1,0 +1,15 @@
+path = require 'path'
+fs   = require 'fs'
+argv = require('optimist').argv
+
+lib  = path.join path.dirname(fs.realpathSync(__filename)), '../lib'
+
+[command, options...] = argv._
+
+switch command
+  when 'server'
+    app = require path.join(lib, '/server')
+    port = options[0] || 3001
+
+    console.log "Started server on port #{port}"
+    app.listen port
