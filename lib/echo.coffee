@@ -13,11 +13,14 @@ exports.register = (app) ->
     res.send compile(req.params.echoType, req.params.name)
 
 exports.compile = compile = (echoType, name) ->
-  # Search for a local echo direcotry
+  # Search for a local echo directory.
   echoPath = path.join currentPath, echoType, name
+  if fs.existsSync echoPath
+    now = new Date()
+    console.log "#{now.getHours()}:#{now.getMinutes()}:#{now.getSeconds()} - Sucessfully Compiled #{echoType}/#{name}"
 
-  # Then search for one in the framework
-  unless fs.existsSync echoPath
+  # If not found then search for one in the framework.
+  else
     echoPath = path.join echoesPath, echoType, name
   
   files = fs.readdirSync echoPath
