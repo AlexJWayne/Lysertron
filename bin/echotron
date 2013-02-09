@@ -1,3 +1,5 @@
+#!/usr/bin/env coffee
+
 path = require 'path'
 fs   = require 'fs'
 argv = require('optimist').argv
@@ -11,5 +13,5 @@ switch command
     app = require path.join(lib, '/server')
     port = options[0] || 3001
 
-    console.log "Started server on port #{port}"
+    console.log "Started server at http://localhost:#{port}/"
     app.listen port

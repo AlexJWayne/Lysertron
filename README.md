@@ -20,7 +20,7 @@ If you have the above squared away, then you are ready to get your own local Ech
 
 1. Clone the repository, cd into project directory.
 2. Install npm dependencies: `npm install`
-3. Start the local server: `coffee bin/echotron server`
+3. Start the local server: `bin/echotron server`
 4. Point your browser to: `http://localhost:3001/`
 
 ## Anatomoy of the Echotron

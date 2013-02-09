@@ -1,11 +1,19 @@
 {
   "name": "Echotron",
-  "description": "",
+  "description": "Semantic Music Visualization, extensible by WebGL doodlers.",
+  "homepage": "https://github.com/Squeegy/Echotron",
   "version": "0.0.1",
-  "author": {
-    "name": "Alex Wayne",
-    "email": "alex@beautifulpixel.com"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Squeegy/Echotron.git"
   },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://creativecommons.org/licenses/MIT/"
+    }
+  ],
+  "author": "Alex Wayne",
   "contributors": [],
   "dependencies": {
     "coffee-script": "1.3.3",
@@ -16,11 +24,13 @@
     "optimist": "*"
   },
   "devDependencies": {},
-  "keywords": [],
-  "main": "index",
+  "keywords": [
+    "webgl",
+    "music",
+  ],
+  "main": "./lib/server",
   "engines": {
     "node": "*"
   },
-  "readme": "",
   "readmeFilename": "README.md"
 }
