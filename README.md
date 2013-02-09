@@ -16,12 +16,14 @@ Echotron is a WebGL semantic and extensible music visualizer.
 * CoffeeScript _(for the moment)_
 * WebGL capable browser
 
+If you have the above squared away, then you are ready to get your own local Echotron server.
+
 1. Clone the repository, cd into project directory.
 2. Install npm dependencies: `npm install`
-3. Start the local server: `./server.coffee`
+3. Start the local server: `coffee bin/echotron server`
 4. Point your browser to: `http://localhost:3001/`
 
-## Anotomoy of the Echotron
+## Anatomoy of the Echotron
 
 Echotron has 3 pools of layers. When creating each scene, a random layer of each type is chosen and composited together.
 
