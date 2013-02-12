@@ -82,5 +82,5 @@ class Cube extends Echotron.Echo
 
     @vel.add THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
     @mesh.position.add THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
-
+    
     @kill() if @beatScale <= 0

@@ -17,10 +17,10 @@ class Echotron.EchoStack extends Echotron.Echo
   update: (elapsed) ->
     @stack.update elapsed
 
-  kill: ->
+  _kill: ->
     super
     for layer in @stack.layers
-      layer.kill()
+      layer._kill()
     return
 
   alive: ->

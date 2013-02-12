@@ -203,7 +203,6 @@ module.exports = class Holo extends Echotron.Echo
           whitenings[vertIndex] = pitches[i]
 
   kill: ->
-    super
     @sizeOnBeat *= 4
 
   alive: ->

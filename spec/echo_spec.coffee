@@ -29,11 +29,22 @@ describe 'Echo', ->
 
       echo.uniforms.beer.should.deep.equal value: 37, type: 'f'
 
-  describe 'kill', ->
+  describe '_kill', ->
     it 'sets @active to false', ->
       echo = new Echotron.Echo
-      echo.kill()
+      echo._kill()
       echo.active.should.be.false
+
+    it 'calls kill()', ->
+      class Specho extends Echotron.Echo
+        kill: -> @killed = yes
+
+      echo = new Specho
+      echo._kill()
+      echo.killed.should.be.true
+        
+    
+    
 
   describe 'expired', ->
     class Specho extends Echotron.Echo
@@ -47,7 +58,7 @@ describe 'Echo', ->
       echo = new Specho
       echo.expired().should.be.false
 
-      echo.kill()
+      echo._kill()
       echo.expired().should.be.false
 
     it 'returns false when not @active and not @alive()', ->
@@ -57,12 +68,12 @@ describe 'Echo', ->
       echo.hasBeer = no
       echo.expired().should.be.false
 
-      echo.kill()
+      echo._kill()
       echo.expired().should.be.true
 
   describe 'alive', ->
     it 'simply returns @active, by default', ->
       echo = new Echotron.Echo
       echo.alive().should.be.true
-      echo.kill()
+      echo._kill()
       echo.alive().should.be.false

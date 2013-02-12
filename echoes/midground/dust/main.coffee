@@ -62,7 +62,6 @@ module.exports = class Dust extends Echotron.Echo
     @rotation.add THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
 
   kill: ->
-    super
     @vel = @speed * 2
     @damp = 0
 

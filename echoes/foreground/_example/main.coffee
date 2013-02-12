@@ -67,8 +67,8 @@ module.exports = class Example extends Echotron.Echo
   # listener intuitively infers from the timing of perceived musical events (segments).
   # onTatum: (tatum) ->
 
-  # Called when the scene transitions and the layer should begin to die.  If you
-  # override this, make sure to call `super`!
+  # Called when the scene transitions and the layer should begin to die. After this is
+  # called, it will no longer receive song event callbacks.
   # kill: ->
 
   # Called every frame after the layer has been killed. For as long as this method

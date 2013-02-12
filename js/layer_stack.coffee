@@ -36,7 +36,7 @@ class Echotron.LayerStack
   # Kill old layers so they can decay.
   transition: ->
     return unless @echoType
-    layer.kill() for layer in @layers
+    layer._kill() for layer in @layers
 
 
     # Force a specific echo via page query string.

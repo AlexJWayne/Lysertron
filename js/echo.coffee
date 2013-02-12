@@ -35,8 +35,14 @@ class Echotron.Echo extends THREE.Object3D
   
   # Tells this layer to start to die. It will no longer receive song events,
   # and will be pruned when @alive() returns false.
-  kill: ->
+  _kill: ->
     @active = no
+    @kill()
+
+  # Call private @_kill() unless we have already been killed.
+  kill: ->
+    @_kill() if @active
+
 
   # Called by LayerStack
   expired: ->

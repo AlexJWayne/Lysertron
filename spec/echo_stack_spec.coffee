@@ -54,14 +54,14 @@ describe 'EchoStack', ->
       echostack.onTatum {}
       echo.tatumed.should.be.true
 
-  describe 'kill', ->
+  describe '_kill()', ->
     it 'kills all layers in the stack', ->
       echo1 = new Echotron.Echo
       echo2 = new Echotron.Echo
       echostack = new Echotron.EchoStack
       echostack.push echo1, echo2
 
-      echostack.kill()
+      echostack._kill()
 
       echo1.active.should.be.false
       echo2.active.should.be.false
