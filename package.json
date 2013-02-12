@@ -22,7 +22,8 @@
     "request":       "2.12.0",
     "jade":          "0.28.1",
     "optimist":      "*",
-    "coffeeson":     "*"
+    "coffeeson":     "*",
+    "request":       "*"
   },
   "devDependencies": {},
   "keywords": [

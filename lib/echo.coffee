@@ -13,6 +13,21 @@ exports.register = (app) ->
     res.type 'js'
     res.send compile(req.params.echoType, req.params.name)
 
+exports.compileMeta = compileMeta = (echoType, name) ->
+  echoPath = path.join currentPath, echoType, name
+  echoPath = path.join echoesPath,  echoType, name unless fs.existsSync echoPath
+  
+  if fs.existsSync path.join(echoPath, 'meta.coffeeson')
+    coffeeson.parse fs.readFileSync(path.join echoPath, 'meta.coffeeson')
+
+  else if fs.existsSync(path.join echoPath, 'meta.json')
+    JSON.parse fs.readFileSync(path.join echoPath, 'meta.json')
+
+  else
+    {}
+
+
+
 exports.compile = compile = (echoType, name) ->
   # Search for a local echo directory.
   echoPath = path.join currentPath, echoType, name
@@ -63,7 +78,7 @@ exports.compile = compile = (echoType, name) ->
       #{code}
     }.call({}));
     module.exports._id = "#{name}";
-    module.exports._meta = #{JSON.stringify meta || {}};
+    module.exports._meta = #{JSON.stringify compileMeta(echoType, name)};
     window.Echotron.Echoes.#{echoType}.push(module.exports);
   }());
   """

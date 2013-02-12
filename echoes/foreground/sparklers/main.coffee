@@ -64,7 +64,7 @@ module.exports = class Sparkler extends Echotron.Echo
       @geom.vertices.push new THREE.Vector3(0, 0, 0)
       @vertexAttributes.energy.value.push 0
 
-    @particlesPerBeat = 1500
+    @particlesPerBeat = 1000
     @particlesPerSegment = 20
 
     @counter = new SPARKS.ShotCounter @particlesPerBeat

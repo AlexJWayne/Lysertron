@@ -1,10 +1,17 @@
 #!/usr/bin/env coffee
 
+# HOST = 'http://localhost:5000/'
+HOST = 'http://frozen-lake-6089.herokuapp.com/'
+
+request = require 'request'
 path = require 'path'
 fs   = require 'fs'
 argv = require('optimist').argv
 
 lib  = path.join path.dirname(fs.realpathSync(__filename)), '../lib'
+
+echoCompiler = require path.join(lib, 'echo')
+manifest = require path.join(lib, 'manifest')
 
 [command, options...] = argv._
 
@@ -15,3 +22,25 @@ switch command
 
     console.log "Started server at http://localhost:#{port}/"
     app.listen port
+
+  when 'publish'
+    [type, name] = options
+    echoes = []
+
+    if type && name
+      echoes = ["#{type}/#{name}"]
+    else
+      manifest.findEchoes (err, echoPaths) -> echoes = echoPaths
+    
+
+    for echoPath in echoes
+      do (echoPath, type, name) ->
+        [type, name] = echoPath.split('/')
+        meta = echoCompiler.compileMeta type, name
+        meta.content = echoCompiler.compile type, name
+
+        # request.post 'http://localhost:5000/',
+        request.post HOST, json: meta, (err, res, body) ->
+          console.log "Uploaded: #{type} #{name}"
+        
+        
