@@ -1,6 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 coffee = require 'coffee-script'
+coffeeson = require 'coffeeson'
 
 rootPath    = path.join path.dirname(fs.realpathSync(__filename)), '..'
 echoesPath  = path.join rootPath, 'echoes'
@@ -45,6 +46,12 @@ exports.compile = compile = (echoType, name) ->
     else if file is 'main.js'
       code = fs.readFileSync "#{echoPath}/#{file}"
 
+    else if file is 'meta.coffeeson'
+      meta = coffeeson.parse fs.readFileSync("#{echoPath}/#{file}")
+
+    else if file is 'meta.json'
+      meta = JSON.parse fs.readFileSync("#{echoPath}/#{file}")
+
     else
       assets[file] = fs.readFileSync("#{echoPath}/#{file}").toString()
 
@@ -55,7 +62,8 @@ exports.compile = compile = (echoType, name) ->
     (function(){
       #{code}
     }.call({}));
-    module.exports.id = "#{name}";
+    module.exports._id = "#{name}";
+    module.exports._meta = #{JSON.stringify meta || {}};
     window.Echotron.Echoes.#{echoType}.push(module.exports);
   }());
   """

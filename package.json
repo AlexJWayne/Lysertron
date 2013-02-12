@@ -21,7 +21,8 @@
     "echonest":      "0.0.3",
     "request":       "2.12.0",
     "jade":          "0.28.1",
-    "optimist": "*"
+    "optimist":      "*",
+    "coffeeson":     "*"
   },
   "devDependencies": {},
   "keywords": [
