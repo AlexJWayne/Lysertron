@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 
 # HOST = 'http://localhost:5000/'
-HOST = 'http://frozen-lake-6089.herokuapp.com/'
+HOST = 'http://echotron.info/'
 
 request = require 'request'
 path = require 'path'
