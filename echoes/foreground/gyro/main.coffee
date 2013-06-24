@@ -34,6 +34,12 @@ module.exports = class Gyro extends Echotron.EchoStack
       TWEEN.Easing.Exponential.Out
     ].random()
 
+    @lightRingWidths = []
+    @lightRingSpeeds = []
+    for i in [1..3]
+      @lightRingWidths.push THREE.Math.randFloat(0.03, 0.15)
+      @lightRingSpeeds.push THREE.Math.randFloat(0.25, 0.75) * [1, -1].random()
+
     # Elastic curve is steeper, it needs more time to keep from being jarring.
     @animTime *= 1.5 if @motionCurve is TWEEN.Easing.Elastic.Out
 
@@ -41,6 +47,7 @@ module.exports = class Gyro extends Echotron.EchoStack
 
     @radialDistance = THREE.Math.randFloat 3, 10
     
+    @lightenOnNudge = [1, -0.5].random()
     @direction = 1 #[1, -1].random()
     @currentRing = if @direction is 1 then 0 else 3
 
@@ -76,8 +83,12 @@ module.exports = class Gyro extends Echotron.EchoStack
 class Ring extends Echotron.Echo
   uniformAttrs:
     progress: 'f'
-    pulse: 'f'
+    elapsed: 'f'
+    lightenOnNudge: 'f'
     color: 'c'
+    lightRingBrightness: 'f'
+    lightRingSpeeds: 'fv1'
+    lightRingWidths: 'fv1'
 
   constructor: (@gyro, @radius, @ringIndex) ->
     super
@@ -89,6 +100,9 @@ class Ring extends Echotron.Echo
       @pulse
       @color
       @motionCurve
+      @lightenOnNudge
+      @lightRingSpeeds
+      @lightRingWidths
     } = @gyro
 
     @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).degToRad
@@ -97,21 +111,30 @@ class Ring extends Echotron.Echo
     thickness = @gyro.thickness[0] * (1 - thicknessMix) + @gyro.thickness[1] * thicknessMix
 
     @add @mesh = new THREE.Mesh(
-      new THREE.TorusGeometry @radius, thickness, 10, 60
+      new THREE.TorusGeometry @radius, thickness, 15, 70
       new THREE.ShaderMaterial(
         uniforms: @uniforms
         fragmentShader: assets['frag.glsl']
         vertexShader:   assets['vert.glsl']
+        transparent: yes
       )
     )
     
     # @mesh.scale.z = @gyro.stretch[0] * (1 - thicknessMix) + @gyro.stretch[1] * thicknessMix
 
   nudge: ->
+    @lightRingBrightness = 1
+
     @progress = 0
     new TWEEN.Tween(this)
       .to({progress: 1}, @animTime.ms)
       .easing(@motionCurve)
+      .start()
+
+    @linearProgress = 0
+    new TWEEN.Tween(this)
+      .to({linearProgress: 1}, @animTime.ms)
+      # .easing(TWEEN.Easing.Linear)
       .start()
 
 
@@ -124,6 +147,9 @@ class Ring extends Echotron.Echo
       .start()
 
   update: (elapsed) ->
+    @elapsed = Date.now() / 1000 % 10000
+    @lightRingBrightness -= elapsed * 0.25
+    @lightRingBrightness = 0 if @lightRingBrightness < 0
     @mesh.rotation.x = @progress * 180.degToRad
 
   alive: ->
