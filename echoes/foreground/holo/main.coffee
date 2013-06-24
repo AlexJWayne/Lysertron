@@ -21,22 +21,23 @@ module.exports = class Holo extends Echotron.Echo
     # Create a geometry object and populate it with vertices.
     # No need to position them yet, we do that every frame.
     @geometry = new THREE.Geometry
-    for u in [0...@qty.segments]
-      for v in [0...@qty.chips]
+    if @show.nodes
+      for u in [0...@qty.segments]
+        for v in [0...@qty.chips]
 
-        # Create vertex and save it's u and v with it.
-        vert = new THREE.Vector3
-        vert.u = u / @qty.segments
-        vert.v = v / @qty.chips
+          # Create vertex and save it's u and v with it.
+          vert = new THREE.Vector3
+          vert.u = u / @qty.segments
+          vert.v = v / @qty.chips
 
-        # Add the vertex to the geometry and set a color for it.
-        @geometry.vertices.push vert
-        @vertexAttrs.whitening.value.push 0
-        @vertexAttrs.vertexColor.value.push(
-          new THREE.Color()
-            .setHSV(vert.v, 1, 1)
-            .lerp(@baseColor, @baseColorBlend)
-        )
+          # Add the vertex to the geometry and set a color for it.
+          @geometry.vertices.push vert
+          @vertexAttrs.whitening.value.push 0
+          @vertexAttrs.vertexColor.value.push(
+            new THREE.Color()
+              .setHSV(vert.v, 1, 1)
+              .lerp(@baseColor, @baseColorBlend)
+          )
 
     # Create the particle system with our geometry and a simple material
     @particles = new THREE.ParticleSystem(
@@ -68,6 +69,31 @@ module.exports = class Holo extends Echotron.Echo
 
     # add the particle system to the scene
     @add @particles
+
+
+    # Create the chip highlight lines.
+    chipLinesGeometry = new THREE.Geometry()
+    for v in [0...@qty.chips]
+      lastVert = null
+      for u in [0...128]
+        vert = new THREE.Vector3()
+        vert.u = u / 127
+        vert.v = v / @qty.chips
+
+        chipLinesGeometry.vertices.push lastVert, vert if lastVert
+        lastVert = vert
+
+    @chipLines = new THREE.Line(
+      chipLinesGeometry
+      new THREE.LineBasicMaterial(
+        color: @baseColor
+        linewidth: @lineWidth
+      )
+      THREE.LinePieces
+    )
+
+    if @show.lines
+      @particles.add @chipLines
 
   initParams: ->
     borderWidth = THREE.Math.randFloat 0.05, 0.4
@@ -106,9 +132,6 @@ module.exports = class Holo extends Echotron.Echo
     # radius of the ring
     @r2 = THREE.Math.randFloat @r1/4, @r1
 
-    # do the particles have a border?
-    @border = no
-
     # number of particles
     @qty =
 
@@ -117,6 +140,22 @@ module.exports = class Holo extends Echotron.Echo
 
       # fidelity of each chip
       segments: THREE.Math.randInt 32, 80
+
+    # Line width
+    @lineWidth = THREE.Math.randFloat 2, 5
+
+
+    # What to render
+    switch THREE.Math.randInt(0,1)
+      when 0
+        @show =
+          nodes: yes
+          lines: no
+      when 1
+        @show =
+          nodes: yes
+          lines: yes
+    
 
   animateBirth: ->
     r1 = @r1
@@ -158,6 +197,9 @@ module.exports = class Holo extends Echotron.Echo
     for vert in @geometry.vertices
       @placeVert vert
 
+    for vert in @chipLines.geometry.vertices
+      @placeVert vert
+
     for i in [0...@vertexAttrs.whitening.value.length]
       amount = @vertexAttrs.whitening.value[i]
       amount -= elapsed * 3
@@ -165,7 +207,8 @@ module.exports = class Holo extends Echotron.Echo
       @vertexAttrs.whitening.value[i] = amount
 
     # bust vertex cache so the new vertex data is loaded
-    @geometry.verticesNeedUpdate = yes
+    @geometry.verticesNeedUpdate  = yes
+    @chipLines.geometry.verticesNeedUpdate = yes
   
   # Toroidalize!
   placeVert: (vert) ->
