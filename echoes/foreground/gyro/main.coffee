@@ -111,7 +111,7 @@ class Ring extends Echotron.Echo
     thickness = @gyro.thickness[0] * (1 - thicknessMix) + @gyro.thickness[1] * thicknessMix
 
     @add @mesh = new THREE.Mesh(
-      new THREE.TorusGeometry @radius, thickness, 15, 70
+      new THREE.TorusGeometry @radius, thickness, 16, 60
       new THREE.ShaderMaterial(
         uniforms: @uniforms
         fragmentShader: assets['frag.glsl']

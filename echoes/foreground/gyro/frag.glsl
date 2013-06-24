@@ -32,7 +32,7 @@ float pulseRing(float width, float speed) {
 }
 
 void main() {
-  float lightVal = dot(vec3(0.0, 1.0, 0.0), screenNormal) * 0.5;
+  float lightVal = dot(vec3(0.0, 1.0, 0.0), screenNormal) * 0.75;
   lightVal      += dot(vec3(1.0, 0.0, 0.0), screenNormal) * 0.5;
 
   // Attenuate light
@@ -42,9 +42,8 @@ void main() {
   // pulse color
   gl_FragColor.xyz += vec3(pow((1.0 - progress), 2.0)) * lightenOnNudge;
 
-  // speckle in some noise
+  // large blurry noise for unlit portion
   gl_FragColor.xyz += vec3(snoise(screenNormal.xy + vec2(elapsed))) * 0.075;
-  // gl_FragColor.xyz += vec3(snoise(uvCoord * vec2(20.0, 1.0))) * 0.1;
 
   // ring lights
   float pulse = 0.0;
@@ -53,6 +52,7 @@ void main() {
   }
   gl_FragColor.xyz += vec3(pulse);
 
+  // alpha
   gl_FragColor.w =
     lightVal * 0.4 + 0.7
     + (1.0 - progress)
