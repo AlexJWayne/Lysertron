@@ -23,7 +23,12 @@ float pulseRing(float width, float speed) {
   result += smoothstep(width, 0.0, abs(x       - ringLightProgress));
   result += smoothstep(width, 0.0, abs(x - 1.0 - ringLightProgress));
   result += smoothstep(width, 0.0, abs(x + 1.0 - ringLightProgress));
-  return result * 0.65 * lightRingBrightness;
+
+  float noise = snoise(uvCoord * 60.0 - vec2(1.0, elapsed) * 20.0);
+
+  result = result * 0.85 * lightRingBrightness;
+  result *= 0.95 + noise * 0.15;
+  return result;
 }
 
 void main() {
