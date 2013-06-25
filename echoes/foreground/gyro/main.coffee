@@ -105,7 +105,7 @@ class Ring extends Echotron.Echo
       @lightRingWidths
     } = @gyro
 
-    @rotation.z = @gyro.fanAngle * @ringIndex #THREE.Math.randFloat(0, 360).degToRad
+    @rotation.z = @gyro.fanAngle * @ringIndex
 
     thicknessMix = @gyro.thicknessCurve(@ringIndex / 3)
     thickness = @gyro.thickness[0] * (1 - thicknessMix) + @gyro.thickness[1] * thicknessMix
@@ -119,22 +119,15 @@ class Ring extends Echotron.Echo
         transparent: yes
       )
     )
-    
-    # @mesh.scale.z = @gyro.stretch[0] * (1 - thicknessMix) + @gyro.stretch[1] * thicknessMix
 
   nudge: ->
+    @rotationflipped = !@rotationflipped
     @lightRingBrightness = 1
 
     @progress = 0
     new TWEEN.Tween(this)
       .to({progress: 1}, @animTime.ms)
       .easing(@motionCurve)
-      .start()
-
-    @linearProgress = 0
-    new TWEEN.Tween(this)
-      .to({linearProgress: 1}, @animTime.ms)
-      # .easing(TWEEN.Easing.Linear)
       .start()
 
 
@@ -150,7 +143,7 @@ class Ring extends Echotron.Echo
     @elapsed = Date.now() / 1000 % 10000
     @lightRingBrightness -= elapsed * 0.25
     @lightRingBrightness = 0 if @lightRingBrightness < 0
-    @mesh.rotation.x = @progress * 180.degToRad
+    @mesh.rotation.x = (if @rotationflipped then 180 else 0).degToRad + @progress * 180.degToRad
 
   alive: ->
     @visible

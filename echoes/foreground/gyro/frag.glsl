@@ -14,7 +14,7 @@ varying vec2 uvCoord;
 
 float snoise(vec2 v);
 
-float pulseRing(float width, float speed) {
+float lightRing(float width, float speed) {
   float x = uvCoord.x;
   float slowness = 1.0 / speed;
   float ringLightProgress = mod(elapsed, slowness) / slowness;
@@ -46,17 +46,17 @@ void main() {
   gl_FragColor.xyz += vec3(snoise(screenNormal.xy + vec2(elapsed))) * 0.075;
 
   // ring lights
-  float pulse = 0.0;
+  float lights = 0.0;
   for (int i = 0; i < 3; i++) {
-    pulse += pulseRing(lightRingWidths[i], lightRingSpeeds[i]);
+    lights += lightRing(lightRingWidths[i], lightRingSpeeds[i]);
   }
-  gl_FragColor.xyz += vec3(pulse);
+  gl_FragColor.xyz += vec3(lights);
 
   // alpha
   gl_FragColor.w =
     lightVal * 0.4 + 0.7
     + (1.0 - progress)
-    + pulse;
+    + lights;
 }
 
 
