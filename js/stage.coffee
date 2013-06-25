@@ -51,14 +51,23 @@ class Echotron.Stage
   initSong: ->
     @song = new Echotron.Song
 
-    # Bind all events
-    for eventType in ['bar', 'beat', 'tatum', 'segment', 'musicEvent']
-      do (eventType) =>
-        @song.on eventType, (eventData) =>
-          handlerName = @getHandlerName eventType
-          @logicalLayers.background.stack[handlerName](eventData)
-          @logicalLayers.midground .stack[handlerName](eventData)
-          @logicalLayers.foreground.stack[handlerName](eventData)
+    # Bind music events events
+    @song.on 'musicEvent', (data) =>
+
+      # Dispatch event to echoes
+      @logicalLayers.background.stack.dispatchMusicEvent(data)
+      @logicalLayers.midground .stack.dispatchMusicEvent(data)
+      @logicalLayers.foreground.stack.dispatchMusicEvent(data)
+
+      # Transition layers on new sections
+      if data.section
+        fullTransition()
+
+      # Force a transition on the 8th bar if one hasnt' happened yet.
+      if data.bar
+        barCount++
+        fullTransition() if barCount > 8
+
     
     # trigger scene transitions
     barCount = 0
@@ -67,14 +76,6 @@ class Echotron.Stage
       @logicalLayers.background.stack.transition()
       @logicalLayers.midground.stack.transition()
       @logicalLayers.foreground.stack.transition()
-
-    # Transition layers on new sections
-    @song.on 'section', fullTransition
-
-    # Force a transition on the 8th bar if one hasnt' happened yet.
-    @song.on 'bar', =>
-      barCount++
-      fullTransition() if barCount > 8
 
     # Get song from URL
     @songName = @getParam 'song'

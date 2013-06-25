@@ -9,11 +9,23 @@ class Echotron.EchoStack extends Echotron.Echo
       @stack.push echo
     return
 
-  onBeat:       (beat)       -> @stack.onBeat       beat
-  onBar:        (bar)        -> @stack.onBar        bar
-  onSegment:    (segment)    -> @stack.onSegment    segment
-  onTatum:      (tatum)      -> @stack.onTatum      tatum
-  onMusicEvent: (musicEvent) -> @stack.onMusicEvent musicEvent
+  dispatchMusicEvent: (data) ->
+    # Dispatch event to layers in the stack.
+    @stack.dispatchMusicEvent data
+
+    # Fire event handles on the echo stack.
+    @onMusicEvent data
+    @onBeat data.beat if data.beat
+    @onBar data.bar if data.bar
+    @onSegment data.segment if data.segment
+    @onTatum data.tatum if data.tatum
+
+  # noop handles for the echostack
+  onMusicEvent: (musicEvent) ->
+  onBeat:       (beat)       ->
+  onBar:        (bar)        ->
+  onSegment:    (segment)    ->
+  onTatum:      (tatum)      ->
 
   update: (elapsed) ->
     @stack.update elapsed

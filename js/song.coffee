@@ -39,6 +39,7 @@ class Echotron.Song
     else
       @noSong = yes
       @loadDefaultSong()
+      @aggregateMusicEvents()
       setTimeout (=> cb this), 0
       console.log "No song selected, using #{@bpm}bpm"
 
@@ -100,7 +101,7 @@ class Echotron.Song
         (Date.now() - @startedAt) / 1000
 
     # Cycle through all event types.
-    for eventType in @eventTypes
+    for eventType in ['musicEvent'] #@eventTypes
       
       # The array of events of this eventType.
       events = @data["#{eventType}s"]

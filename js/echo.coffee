@@ -44,9 +44,19 @@ class Echotron.Echo extends THREE.Object3D
     @_kill() if @active
 
 
-  # Called by LayerStack
+  # Called by LayerStack, returns true if the layer should be removed.
   expired: ->
     not @active and not @alive()
+
+  # Called by the music playing, triggering event callbacks.
+  dispatchMusicEvent: (data) ->
+    @onMusicEvent data
+
+    @onBeat data.beat if data.beat
+    @onBar data.bar if data.bar
+    @onSegment data.segment if data.segment
+    @onTatum data.tatum if data.tatum
+
 
   # Override. Should return false when the layer can be destoryed.
   alive: -> @active

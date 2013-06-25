@@ -26,11 +26,19 @@ module.exports = class Cubes extends Echotron.EchoStack
   onMusicEvent: (data) ->
     if data.bar
       for i in [1..@spawnQty*8]
-        @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
+        @push new Cube this,
+          color: @color
+          speed: Math.abs(@speed*2)
+          accel: @accel/2
+          size: @size.map((s)-> s/2)
 
     else if data.beat
       for i in [1..@spawnQty]
-        @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
+        @push new Cube this,
+          color: @color
+          speed: @speed
+          accel: @accel
+          size: @size
     
     return
 
