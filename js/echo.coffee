@@ -63,5 +63,9 @@ class Echotron.Echo extends THREE.Object3D
   # Override. Do stuff on bars.
   onTatum: ->
 
+  # Override. Do stuff on any music event.
+  # There is a key for each type of event that is ocurring.
+  onMusicEvent: ->
+
   # Override. Update state per frame.
   update: (elapsed) ->

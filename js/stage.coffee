@@ -52,7 +52,7 @@ class Echotron.Stage
     @song = new Echotron.Song
 
     # Bind all events
-    for eventType in ['bar', 'beat', 'tatum', 'segment']
+    for eventType in ['bar', 'beat', 'tatum', 'segment', 'musicEvent']
       do (eventType) =>
         @song.on eventType, (eventData) =>
           handlerName = @getHandlerName eventType

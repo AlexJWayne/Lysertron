@@ -8,10 +8,11 @@ class Echotron.LayerStack
   ]
 
   # Callback handlers for each song event which delegate to layer events.
-  onBeat:     (data) -> layer.onBeat(data)     for layer in @layers when layer.active; return
-  onBar:      (data) -> layer.onBar(data)      for layer in @layers when layer.active; return
-  onSegment:  (data) -> layer.onSegment(data)  for layer in @layers when layer.active; return
-  onTatum:    (data) -> layer.onTatum(data)    for layer in @layers when layer.active; return
+  onBeat:       (data) -> layer.onBeat(data)        for layer in @layers when layer.active; return
+  onBar:        (data) -> layer.onBar(data)         for layer in @layers when layer.active; return
+  onSegment:    (data) -> layer.onSegment(data)     for layer in @layers when layer.active; return
+  onTatum:      (data) -> layer.onTatum(data)       for layer in @layers when layer.active; return
+  onMusicEvent: (data) -> layer.onMusicEvent(data)  for layer in @layers when layer.active; return
 
   # Update all layers for a single frame.
   update: (elapsed) ->

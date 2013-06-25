@@ -23,15 +23,26 @@ module.exports = class Cubes extends Echotron.EchoStack
 
     @color = new THREE.Color().setHSV Math.random(), THREE.Math.randFloat(0.5, 1), Math.random()
 
-  onBeat: ->
-    for i in [1..@spawnQty]
-      @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
+  onMusicEvent: (data) ->
+    if data.bar
+      for i in [1..@spawnQty*8]
+        @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
+
+    else if data.beat
+      for i in [1..@spawnQty]
+        @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
+    
     return
 
-  onBar: ->
-    for i in [1..@spawnQty*8]
-      @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
-    return
+  # onBeat: ->
+  #   for i in [1..@spawnQty]
+  #     @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
+  #   return
+
+  # onBar: ->
+  #   for i in [1..@spawnQty*8]
+  #     @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
+  #   return
   
   update: (elapsed) ->
     super

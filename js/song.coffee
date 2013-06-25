@@ -15,6 +15,7 @@ class Echotron.Song
     'tatum'
     'segment'
     'section'
+    'musicEvent'
   ]
 
   # Load a track and it's meta data
@@ -31,6 +32,7 @@ class Echotron.Song
         dataType: 'json'
         async: no
         success: (@data) =>
+          @aggregateMusicEvents()
           @bpm = @data.track.tempo
           @bps = @bpm / 60
 
@@ -39,6 +41,27 @@ class Echotron.Song
       @loadDefaultSong()
       setTimeout (=> cb this), 0
       console.log "No song selected, using #{@bpm}bpm"
+
+  # Put all music events into a single queue.
+  aggregateMusicEvents: ->
+    events = []
+    eventsByTime = {}
+    for eventType in @eventTypes when eventType isnt 'musicEvent'
+      for eventData in @data["#{eventType}s"]
+        start = eventData.start
+        unless eventsByTime[start]
+          obj = { start }
+          events.push obj
+          eventsByTime[start] = obj
+
+        eventsByTime[start][eventType] = eventData
+
+    events = events.sort (a, b) ->
+      a.start - b.start
+
+    @data.musicEvents = []
+    for event in events
+      @data.musicEvents.push event
 
   generateSongEvents: (duration = 1) ->
     for i in [0...600] by duration
@@ -78,7 +101,7 @@ class Echotron.Song
 
     # Cycle through all event types.
     for eventType in @eventTypes
-
+      
       # The array of events of this eventType.
       events = @data["#{eventType}s"]
 
@@ -100,10 +123,9 @@ class Echotron.Song
         # Close over event type and data
         do (eventType, eventData) =>
           setTimeout =>
-
-            # Regularly log out how far behind we are.
-            if @audio && eventType is 'bar'
-              console.log 'audio sync', @audio[0].currentTime - eventData.start
+            # # Regularly log out how far behind we are.
+            # if @audio && eventType is 'bar'
+            #   console.log 'audio sync', @audio[0].currentTime - eventData.start
 
             # What it's all about, trigger the event of this type and pass in the event data.
             @trigger eventType, eventData
