@@ -3,7 +3,7 @@ module.exports = class Lattice extends Echotron.EchoStack
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
 
-    @spinSpeed = THREE.Math.randFloatSpread(180).degToRad
+    @spinSpeed = THREE.Math.randFloatSpread(60).degToRad
 
     @offsetTime = 10
     
@@ -70,9 +70,7 @@ class Spiral extends Echotron.EchoStack
     @flippedDir = if @flipped then -1 else 1
 
     @rotDirection   = source.rotDirection   || [1, -1].random()
-    @rotSpeedTarget = source.rotSpeedTarget || THREE.Math.randFloat(20, 50).degToRad
-    @rotSpeedDecay  = source.rotSpeedDecay  || @rotSpeedTarget * @rotDirection * 8
-    @rotSpeed       = 0
+    @rotSpeed       = source.rotSpeedTarget || THREE.Math.randFloat(30, 90).degToRad
 
     @push (new Strut(this, i/@qty, @flipped) for i in [0...@qty])...
 
@@ -84,15 +82,14 @@ class Spiral extends Echotron.EchoStack
 
   update: (elapsed) ->
     super
+    @rotation.z += @rotSpeed * @rotDirection * elapsed
 
-    @rotSpeed -= @rotSpeedDecay * @rotDirection * @flippedDir * elapsed / stage.song.bps
-    @rotSpeed  = @rotSpeedTarget  * 3 if @rotSpeed >  @rotSpeedTarget * 3
-    @rotSpeed  = -@rotSpeedTarget * 3 if @rotSpeed < -@rotSpeedTarget * 3
+  onBeat: (beat) ->
+    new TWEEN.Tween(this)
+      .to({rotSpeed: -@rotSpeed}, beat.duration.ms)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .start()
 
-    @rotation.z += @rotSpeed      * @rotDirection * elapsed / stage.song.bps
-
-  onBeat: ->
-    @rotSpeed = @rotSpeedTarget
 
 class Strut extends Echotron.Echo
   uniformAttrs:
