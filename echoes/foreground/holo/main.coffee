@@ -181,9 +181,8 @@ module.exports = class Holo extends Echotron.Echo
 
   update: (elapsed) ->
     # update the particle size
-    @size -= @sizeOnBeat * elapsed / 3
-    @size = 0 if @size < 0
     @particles.material.size = @size
+    @chipLines.material.linewidth = @size * 0.15
 
     # add rotation speeds to to the torus rotation
     @particles.rotation.x += @rotationSpeedX * elapsed
@@ -230,8 +229,14 @@ module.exports = class Holo extends Echotron.Echo
     )
 
 
-  onBeat: ->
-    @size = @sizeOnBeat
+  onBeat: (beat) ->
+    @shrink = !@shrink
+    targetSize = if @shrink then @sizeOnBeat/2 else @sizeOnBeat
+
+    new TWEEN.Tween(this)
+      .to({size: targetSize}, beat.duration.ms)
+      .easing(TWEEN.Easing.Sinusoidal[if @shrink then 'In' else 'Out'])
+      .start()
 
   onSegment: (segment) ->
     pitches = segment.pitches
@@ -246,7 +251,10 @@ module.exports = class Holo extends Echotron.Echo
           whitenings[vertIndex] = pitches[i]
 
   kill: ->
-    @sizeOnBeat *= 4
+    new TWEEN.Tween(this)
+      .to({size: 0}, 0.6.ms)
+      .easing(TWEEN.Easing.Sinusoidal.In)
+      .start()
 
   alive: ->
-    @size > 0
+    @size > 0.1
