@@ -1,6 +1,7 @@
 module.exports = class Gyro extends Echotron.EchoStack
   initialize: ->
-    @animTime = THREE.Math.randFloat(2, 4) / stage.song.bps
+    @animTime = THREE.Math.randInt(1, 2)
+
     @thickness = [
       THREE.Math.randFloat(0.75, 2)
       THREE.Math.randFloat(0.75, 2)
@@ -28,20 +29,11 @@ module.exports = class Gyro extends Echotron.EchoStack
       THREE.Math.randFloat(0.5, 1)
     )
 
-    @motionCurve = [
-      TWEEN.Easing.Elastic.Out
-      TWEEN.Easing.Back.Out
-      TWEEN.Easing.Exponential.Out
-    ].random()
-
     @lightRingWidths = []
     @lightRingSpeeds = []
     for i in [1..3]
       @lightRingWidths.push THREE.Math.randFloat(0.03, 0.15)
       @lightRingSpeeds.push THREE.Math.randFloat(0.25, 0.75) * [1, -1].random()
-
-    # Elastic curve is steeper, it needs more time to keep from being jarring.
-    @animTime *= 1.5 if @motionCurve is TWEEN.Easing.Elastic.Out
 
     @fanAngle = THREE.Math.randFloat(10, 45).degToRad
 
@@ -65,10 +57,10 @@ module.exports = class Gyro extends Echotron.EchoStack
     )
 
 
-  onBeat: ->
+  onBeat: (beat) ->
     layer = @stack.layers[@currentRing]
     @add layer
-    layer.nudge()
+    layer.nudge beat.duration
 
     @currentRing += @direction
     @currentRing = 0 if @currentRing >= @stack.layers.length
@@ -99,12 +91,12 @@ class Ring extends Echotron.Echo
       @animTime
       @pulse
       @color
-      @motionCurve
       @lightenOnNudge
       @lightRingSpeeds
       @lightRingWidths
     } = @gyro
 
+    @rotation.x = 90.degToRad
     @rotation.z = @gyro.fanAngle * @ringIndex
 
     thicknessMix = @gyro.thicknessCurve(@ringIndex / 3)
@@ -120,14 +112,14 @@ class Ring extends Echotron.Echo
       )
     )
 
-  nudge: ->
+  nudge: (duration) ->
     @rotationflipped = !@rotationflipped
     @lightRingBrightness = 1
 
     @progress = 0
     new TWEEN.Tween(this)
-      .to({progress: 1}, @animTime.ms)
-      .easing(@motionCurve)
+      .to({progress: 1}, (duration * @animTime).ms)
+      .easing(TWEEN.Easing.Back.Out)
       .start()
 
 
