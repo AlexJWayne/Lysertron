@@ -6,10 +6,7 @@ module.exports = class Dust extends Echotron.Echo
 
   initialize: ->
     @direction = 1
-    @speed = THREE.Math.randFloat(2, 4)
-    @damp  = THREE.Math.randFloat(1, 4)
-    @vel   = 3
-
+    
     @size = THREE.Math.randFloat(3, 8)
     @position.z = Math.random()
     @scale.setLength 0
@@ -49,21 +46,26 @@ module.exports = class Dust extends Echotron.Echo
 
     @add @particles
 
-  onBeat: ->
-    @vel = @speed * @direction
+  onBeat: (beat) ->
+    targetScale = if @direction > 0 then 2 else 1
+
+    new TWEEN.Tween(@scale)
+      .to({x:targetScale, y:targetScale, z:targetScale}, beat.duration * 1000)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .start()
+
     @direction *= -1
 
   update: (elapsed) ->
     super
-    
-    @vel -= @vel * @damp * elapsed
-    @scale.add THREE.Vector3.temp(1,1,1).multiplyScalar(@vel * elapsed)
-
     @rotation.add THREE.Vector3.temp(@spin).multiplyScalar(elapsed)
 
   kill: ->
-    @vel = @speed * 2
-    @damp = 0
+    targetScale = 50
+    new TWEEN.Tween(@scale)
+      .to({x:targetScale, y:targetScale, z:targetScale}, 3 * 1000)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .start()
 
   alive: ->
-    @scale.length() < 50
+    @scale.length() < 49

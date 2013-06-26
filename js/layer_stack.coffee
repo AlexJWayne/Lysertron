@@ -57,8 +57,6 @@ class Echotron.LayerStack
       layer = new klass
       @push layer
       @scene?.add layer
-    
-      console.log @layers
 
   # Add an Echo to the stack. It must descend from Echotron.Echo.
   push: (layers...) ->
