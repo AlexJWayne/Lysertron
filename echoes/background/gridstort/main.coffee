@@ -57,24 +57,16 @@ module.exports = class Gridstort extends Echotron.Echo
     @add @mesh
 
 
-    @rotation.x = THREE.Math.randFloat(-130, -210).degToRad
+    @rotation.x = THREE.Math.randFloat(-160, -200).degToRad
 
   onMusicEvent: (data) ->
     if data.bar
       @ripple {
-        amplitude: .75
+        amplitude: 0.9
         frequency: 40
         x: 0
         y: 0
       }
-
-    # else if data.beat
-    #   @ripple {
-    #     amplitude: 1.2
-    #     frequency: 125
-    #     x: THREE.Math.randFloatSpread 1
-    #     y: THREE.Math.randFloatSpread 1
-    #   }
     
     if data.segment
       @ripple {
