@@ -2,6 +2,7 @@ class Echotron.Stage
   constructor: ->
     @initEngine()
     @initSong()
+    @createSongSelector()
 
   # Initialize the THREE.js scene, camera and renderer.
   initEngine: ->
@@ -80,6 +81,26 @@ class Echotron.Stage
     # Get song from URL
     @songName = @getParam 'song'
   
+  createSongSelector: ->
+    $.get "/songs.json", (songs) =>
+      select = $('<select>')
+        .attr(id: 'song-select')
+        .on 'change', ->
+          window.location.search = "?song=#{ @value }"
+
+      select.append $('<option>').text(' - Select Song - ')
+
+      for song in songs
+        option = $('<option>')
+          .attr(value: song)
+          .text(song)
+
+        option.attr selected: yes if song is @getParam('song')
+
+        select.append option
+
+      $(document.body).append select
+
   # Start the song and the visualization.
   start: (playAudio = yes) ->
     @lastFrame = Date.now() / 1000
