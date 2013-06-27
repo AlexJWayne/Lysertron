@@ -46,6 +46,8 @@ module.exports = class Dust extends Echotron.Echo
 
     @add @particles
 
+    @onBeat duration: 1
+
   onBeat: (beat) ->
     targetScale = if @direction > 0 then 1.5 else 0.75
 
