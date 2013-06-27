@@ -19,6 +19,7 @@ routes = [
   'index_html'
   'coffee'
   'echo'
+  'songs'
 ]
 
 for route in routes
