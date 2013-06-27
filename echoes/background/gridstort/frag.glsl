@@ -10,8 +10,8 @@ uniform vec2 drift;
 uniform float birth;
 uniform float death;
 
-uniform vec2 ripplePositions[12]; // x, y
-uniform vec3 rippleData[12];      // startTime, amplitude, frequency
+uniform vec2 ripplePositions[18]; // x, y
+uniform vec3 rippleData[18];      // startTime, amplitude, frequency
 
 const float UVSCALE = 10.0;
 const float propogationSpeed = 0.75;
@@ -19,16 +19,15 @@ const float propogationSpeed = 0.75;
 vec2 ripple(vec2 center, float started, float amp, float freq) {
   vec2 normUV = ((uvCoord - vec2(0.5)) * 2.0) * UVSCALE + center;
 
-  float distortion = (1.0 + cos(length(normUV) * freq - time * speed));
+  float distortion = (1.0 + cos(length(normUV) * freq - time * speed * (freq / 30.0)));
   float mainRipple = distortion * pow(amp, 3.0);
 
   float distance = length(normUV);
   float sinceStart = time - started;
-  
-  // float freqSpeedCoef = smoothstep(350.0, 50.0, freq) + 1.0;
-
   float attenuation = smoothstep(propogationSpeed * sinceStart, 0.0, distance);
-  // lower effect in center?
+  
+  // lower effect in center
+  attenuation *= smoothstep(propogationSpeed * sinceStart - (60.0 / freq), propogationSpeed * sinceStart, distance);
   
   return normUV * mainRipple * attenuation;
 }
@@ -36,7 +35,7 @@ vec2 ripple(vec2 center, float started, float amp, float freq) {
 void main() {
   vec2 coords = (uvCoord - vec2(0.5)) * UVSCALE;
   vec2 theRipples = vec2(0.0);
-  for (int i = 0; i < 12; i++) {
+  for (int i = 0; i < 18; i++) {
     theRipples += ripple(
       ripplePositions[i],
       rippleData[i].x,

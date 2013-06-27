@@ -87,7 +87,7 @@ class Echotron.Song
       bars:     @generateSongEvents 4
       beats:    @generateSongEvents 1
       tatums:   @generateSongEvents 1/4
-      segments: @generateSongEvents 1/16
+      segments: @generateSongEvents 1/4
 
 
   # Schedule the song's event callbacks

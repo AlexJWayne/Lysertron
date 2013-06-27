@@ -47,7 +47,7 @@ module.exports = class Dust extends Echotron.Echo
     @add @particles
 
   onBeat: (beat) ->
-    targetScale = if @direction > 0 then 2 else 1
+    targetScale = if @direction > 0 then 1.5 else 0.75
 
     new TWEEN.Tween(@scale)
       .to({x:targetScale, y:targetScale, z:targetScale}, beat.duration * 1000)

@@ -17,7 +17,7 @@ module.exports = class Gridstort extends Echotron.Echo
   initialize: ->
     @time         = THREE.Math.randFloat 0, 10
     @density      = THREE.Math.randFloat 10, 30
-    @opacityMax   = THREE.Math.randFloat 0.05, 0.1
+    @opacityMax   = 0.05
     @opacity      = @opacityMax
     @speed        = 20#THREE.Math.randFloat 5, 20
     @spinSpeed    = THREE.Math.randFloatSpread(45).degToRad
@@ -25,11 +25,11 @@ module.exports = class Gridstort extends Echotron.Echo
     @death        = 0
 
     @ripplePositions =
-      for i in [1..12]
+      for i in [1..18]
         new THREE.Vector2
 
     @rippleData =
-      for i in [1..12]
+      for i in [1..18]
         new THREE.Vector3
 
     @drift        = new THREE.Vector2(
@@ -51,6 +51,7 @@ module.exports = class Gridstort extends Echotron.Echo
         vertexShader:   assets["vert.glsl"]
         fragmentShader: assets["frag.glsl"]
         depthTest:      no
+        transparent:    yes
       )
     )
     @add @mesh
@@ -58,21 +59,30 @@ module.exports = class Gridstort extends Echotron.Echo
 
     @rotation.x = THREE.Math.randFloat(-130, -210).degToRad
 
-  onBar: ->
-    @ripple {
-      amplitude: 1.5
-      frequency: 30
-      x: 0
-      y: 0
-    }
+  onMusicEvent: (data) ->
+    if data.bar
+      @ripple {
+        amplitude: .75
+        frequency: 40
+        x: 0
+        y: 0
+      }
 
-  onBeat: ->
-    @ripple {
-      amplitude: 1.1
-      frequency: 150
-      x: THREE.Math.randFloatSpread 1
-      y: THREE.Math.randFloatSpread 1
-    }      
+    # else if data.beat
+    #   @ripple {
+    #     amplitude: 1.2
+    #     frequency: 125
+    #     x: THREE.Math.randFloatSpread 1
+    #     y: THREE.Math.randFloatSpread 1
+    #   }
+    
+    if data.segment
+      @ripple {
+        amplitude: 0.75
+        frequency: 125
+        x: THREE.Math.randFloatSpread 1
+        y: THREE.Math.randFloatSpread 1
+      }
 
   ripple: (options) ->
     start = performance.now() / 1000
@@ -94,14 +104,11 @@ module.exports = class Gridstort extends Echotron.Echo
 
   update: (elapsed) ->
     @birth += elapsed
+
     @time = performance.now() / 1000
 
     unless @active
       @death += elapsed
-
-    for ripple in @rippleData
-      ripple.y -= (elapsed * stage.song.bps) * 0.4
-      ripple.y = 0 if ripple.y < 0
     
     @rotation.z += elapsed / 4.0
 

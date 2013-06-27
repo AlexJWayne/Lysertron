@@ -71,29 +71,29 @@ module.exports = class Holo extends Echotron.Echo
     @add @particles
 
 
-    # Create the chip highlight lines.
-    chipLinesGeometry = new THREE.Geometry()
-    for v in [0...@qty.chips]
-      lastVert = null
-      for u in [0...128]
-        vert = new THREE.Vector3()
-        vert.u = u / 127
-        vert.v = v / @qty.chips
+    # # Create the chip highlight lines.
+    # chipLinesGeometry = new THREE.Geometry()
+    # for v in [0...@qty.chips]
+    #   lastVert = null
+    #   for u in [0...128]
+    #     vert = new THREE.Vector3()
+    #     vert.u = u / 127
+    #     vert.v = v / @qty.chips
 
-        chipLinesGeometry.vertices.push lastVert, vert if lastVert
-        lastVert = vert
+    #     chipLinesGeometry.vertices.push lastVert, vert if lastVert
+    #     lastVert = vert
 
-    @chipLines = new THREE.Line(
-      chipLinesGeometry
-      new THREE.LineBasicMaterial(
-        color: @baseColor
-        linewidth: @lineWidth
-      )
-      THREE.LinePieces
-    )
+    # @chipLines = new THREE.Line(
+    #   chipLinesGeometry
+    #   new THREE.LineBasicMaterial(
+    #     color: @baseColor
+    #     linewidth: @lineWidth
+    #   )
+    #   THREE.LinePieces
+    # )
 
-    if @show.lines
-      @particles.add @chipLines
+    # if @show.lines
+    #   @particles.add @chipLines
 
   initParams: ->
     borderWidth = THREE.Math.randFloat 0.05, 0.4
@@ -182,7 +182,7 @@ module.exports = class Holo extends Echotron.Echo
   update: (elapsed) ->
     # update the particle size
     @particles.material.size = @size
-    @chipLines.material.linewidth = @size * 0.15
+    # @chipLines.material.linewidth = @size * 0.15
 
     # add rotation speeds to to the torus rotation
     @particles.rotation.x += @rotationSpeedX * elapsed
@@ -196,8 +196,8 @@ module.exports = class Holo extends Echotron.Echo
     for vert in @geometry.vertices
       @placeVert vert
 
-    for vert in @chipLines.geometry.vertices
-      @placeVert vert
+    # for vert in @chipLines.geometry.vertices
+    #   @placeVert vert
 
     for i in [0...@vertexAttrs.whitening.value.length]
       amount = @vertexAttrs.whitening.value[i]
@@ -207,7 +207,7 @@ module.exports = class Holo extends Echotron.Echo
 
     # bust vertex cache so the new vertex data is loaded
     @geometry.verticesNeedUpdate  = yes
-    @chipLines.geometry.verticesNeedUpdate = yes
+    # @chipLines.geometry.verticesNeedUpdate = yes
   
   # Toroidalize!
   placeVert: (vert) ->
