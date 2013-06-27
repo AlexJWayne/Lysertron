@@ -69,6 +69,10 @@ class Cube extends Echotron.Echo
     super
 
     @beatScale = 1
+    new TWEEN.Tween(this)
+      .to({beatScale: 0}, @parentLayer.shrinkTime * THREE.Math.randFloat(0.8, 1.2) * 1000)
+      .start()
+
     @tint      = @color
 
     @finalSize = THREE.Math.randFloat @size...
@@ -93,10 +97,10 @@ class Cube extends Echotron.Echo
     @vel = @mesh.position.clone().setLength @speed
 
   alive: ->
-    @beatScale.value > 0
+    @beatScale > 0
 
   update: (elapsed) ->
-    @beatScale -= elapsed / @parentLayer.shrinkTime
+    # @beatScale -= elapsed / @parentLayer.shrinkTime
     @mesh.scale.setLength @finalSize * @beatScale * @beatScale
 
     @vel.add THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
