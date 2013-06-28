@@ -23,8 +23,9 @@ describe 'EchoStack', ->
 
       echostack.stack.layers.should.deep.equal [echo1, echo2]
 
-  describe 'song events', ->
+  describe 'dispatchMusicEvent', ->
     class Echo extends Echotron.Echo
+      onMusicEvent: -> @musicEvented = yes
       onBeat:    -> @beated = yes
       onBar:     -> @barred = yes
       onSegment: -> @segmented = yes
@@ -38,23 +39,27 @@ describe 'EchoStack', ->
       echo = new Echo
       echostack.push echo
 
-    it 'delegates onBeat', ->
-      echostack.onBeat {}
+    it 'dispatches onMusicEvent', ->
+      echostack.dispatchMusicEvent {}
+      echo.musicEvented.should.be.true
+
+    it 'dispatches onBeat', ->
+      echostack.dispatchMusicEvent beat: {}
       echo.beated.should.be.true
 
-    it 'delegates onBar', ->
-      echostack.onBar {}
+    it 'dispatches onBar', ->
+      echostack.dispatchMusicEvent bar: {}
       echo.barred.should.be.true
 
-    it 'delegates onSegment', ->
-      echostack.onSegment {}
+    it 'dispatches onSegment', ->
+      echostack.dispatchMusicEvent segment: {}
       echo.segmented.should.be.true
 
-    it 'delegates onTatum', ->
-      echostack.onTatum {}
+    it 'dispatches onTatum', ->
+      echostack.dispatchMusicEvent tatum: {}
       echo.tatumed.should.be.true
 
-  describe '_kill()', ->
+  describe '_kill', ->
     it 'kills all layers in the stack', ->
       echo1 = new Echotron.Echo
       echo2 = new Echotron.Echo

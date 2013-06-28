@@ -1,5 +1,5 @@
 describe 'Utils', ->
-  describe 'Array::random()', ->
+  describe 'Array::random', ->
 
     # Don't destory the built in Math.random()
     oldRnd = Math.random
@@ -15,7 +15,7 @@ describe 'Utils', ->
       Math.random = -> 0.99
       [1,2,3].random().should.equal 3
 
-  describe 'THREE.Vector3.temp()', ->
+  describe 'THREE.Vector3.temp', ->
     it 'always returns the same object', ->
       v1 = THREE.Vector3.temp()
       v2 = THREE.Vector3.temp()

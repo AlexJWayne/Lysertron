@@ -14,13 +14,11 @@ describe 'LayerStack', ->
       stack = new Echotron.LayerStack scene, [echo]
       stack.layers.should.deep.equal [echo]
 
-  describe 'song events', ->
+  describe 'dispatchMusicEvent', ->
     describe 'delegates to each layer', ->
       class Specho extends Echotron.Echo
-        onBeat:    -> @beated    = yes
-        onBar:     -> @barred    = yes
-        onSegment: -> @segmented = yes
-        onTatum:   -> @tatumed   = yes
+        onMusicEvent: ->
+          @triggered = yes
 
       echo1 = null
       echo2 = null
@@ -32,22 +30,11 @@ describe 'LayerStack', ->
         stack = new Echotron.LayerStack scene, [echo1, echo2]
     
       it 'onBeat', ->
-        stack.onBeat()
-        echo1.beated.should.be.true
-    
-      it 'onBar', ->
-        stack.onBar()
-        echo1.barred.should.be.true
-    
-      it 'onSegment', ->
-        stack.onSegment()
-        echo1.segmented.should.be.true
-    
-      it 'onTatum', ->
-        stack.onTatum()
-        echo1.tatumed.should.be.true
+        stack.dispatchMusicEvent event: 'data'
+        echo1.triggered.should.be.true
+        echo2.triggered.should.be.true
 
-  describe 'update()', ->
+  describe 'update', ->
     it 'calls update on each layer', ->
       class Specho extends Echotron.Echo
         update: (elapsed) ->
@@ -74,7 +61,7 @@ describe 'LayerStack', ->
 
       stack.layers.should.deep.equal [echo1]
 
-  describe 'push()', ->
+  describe 'push', ->
     it 'adds a layer to @layers', ->
       stack = new Echotron.LayerStack
       echo = new Echotron.Echo
@@ -86,7 +73,7 @@ describe 'LayerStack', ->
       obj = {}
       (-> stack.push obj).should.throw "LayerStack::push() object is not a Echotron.Echo"
 
-  describe 'isEmpty()', ->
+  describe 'isEmpty', ->
     it 'returns false when there are layers', ->
       stack = new Echotron.LayerStack scene, new Echotron.Echo
       stack.isEmpty().should.be.false
@@ -95,7 +82,7 @@ describe 'LayerStack', ->
       stack = new Echotron.LayerStack scene
       stack.isEmpty().should.be.true
 
-  describe 'transition()', ->
+  describe 'transition', ->
     it 'needs specs'
 
 
