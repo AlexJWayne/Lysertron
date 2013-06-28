@@ -41,9 +41,9 @@ class Echotron.Stage
     @renderer.autoClear = no
     container.appendChild @renderer.domElement
 
-    # fps
-    @stats = new Stats
-    $(document.body).append @stats.domElement
+    # # fps
+    # @stats = new Stats
+    # $(document.body).append @stats.domElement
 
     # resize
     THREEx.WindowResize @renderer, @camera
@@ -130,8 +130,8 @@ class Echotron.Stage
     @update()
     @render()
 
-    @stats.end()
-    @stats.begin()    
+    # @stats.end()
+    # @stats.begin()    
 
   # Render the scene.
   render: =>
