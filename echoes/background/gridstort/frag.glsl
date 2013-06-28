@@ -32,15 +32,30 @@ vec2 ripple(vec2 center, float started, float amp, float freq) {
   return normUV * mainRipple * attenuation;
 }
 
+float highlightRippleStart(vec2 center, float started, float amp) {
+  vec2 normUV = ((uvCoord - vec2(0.5)) * 2.0) * UVSCALE + center;
+  float distance = length(normUV) * (time - started + 0.25);
+  return smoothstep(0.075 * (amp - 0.5), 0.0, distance) * smoothstep(1.0, 0.0, time - started) * 0.65;
+}
+
 void main() {
   vec2 coords = (uvCoord - vec2(0.5)) * UVSCALE;
+  
   vec2 theRipples = vec2(0.0);
+  float rippleStarts = 0.0;
+
   for (int i = 0; i < 18; i++) {
     theRipples += ripple(
       ripplePositions[i],
       rippleData[i].x,
       rippleData[i].y,
       rippleData[i].z
+    );
+
+    rippleStarts += highlightRippleStart(
+      ripplePositions[i],
+      rippleData[i].x,
+      rippleData[i].y
     );
   }
   
@@ -82,7 +97,7 @@ void main() {
 
   
   gl_FragColor.xyz = (
-    baseColor
+    baseColor + rippleStarts
     + vec3(grid * opacity)
     + vec3(highlight)
     - vec3(shadow)
