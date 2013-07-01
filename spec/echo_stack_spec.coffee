@@ -1,8 +1,8 @@
 describe 'EchoStack', ->
   describe 'constructor', ->
-    it 'creates a LayerStack', ->
+    it 'creates a LayerGroup', ->
       echostack = new Lysertron.EchoStack
-      echostack.stack.should.be.instanceOf Lysertron.LayerStack
+      echostack.stack.should.be.instanceOf Lysertron.LayerGroup
 
   describe 'push', ->
     it 'adds echoes to the scene', ->

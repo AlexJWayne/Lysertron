@@ -1,4 +1,4 @@
-describe 'LayerStack', ->
+describe 'LayerGroup', ->
   scene = null
 
   beforeEach ->
@@ -6,12 +6,12 @@ describe 'LayerStack', ->
 
   describe 'constructor', ->
     it 'creates @layers as an empty array by default', ->
-      stack = new Lysertron.LayerStack scene
+      stack = new Lysertron.LayerGroup scene
       stack.layers.should.deep.equal []
 
     it 'accepts an array of layers to populate @layers', ->
       echo = new Lysertron.Echo
-      stack = new Lysertron.LayerStack scene, [echo]
+      stack = new Lysertron.LayerGroup scene, [echo]
       stack.layers.should.deep.equal [echo]
 
   describe 'dispatchMusicEvent', ->
@@ -27,7 +27,7 @@ describe 'LayerStack', ->
       beforeEach ->
         echo1 = new Specho
         echo2 = new Specho
-        stack = new Lysertron.LayerStack scene, [echo1, echo2]
+        stack = new Lysertron.LayerGroup scene, [echo1, echo2]
     
       it 'onBeat', ->
         stack.dispatchMusicEvent event: 'data'
@@ -42,7 +42,7 @@ describe 'LayerStack', ->
 
       echo1 = new Specho
       echo2 = new Specho
-      stack = new Lysertron.LayerStack scene, [echo1, echo2]
+      stack = new Lysertron.LayerGroup scene, [echo1, echo2]
 
       stack.update()
 
@@ -56,30 +56,30 @@ describe 'LayerStack', ->
 
       echo1 = new Specho no
       echo2 = new Specho yes
-      stack = new Lysertron.LayerStack scene, [echo1, echo2]
+      stack = new Lysertron.LayerGroup scene, [echo1, echo2]
       stack.update()
 
       stack.layers.should.deep.equal [echo1]
 
   describe 'push', ->
     it 'adds a layer to @layers', ->
-      stack = new Lysertron.LayerStack
+      stack = new Lysertron.LayerGroup
       echo = new Lysertron.Echo
       stack.push echo
       stack.layers.should.deep.equal [echo]
 
     it 'throws exception if a non Lysertron.Echo object is pushed', ->
-      stack = new Lysertron.LayerStack
+      stack = new Lysertron.LayerGroup
       obj = {}
-      (-> stack.push obj).should.throw "LayerStack::push() object is not a Lysertron.Echo"
+      (-> stack.push obj).should.throw "LayerGroup::push() object is not a Lysertron.Echo"
 
   describe 'isEmpty', ->
     it 'returns false when there are layers', ->
-      stack = new Lysertron.LayerStack scene, new Lysertron.Echo
+      stack = new Lysertron.LayerGroup scene, new Lysertron.Echo
       stack.isEmpty().should.be.false
 
     it 'returns true when there are no layers', ->
-      stack = new Lysertron.LayerStack scene
+      stack = new Lysertron.LayerGroup scene
       stack.isEmpty().should.be.true
 
   describe 'transition', ->

@@ -18,9 +18,9 @@ class Lysertron.Stage
       foreground:
         scene: new THREE.Scene
         
-    @logicalLayers.background.stack = new Lysertron.LayerStack @logicalLayers.background.scene, [], 'background'
-    @logicalLayers.midground.stack  = new Lysertron.LayerStack @logicalLayers.midground.scene,  [], 'midground'
-    @logicalLayers.foreground.stack = new Lysertron.LayerStack @logicalLayers.foreground.scene, [], 'foreground'
+    @logicalLayers.background.stack = new Lysertron.LayerGroup @logicalLayers.background.scene, [], 'background'
+    @logicalLayers.midground.stack  = new Lysertron.LayerGroup @logicalLayers.midground.scene,  [], 'midground'
+    @logicalLayers.foreground.stack = new Lysertron.LayerGroup @logicalLayers.foreground.scene, [], 'foreground'
 
     # camera
     @camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 5000

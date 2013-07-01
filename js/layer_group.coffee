@@ -1,4 +1,4 @@
-class Lysertron.LayerStack
+class Lysertron.LayerGroup
   constructor: (@scene, @layers = [], @echoType) ->
 
   echoTypes: [
@@ -62,7 +62,7 @@ class Lysertron.LayerStack
   push: (layers...) ->
     for layer in layers
       unless layer instanceof Lysertron.Echo
-        throw new Error "LayerStack::push() object is not a Lysertron.Echo"
+        throw new Error "LayerGroup::push() object is not a Lysertron.Echo"
 
       @layers.push layer
 

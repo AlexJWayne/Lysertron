@@ -27,7 +27,7 @@ module.exports =
   app: [
     'echo'
     'util'
-    'layer_stack'
+    'layer_group'
     'echo_stack'
     'song'
     'stage'

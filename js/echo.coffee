@@ -1,3 +1,5 @@
+# Echo -> Layer
+
 window.Lysertron ||= {}
 Lysertron.Echoes ||= {}
 Lysertron.Echoes.foreground ||= []
@@ -44,7 +46,7 @@ class Lysertron.Echo extends THREE.Object3D
     @_kill() if @active
 
 
-  # Called by LayerStack, returns true if the layer should be removed.
+  # Called by LayerGroup, returns true if the layer should be removed.
   expired: ->
     not @active and not @alive()
 
