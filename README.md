@@ -20,7 +20,7 @@ If you have the above squared away, then you are ready to get your own local Lys
 
 1. Clone the repository, cd into project directory.
 2. Install npm dependencies: `npm install`
-3. Start the local server: `bin/echotron server`
+3. Start the local server: `bin/lysertron`
 4. Point your browser to: `http://localhost:3001/`
 
 ## Anatomoy of the Lysertron
@@ -31,7 +31,7 @@ Lysertron has 3 pools of layers. When creating each scene, a random layer of eac
 * **Midground:** Renders second, typically textures or adorns background.
 * **Foreground:** Renders last, typically some sort of object animating front and center
 
-In the `echoes/` directory is a directory for each of these types.  Each layer gets it's own folder within those. Simply adding a directory for a new layer type in the correct directory will cause the server to find it, package it, and expose it to the browser.
+In the `layers/` directory is a directory for each of these types.  Each layer gets it's own folder within those. Simply adding a directory for a new layer type in the correct directory will cause the server to find it, package it, and expose it to the browser.
 
 Most layers will have at least 3 files:
 * **main.coffee:** The JavaScript that powers the layer.
@@ -53,11 +53,11 @@ The project comes with an example which, while not very pretty, should lay out t
 
 Simply change the name of the folder at:
 
-    echoes/foreground/_example
+    layers/foreground/_example
 
 To:
 
-    echoes/foreground/example
+    layers/foreground/example
 
 Now, with the server running, navigate to:
 
