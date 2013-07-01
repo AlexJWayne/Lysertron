@@ -1,0 +1,46 @@
+#!/usr/bin/env coffee
+
+# HOST = 'http://localhost:5000/'
+# HOST = 'http://echotron.info/'
+
+request = require 'request'
+path = require 'path'
+fs   = require 'fs'
+argv = require('optimist').argv
+
+lib  = path.join path.dirname(fs.realpathSync(__filename)), '../lib'
+
+layerCompiler = require path.join(lib, 'layer')
+manifest = require path.join(lib, 'manifest')
+
+[command, options...] = argv._
+
+switch command
+  when undefined, 'server'
+    app = require path.join(lib, '/server')
+    port = options[0] || 3001
+
+    console.log "Started server at http://localhost:#{port}/"
+    app.listen port
+
+  # when 'publish'
+  #   [type, name] = options
+  #   echoes = []
+
+  #   if type && name
+  #     echoes = ["#{type}/#{name}"]
+  #   else
+  #     manifest.findEchoes (err, echoPaths) -> echoes = echoPaths
+    
+
+  #   for echoPath in echoes
+  #     do (echoPath, type, name) ->
+  #       [type, name] = echoPath.split('/')
+  #       meta = layerCompiler.compileMeta type, name
+  #       meta.content = layerCompiler.compile type, name
+
+  #       # request.post 'http://localhost:5000/',
+  #       request.post HOST, json: meta, (err, res, body) ->
+  #         console.log "Uploaded: #{type} #{name}"
+        
+  #       
