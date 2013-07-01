@@ -1,4 +1,4 @@
-class Lysertron.LayerStack extends Lysertron.Echo
+class Lysertron.LayerStack extends Lysertron.Layer
   constructor: ->
     @stack = new Lysertron.LayerGroup this
     super

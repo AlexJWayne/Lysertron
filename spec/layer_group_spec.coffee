@@ -10,13 +10,13 @@ describe 'LayerGroup', ->
       stack.layers.should.deep.equal []
 
     it 'accepts an array of layers to populate @layers', ->
-      echo = new Lysertron.Echo
+      echo = new Lysertron.Layer
       stack = new Lysertron.LayerGroup scene, [echo]
       stack.layers.should.deep.equal [echo]
 
   describe 'dispatchMusicEvent', ->
     describe 'delegates to each layer', ->
-      class Specho extends Lysertron.Echo
+      class Specho extends Lysertron.Layer
         onMusicEvent: ->
           @triggered = yes
 
@@ -36,7 +36,7 @@ describe 'LayerGroup', ->
 
   describe 'update', ->
     it 'calls update on each layer', ->
-      class Specho extends Lysertron.Echo
+      class Specho extends Lysertron.Layer
         update: (elapsed) ->
           @updated = yes
 
@@ -50,7 +50,7 @@ describe 'LayerGroup', ->
       echo2.updated.should.be.true
 
     it 'removes expired layers', ->
-      class Specho extends Lysertron.Echo
+      class Specho extends Lysertron.Layer
         constructor: (@isExpired) -> super
         expired: -> @isExpired
 
@@ -64,18 +64,18 @@ describe 'LayerGroup', ->
   describe 'push', ->
     it 'adds a layer to @layers', ->
       stack = new Lysertron.LayerGroup
-      echo = new Lysertron.Echo
+      echo = new Lysertron.Layer
       stack.push echo
       stack.layers.should.deep.equal [echo]
 
-    it 'throws exception if a non Lysertron.Echo object is pushed', ->
+    it 'throws exception if a non Lysertron.Layer object is pushed', ->
       stack = new Lysertron.LayerGroup
       obj = {}
-      (-> stack.push obj).should.throw "LayerGroup::push() object is not a Lysertron.Echo"
+      (-> stack.push obj).should.throw "LayerGroup::push() object is not a Lysertron.Layer"
 
   describe 'isEmpty', ->
     it 'returns false when there are layers', ->
-      stack = new Lysertron.LayerGroup scene, new Lysertron.Echo
+      stack = new Lysertron.LayerGroup scene, new Lysertron.Layer
       stack.isEmpty().should.be.false
 
     it 'returns true when there are no layers', ->

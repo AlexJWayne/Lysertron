@@ -72,7 +72,7 @@ module.exports = class Gyro extends Lysertron.LayerStack
 
 
     
-class Ring extends Lysertron.Echo
+class Ring extends Lysertron.Layer
   uniformAttrs:
     progress: 'f'
     elapsed: 'f'

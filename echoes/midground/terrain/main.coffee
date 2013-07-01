@@ -7,7 +7,7 @@ module.exports = class Terrains extends Lysertron.LayerStack
     @push @bottom
     @push @top
 
-class Terrain extends Lysertron.Echo
+class Terrain extends Lysertron.Layer
   uniformAttrs:
     smoothness: 'f'
     travel: 'v2'

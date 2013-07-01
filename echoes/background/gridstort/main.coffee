@@ -1,4 +1,4 @@
-module.exports = class Gridstort extends Lysertron.Echo
+module.exports = class Gridstort extends Lysertron.Layer
   uniformAttrs:
     time:      'f'
     baseColor: 'c'

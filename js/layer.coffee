@@ -1,12 +1,12 @@
 # Echo -> Layer
 
 window.Lysertron ||= {}
-Lysertron.Echoes ||= {}
-Lysertron.Echoes.foreground ||= []
-Lysertron.Echoes.midground  ||= []
-Lysertron.Echoes.background ||= []
+Lysertron.Layers ||= {}
+Lysertron.Layers.foreground ||= []
+Lysertron.Layers.midground  ||= []
+Lysertron.Layers.background ||= []
 
-class Lysertron.Echo extends THREE.Object3D
+class Lysertron.Layer extends THREE.Object3D
   uniformAttrs: {}
 
   # Override, calling super. Setup your Echo however you need.

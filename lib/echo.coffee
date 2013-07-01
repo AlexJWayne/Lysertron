@@ -1,3 +1,5 @@
+# Rename echo -> layer
+
 fs = require 'fs'
 path = require 'path'
 coffee = require 'coffee-script'
@@ -79,6 +81,6 @@ exports.compile = compile = (echoType, name) ->
     }.call({}));
     module.exports._id = "#{name}";
     module.exports._meta = #{JSON.stringify compileMeta(echoType, name)};
-    window.Lysertron.Echoes.#{echoType}.push(module.exports);
+    window.Lysertron.Layers.#{echoType}.push(module.exports);
   }());
   """

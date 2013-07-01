@@ -58,7 +58,7 @@ module.exports = class Cubes extends Lysertron.LayerStack
     @rotation.x += @tumble * elapsed
 
 
-class Cube extends Lysertron.Echo
+class Cube extends Lysertron.Layer
   uniformAttrs:
     beatScale: 'f'
     tint:      'c'

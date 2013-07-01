@@ -1,4 +1,4 @@
-module.exports = class Dust extends Lysertron.Echo
+module.exports = class Dust extends Lysertron.Layer
   uniformAttrs:
     baseColor:     'c'
     size:          'f'

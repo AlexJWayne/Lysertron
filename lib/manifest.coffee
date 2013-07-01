@@ -25,7 +25,7 @@ module.exports =
     'sparks'
   ]
   app: [
-    'echo'
+    'layer'
     'util'
     'layer_group'
     'layer_stack'

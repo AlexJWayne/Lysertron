@@ -91,7 +91,7 @@ class Spiral extends Lysertron.LayerStack
       .start()
 
 
-class Strut extends Lysertron.Echo
+class Strut extends Lysertron.Layer
   uniformAttrs:
     color: 'c'
     twist: 'f'

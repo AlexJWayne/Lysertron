@@ -1,6 +1,6 @@
-describe 'Echo', ->
+describe 'Layer', ->
   describe 'constructor', ->
-    class Specho extends Lysertron.Echo
+    class Specho extends Lysertron.Layer
       initialize: ->
         @initialized = yes
 
@@ -9,7 +9,7 @@ describe 'Echo', ->
       echo.initialized.should.be.true
 
   describe 'uniformAttrs', ->
-    class Specho extends Lysertron.Echo
+    class Specho extends Lysertron.Layer
       uniformAttrs:
         beer: 'f'
 
@@ -31,12 +31,12 @@ describe 'Echo', ->
 
   describe '_kill', ->
     it 'sets @active to false', ->
-      echo = new Lysertron.Echo
+      echo = new Lysertron.Layer
       echo._kill()
       echo.active.should.be.false
 
     it 'calls kill()', ->
-      class Specho extends Lysertron.Echo
+      class Specho extends Lysertron.Layer
         kill: -> @killed = yes
 
       echo = new Specho
@@ -47,7 +47,7 @@ describe 'Echo', ->
     
 
   describe 'expired', ->
-    class Specho extends Lysertron.Echo
+    class Specho extends Lysertron.Layer
       constructor: ->
         super
         @hasBeer = yes
@@ -73,7 +73,7 @@ describe 'Echo', ->
 
   describe 'alive', ->
     it 'simply returns @active, by default', ->
-      echo = new Lysertron.Echo
+      echo = new Lysertron.Layer
       echo.alive().should.be.true
       echo._kill()
       echo.alive().should.be.false

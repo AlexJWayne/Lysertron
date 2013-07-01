@@ -43,7 +43,7 @@ class Lysertron.LayerGroup
     # Force a specific echo via page query string.
     forcedEchoName = stage.getParam(@echoType) || stage.getParam(@echoType.replace /ground$/, '')
     if forcedEchoName
-      klass = (echoClass for echoClass in Lysertron.Echoes[@echoType] when echoClass._id is forcedEchoName)[0]
+      klass = (echoClass for echoClass in Lysertron.Layers[@echoType] when echoClass._id is forcedEchoName)[0]
       if klass
         console.log "Forced #{@echoType}:", forcedEchoName
       else
@@ -51,18 +51,18 @@ class Lysertron.LayerGroup
 
     # Nothing forced, pick a random one.
     else
-      klass = Lysertron.Echoes[@echoType].random()
+      klass = Lysertron.Layers[@echoType].random()
 
     if klass
       layer = new klass
       @push layer
       @scene?.add layer
 
-  # Add an Echo to the stack. It must descend from Lysertron.Echo.
+  # Add an Echo to the stack. It must descend from Lysertron.Layer.
   push: (layers...) ->
     for layer in layers
-      unless layer instanceof Lysertron.Echo
-        throw new Error "LayerGroup::push() object is not a Lysertron.Echo"
+      unless layer instanceof Lysertron.Layer
+        throw new Error "LayerGroup::push() object is not a Lysertron.Layer"
 
       @layers.push layer
 

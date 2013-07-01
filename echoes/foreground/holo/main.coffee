@@ -1,4 +1,4 @@
-module.exports = class Holo extends Lysertron.Echo
+module.exports = class Holo extends Lysertron.Layer
 
   uniformAttrs:
     size: 'f'

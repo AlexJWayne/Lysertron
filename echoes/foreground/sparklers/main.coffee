@@ -45,7 +45,7 @@ class Gravity
     )
 
 
-module.exports = class Sparkler extends Lysertron.Echo
+module.exports = class Sparkler extends Lysertron.Layer
   uniformAttrs:
     baseColor: 'c'
     darkening: 'f'

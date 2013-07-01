@@ -6,8 +6,8 @@ describe 'LayerStack', ->
 
   describe 'push', ->
     it 'adds echoes to the scene', ->
-      echo1 = new Lysertron.Echo
-      echo2 = new Lysertron.Echo
+      echo1 = new Lysertron.Layer
+      echo2 = new Lysertron.Layer
 
       echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
@@ -15,8 +15,8 @@ describe 'LayerStack', ->
       echostack.children.should.deep.equal [echo1, echo2]
 
     it 'pushes echoes to the stack', ->
-      echo1 = new Lysertron.Echo
-      echo2 = new Lysertron.Echo
+      echo1 = new Lysertron.Layer
+      echo2 = new Lysertron.Layer
 
       echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
@@ -24,7 +24,7 @@ describe 'LayerStack', ->
       echostack.stack.layers.should.deep.equal [echo1, echo2]
 
   describe 'dispatchMusicEvent', ->
-    class Echo extends Lysertron.Echo
+    class Echo extends Lysertron.Layer
       onMusicEvent: -> @musicEvented = yes
       onBeat:    -> @beated = yes
       onBar:     -> @barred = yes
@@ -61,8 +61,8 @@ describe 'LayerStack', ->
 
   describe '_kill', ->
     it 'kills all layers in the stack', ->
-      echo1 = new Lysertron.Echo
-      echo2 = new Lysertron.Echo
+      echo1 = new Lysertron.Layer
+      echo2 = new Lysertron.Layer
       echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
 
@@ -72,7 +72,7 @@ describe 'LayerStack', ->
       echo2.active.should.be.false
 
   describe 'update', ->
-    class Echo extends Lysertron.Echo
+    class Echo extends Lysertron.Layer
       update: (elapsed) -> @updated = elapsed
 
     it 'delegates to layers', ->
@@ -89,7 +89,7 @@ describe 'LayerStack', ->
   describe 'alive', ->
     it 'returns true when there are layers in the stack', ->
       echostack = new Lysertron.LayerStack
-      echostack.push new Lysertron.Echo
+      echostack.push new Lysertron.Layer
       echostack.alive().should.be.true
 
     it 'returns false when there are no layers in the stack', ->

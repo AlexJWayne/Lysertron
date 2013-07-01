@@ -6,7 +6,7 @@ module.exports = class Tunnel extends Lysertron.LayerStack
       layer.baseColor = new THREE.Color 0x000000 unless i == 0
       @push layer
 
-class SingleTunnel extends Lysertron.Echo
+class SingleTunnel extends Lysertron.Layer
   uniformAttrs:
     inward:         'f'
     brightness:     'f'
