@@ -18,7 +18,7 @@ app.set 'views', '.'
 routes = [
   'index_html'
   'coffee'
-  'echo'
+  'layer'
   'songs'
 ]
 

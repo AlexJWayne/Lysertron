@@ -2,10 +2,10 @@ fs = require 'fs'
 path = require 'path'
 
 rootPath = path.join path.dirname(fs.realpathSync(__filename)), '..'
-echoesPath = path.join rootPath, 'echoes'
+layersPath = path.join rootPath, 'layers'
 currentPath = process.cwd()
 
-echoTypes = [
+layerTypes = [
   'background'
   'midground'
   'foreground'
@@ -33,25 +33,25 @@ module.exports =
     'stage'
   ]
   
-  findEchoes: (callback) ->
-    echoes = []
+  findLayers: (callback) ->
+    layers = []
 
     # Find all framework echoes
-    for echoType in echoTypes
-      for echo in fs.readdirSync(path.join echoesPath, echoType)
-        continue if /^(\.|_)/.test echo
-        echoes.push "#{echoType}/#{echo}"
+    for layerType in layerTypes
+      for layer in fs.readdirSync(path.join layersPath, layerType)
+        continue if /^(\.|_)/.test layer
+        layers.push "#{layerType}/#{layer}"
 
     # Find all local echoes
     if currentPath isnt rootPath
-      for echoType in echoTypes
-        typedDir = path.join currentPath, echoType
+      for layerType in layerTypes
+        typedDir = path.join currentPath, layerType
         if fs.existsSync typedDir
-          for echo in fs.readdirSync(typedDir)
-            continue if /^(\.|_)/.test echo
-            echoes.push "#{echoType}/#{echo}"
+          for layer in fs.readdirSync(typedDir)
+            continue if /^(\.|_)/.test layer
+            layers.push "#{layerType}/#{layer}"
 
-    callback null, echoes
+    callback null, layers
 
   findSpecs: (callback) ->
     fs.readdir path.join(rootPath, "spec"), (err, files) ->

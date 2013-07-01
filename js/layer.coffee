@@ -1,11 +1,11 @@
-# Echo -> Layer
-
 window.Lysertron ||= {}
 Lysertron.Layers ||= {}
 Lysertron.Layers.foreground ||= []
 Lysertron.Layers.midground  ||= []
 Lysertron.Layers.background ||= []
 
+# A single renderable object that can respond to music events.
+# These are the building blocks of all visulizations!
 class Lysertron.Layer extends THREE.Object3D
   uniformAttrs: {}
 

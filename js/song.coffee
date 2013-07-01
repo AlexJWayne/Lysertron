@@ -1,3 +1,4 @@
+# private
 class Lysertron.Song
 
   # Class is an event emitter

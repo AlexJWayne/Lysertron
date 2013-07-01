@@ -9,12 +9,12 @@ manifest = require './manifest'
 renderContent = (req, res, { specRun, specs }) ->
   specs ||= []
 
-  manifest.findEchoes (err, echoes) ->
+  manifest.findLayers (err, layers) ->
     res.render indexPath,
       vendor:   manifest.vendor
       app:      manifest.app
       specs:    specs
-      echoes:   echoes
+      layers:   layers
       specRun:  specRun
 
 exports.register = (app) ->

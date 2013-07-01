@@ -10,7 +10,7 @@ argv = require('optimist').argv
 
 lib  = path.join path.dirname(fs.realpathSync(__filename)), '../lib'
 
-echoCompiler = require path.join(lib, 'echo')
+layerCompiler = require path.join(lib, 'layer')
 manifest = require path.join(lib, 'manifest')
 
 [command, options...] = argv._
@@ -36,8 +36,8 @@ switch command
     for echoPath in echoes
       do (echoPath, type, name) ->
         [type, name] = echoPath.split('/')
-        meta = echoCompiler.compileMeta type, name
-        meta.content = echoCompiler.compile type, name
+        meta = layerCompiler.compileMeta type, name
+        meta.content = layerCompiler.compile type, name
 
         # request.post 'http://localhost:5000/',
         request.post HOST, json: meta, (err, res, body) ->

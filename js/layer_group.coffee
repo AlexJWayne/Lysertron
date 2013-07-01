@@ -1,3 +1,9 @@
+# private
+
+# Contains all objects within a logical layer, one of three in the scene. Framework use only.
+# * foreground
+# * midground
+# * background
 class Lysertron.LayerGroup
   constructor: (@scene, @layers = [], @echoType) ->
 

@@ -1,3 +1,4 @@
+# private
 class Lysertron.Stage
   constructor: ->
     @initEngine()

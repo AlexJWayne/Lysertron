@@ -1,3 +1,6 @@
+# Create a stack of layers that can react to beat events.
+# Useful when your custom layer actually manages a number
+# of layers.
 class Lysertron.LayerStack extends Lysertron.Layer
   constructor: ->
     @stack = new Lysertron.LayerGroup this
