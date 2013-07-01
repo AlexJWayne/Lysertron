@@ -1,4 +1,4 @@
-module.exports = class Gyro extends Lysertron.EchoStack
+module.exports = class Gyro extends Lysertron.LayerStack
   initialize: ->
     @animTime = THREE.Math.randInt(1, 2)
 

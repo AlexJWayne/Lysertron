@@ -1,4 +1,4 @@
-module.exports = class Terrains extends Lysertron.EchoStack
+module.exports = class Terrains extends Lysertron.LayerStack
   initialize: ->
     @bottom = new Terrain
     @top    = new Terrain

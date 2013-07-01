@@ -1,7 +1,7 @@
-describe 'EchoStack', ->
+describe 'LayerStack', ->
   describe 'constructor', ->
-    it 'creates a LayerGroup', ->
-      echostack = new Lysertron.EchoStack
+    it 'creates a LayerStack', ->
+      echostack = new Lysertron.LayerStack
       echostack.stack.should.be.instanceOf Lysertron.LayerGroup
 
   describe 'push', ->
@@ -9,7 +9,7 @@ describe 'EchoStack', ->
       echo1 = new Lysertron.Echo
       echo2 = new Lysertron.Echo
 
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
 
       echostack.children.should.deep.equal [echo1, echo2]
@@ -18,7 +18,7 @@ describe 'EchoStack', ->
       echo1 = new Lysertron.Echo
       echo2 = new Lysertron.Echo
 
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
 
       echostack.stack.layers.should.deep.equal [echo1, echo2]
@@ -35,7 +35,7 @@ describe 'EchoStack', ->
     echo = null
 
     beforeEach ->
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echo = new Echo
       echostack.push echo
 
@@ -63,7 +63,7 @@ describe 'EchoStack', ->
     it 'kills all layers in the stack', ->
       echo1 = new Lysertron.Echo
       echo2 = new Lysertron.Echo
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
 
       echostack._kill()
@@ -78,7 +78,7 @@ describe 'EchoStack', ->
     it 'delegates to layers', ->
       echo1 = new Echo
       echo2 = new Echo
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.push echo1, echo2
 
       echostack.update 0.1
@@ -88,10 +88,10 @@ describe 'EchoStack', ->
 
   describe 'alive', ->
     it 'returns true when there are layers in the stack', ->
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.push new Lysertron.Echo
       echostack.alive().should.be.true
 
     it 'returns false when there are no layers in the stack', ->
-      echostack = new Lysertron.EchoStack
+      echostack = new Lysertron.LayerStack
       echostack.alive().should.be.false

@@ -1,4 +1,4 @@
-module.exports = class Tunnel extends Lysertron.EchoStack
+module.exports = class Tunnel extends Lysertron.LayerStack
   constructor: ->
     super
     for i in [0..1]

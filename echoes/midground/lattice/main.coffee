@@ -1,4 +1,4 @@
-module.exports = class Lattice extends Lysertron.EchoStack
+module.exports = class Lattice extends Lysertron.LayerStack
   initialize: ->
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
@@ -51,7 +51,7 @@ module.exports = class Lattice extends Lysertron.EchoStack
 
 
 
-class Spiral extends Lysertron.EchoStack
+class Spiral extends Lysertron.LayerStack
   constructor: (@lattice, @flipped, source = {}) ->
     super
 

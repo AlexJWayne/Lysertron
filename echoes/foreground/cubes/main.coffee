@@ -1,4 +1,4 @@
-module.exports = class Cubes extends Lysertron.EchoStack
+module.exports = class Cubes extends Lysertron.LayerStack
   initialize: ->
     @size = [
       THREE.Math.randFloat(5, 16)

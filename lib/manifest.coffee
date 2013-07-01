@@ -28,7 +28,7 @@ module.exports =
     'echo'
     'util'
     'layer_group'
-    'echo_stack'
+    'layer_stack'
     'song'
     'stage'
   ]
