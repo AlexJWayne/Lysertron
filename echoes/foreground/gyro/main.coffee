@@ -1,4 +1,4 @@
-module.exports = class Gyro extends Echotron.EchoStack
+module.exports = class Gyro extends Lysertron.EchoStack
   initialize: ->
     @animTime = THREE.Math.randInt(1, 2)
 
@@ -72,7 +72,7 @@ module.exports = class Gyro extends Echotron.EchoStack
 
 
     
-class Ring extends Echotron.Echo
+class Ring extends Lysertron.Echo
   uniformAttrs:
     progress: 'f'
     elapsed: 'f'

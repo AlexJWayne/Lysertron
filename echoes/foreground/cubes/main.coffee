@@ -1,4 +1,4 @@
-module.exports = class Cubes extends Echotron.EchoStack
+module.exports = class Cubes extends Lysertron.EchoStack
   initialize: ->
     @size = [
       THREE.Math.randFloat(5, 16)
@@ -58,7 +58,7 @@ module.exports = class Cubes extends Echotron.EchoStack
     @rotation.x += @tumble * elapsed
 
 
-class Cube extends Echotron.Echo
+class Cube extends Lysertron.Echo
   uniformAttrs:
     beatScale: 'f'
     tint:      'c'

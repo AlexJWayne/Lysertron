@@ -1,4 +1,4 @@
-module.exports = class Terrains extends Echotron.EchoStack
+module.exports = class Terrains extends Lysertron.EchoStack
   initialize: ->
     @bottom = new Terrain
     @top    = new Terrain
@@ -7,7 +7,7 @@ module.exports = class Terrains extends Echotron.EchoStack
     @push @bottom
     @push @top
 
-class Terrain extends Echotron.Echo
+class Terrain extends Lysertron.Echo
   uniformAttrs:
     smoothness: 'f'
     travel: 'v2'

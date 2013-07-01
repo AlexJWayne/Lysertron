@@ -79,6 +79,6 @@ exports.compile = compile = (echoType, name) ->
     }.call({}));
     module.exports._id = "#{name}";
     module.exports._meta = #{JSON.stringify compileMeta(echoType, name)};
-    window.Echotron.Echoes.#{echoType}.push(module.exports);
+    window.Lysertron.Echoes.#{echoType}.push(module.exports);
   }());
   """

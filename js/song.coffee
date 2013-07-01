@@ -1,4 +1,4 @@
-class Echotron.Song
+class Lysertron.Song
 
   # Class is an event emitter
   _.extend @::, Backbone.Events

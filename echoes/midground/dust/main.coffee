@@ -1,4 +1,4 @@
-module.exports = class Dust extends Echotron.Echo
+module.exports = class Dust extends Lysertron.Echo
   uniformAttrs:
     baseColor:     'c'
     size:          'f'

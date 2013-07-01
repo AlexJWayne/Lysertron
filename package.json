@@ -1,11 +1,11 @@
 {
   "name": "echotron",
   "description": "Semantic Music Visualization, extensible by WebGL doodlers.",
-  "homepage": "https://github.com/Squeegy/Echotron",
+  "homepage": "https://github.com/Squeegy/Lysertron",
   "version": "0.0.2",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Squeegy/Echotron.git"
+    "url": "git://github.com/Squeegy/Lysertron.git"
   },
   "licenses": [
     {

@@ -1,4 +1,4 @@
-module.exports = class Gridstort extends Echotron.Echo
+module.exports = class Gridstort extends Lysertron.Echo
   uniformAttrs:
     time:      'f'
     baseColor: 'c'

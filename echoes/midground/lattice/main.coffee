@@ -1,4 +1,4 @@
-module.exports = class Lattice extends Echotron.EchoStack
+module.exports = class Lattice extends Lysertron.EchoStack
   initialize: ->
     @flipped = [yes, no].random()
     @doubled = [yes, no].random()
@@ -51,7 +51,7 @@ module.exports = class Lattice extends Echotron.EchoStack
 
 
 
-class Spiral extends Echotron.EchoStack
+class Spiral extends Lysertron.EchoStack
   constructor: (@lattice, @flipped, source = {}) ->
     super
 
@@ -91,7 +91,7 @@ class Spiral extends Echotron.EchoStack
       .start()
 
 
-class Strut extends Echotron.Echo
+class Strut extends Lysertron.Echo
   uniformAttrs:
     color: 'c'
     twist: 'f'

@@ -1,5 +1,5 @@
 # The class that is your layer needs to be assigned to module.exports in node.js style.
-module.exports = class Example extends Echotron.Echo
+module.exports = class Example extends Lysertron.Echo
 
   # Allows shorthand property setters to be passed as uniforms to the shaders.
   #

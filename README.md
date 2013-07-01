@@ -1,6 +1,6 @@
-# Echotron
+# Lysertron
 
-Echotron is a WebGL semantic and extensible music visualizer.
+Lysertron is a WebGL semantic and extensible music visualizer.
 
 ![](http://media.tumblr.com/378c7af6967e6cf2175e8f6c3e07a322/tumblr_inline_mhlz6sjZEn1qz4rgp.jpg)
 
@@ -16,16 +16,16 @@ Echotron is a WebGL semantic and extensible music visualizer.
 * CoffeeScript _(for the moment)_
 * WebGL capable browser
 
-If you have the above squared away, then you are ready to get your own local Echotron server.
+If you have the above squared away, then you are ready to get your own local Lysertron server.
 
 1. Clone the repository, cd into project directory.
 2. Install npm dependencies: `npm install`
 3. Start the local server: `bin/echotron server`
 4. Point your browser to: `http://localhost:3001/`
 
-## Anatomoy of the Echotron
+## Anatomoy of the Lysertron
 
-Echotron has 3 pools of layers. When creating each scene, a random layer of each type is chosen and composited together.
+Lysertron has 3 pools of layers. When creating each scene, a random layer of each type is chosen and composited together.
 
 * **Background:** Renders first, paints entire frame.
 * **Midground:** Renders second, typically textures or adorns background.
@@ -65,12 +65,12 @@ Now, with the server running, navigate to:
 
 You should see the `example` layer as a spinning, color changing, cube as the foreground over random mid ground and background layers.
 
-Now you can tweak the content of the files in the `example` directory, and figure out how things work in the Echotron.
+Now you can tweak the content of the files in the `example` directory, and figure out how things work in the Lysertron.
 
 
 ## Adding your own music
 
-Echotron music must be pre-processed by **Echonest**.
+Lysertron music must be pre-processed by **Echonest**.
 
 1. [Signup for an Echonest API key](http://developer.echonest.com/account/register)
 2. Copy `echonest.example.json` to `echonest.json`.

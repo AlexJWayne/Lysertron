@@ -1,4 +1,4 @@
-module.exports = class Holo extends Echotron.Echo
+module.exports = class Holo extends Lysertron.Echo
 
   uniformAttrs:
     size: 'f'

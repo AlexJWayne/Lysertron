@@ -1,4 +1,4 @@
-module.exports = class Tunnel extends Echotron.EchoStack
+module.exports = class Tunnel extends Lysertron.EchoStack
   constructor: ->
     super
     for i in [0..1]
@@ -6,7 +6,7 @@ module.exports = class Tunnel extends Echotron.EchoStack
       layer.baseColor = new THREE.Color 0x000000 unless i == 0
       @push layer
 
-class SingleTunnel extends Echotron.Echo
+class SingleTunnel extends Lysertron.Echo
   uniformAttrs:
     inward:         'f'
     brightness:     'f'

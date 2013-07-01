@@ -1,4 +1,4 @@
-class Echotron.Stage
+class Lysertron.Stage
   constructor: ->
     @initEngine()
     @initSong()
@@ -18,9 +18,9 @@ class Echotron.Stage
       foreground:
         scene: new THREE.Scene
         
-    @logicalLayers.background.stack = new Echotron.LayerStack @logicalLayers.background.scene, [], 'background'
-    @logicalLayers.midground.stack  = new Echotron.LayerStack @logicalLayers.midground.scene,  [], 'midground'
-    @logicalLayers.foreground.stack = new Echotron.LayerStack @logicalLayers.foreground.scene, [], 'foreground'
+    @logicalLayers.background.stack = new Lysertron.LayerStack @logicalLayers.background.scene, [], 'background'
+    @logicalLayers.midground.stack  = new Lysertron.LayerStack @logicalLayers.midground.scene,  [], 'midground'
+    @logicalLayers.foreground.stack = new Lysertron.LayerStack @logicalLayers.foreground.scene, [], 'foreground'
 
     # camera
     @camera = new THREE.PerspectiveCamera 70, window.innerWidth / window.innerHeight, 1, 5000
@@ -50,7 +50,7 @@ class Echotron.Stage
 
   # Initialize the song and bind song events.
   initSong: ->
-    @song = new Echotron.Song
+    @song = new Lysertron.Song
 
     # Bind music events events
     @song.on 'musicEvent', (data) =>
@@ -165,5 +165,5 @@ class Echotron.Stage
 
 # Go
 $ ->
-  stage = window.stage = new Echotron.Stage
+  stage = window.stage = new Lysertron.Stage
   stage.start yes unless mocha?

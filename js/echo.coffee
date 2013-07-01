@@ -1,10 +1,10 @@
-window.Echotron ||= {}
-Echotron.Echoes ||= {}
-Echotron.Echoes.foreground ||= []
-Echotron.Echoes.midground  ||= []
-Echotron.Echoes.background ||= []
+window.Lysertron ||= {}
+Lysertron.Echoes ||= {}
+Lysertron.Echoes.foreground ||= []
+Lysertron.Echoes.midground  ||= []
+Lysertron.Echoes.background ||= []
 
-class Echotron.Echo extends THREE.Object3D
+class Lysertron.Echo extends THREE.Object3D
   uniformAttrs: {}
 
   # Override, calling super. Setup your Echo however you need.
