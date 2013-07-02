@@ -41,5 +41,5 @@ performance.now = do ->
   performance.webkitNow ||
   (
     start = Date.now()
-    -> return Date().now() - start
+    -> return Date.now() - start
   )
