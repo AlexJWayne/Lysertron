@@ -3,6 +3,7 @@
 HOST = 'http://localhost:3000/'
 # HOST = 'http://echotron.info/'
 
+UglifyJS = require 'uglify-js'
 request = require 'request'
 path = require 'path'
 fs   = require 'fs'
@@ -37,7 +38,8 @@ switch command
         [type, name] = layerPath.split('/')
         # meta = layerCompiler.compileMeta type, name
         # meta.content = layerCompiler.compile type, name
-        content = layerCompiler.compile type, name
+        code = layerCompiler.compile type, name
+        code = UglifyJS.minify(code, fromString: yes).code
 
-        request.post "#{HOST}layers.js", json: { layer: { code: content, location: type, name: name } }, (err, res, body) ->
+        request.post "#{HOST}layers.js", json: { layer: { code, location: type, name } }, (err, res, body) ->
           console.log "Uploaded: #{type} #{name}"
