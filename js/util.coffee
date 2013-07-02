@@ -31,3 +31,15 @@ Number::radToDeg || Object.defineProperty Number::, 'radToDeg',
 Number::ms || Object.defineProperty Number::, 'ms',
   get: ->
     this * 1000
+
+window.performance ||= {}
+performance.now = do ->
+  performance.now       ||
+  performance.mozNow    ||
+  performance.msNow     ||
+  performance.oNow      ||
+  performance.webkitNow ||
+  (
+    start = Date.now()
+    -> return Date().now() - start
+  )
