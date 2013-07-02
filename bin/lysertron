@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
 
-# HOST = 'http://localhost:5000/'
+HOST = 'http://localhost:3000/'
 # HOST = 'http://echotron.info/'
 
 request = require 'request'
@@ -23,24 +23,21 @@ switch command
     console.log "Started server at http://localhost:#{port}/"
     app.listen port
 
-  # when 'publish'
-  #   [type, name] = options
-  #   echoes = []
+  when 'publish'
+    [type, name] = options
+    layers = []
 
-  #   if type && name
-  #     echoes = ["#{type}/#{name}"]
-  #   else
-  #     manifest.findEchoes (err, echoPaths) -> echoes = echoPaths
+    if type && name
+      echoes = ["#{type}/#{name}"]
+    else
+      manifest.findLayers (err, layerPaths) -> layers = layerPaths
     
+    for layerPath in layers
+      do (layerPath, type, name) ->
+        [type, name] = layerPath.split('/')
+        # meta = layerCompiler.compileMeta type, name
+        # meta.content = layerCompiler.compile type, name
+        content = layerCompiler.compile type, name
 
-  #   for echoPath in echoes
-  #     do (echoPath, type, name) ->
-  #       [type, name] = echoPath.split('/')
-  #       meta = layerCompiler.compileMeta type, name
-  #       meta.content = layerCompiler.compile type, name
-
-  #       # request.post 'http://localhost:5000/',
-  #       request.post HOST, json: meta, (err, res, body) ->
-  #         console.log "Uploaded: #{type} #{name}"
-        
-  #       
+        request.post "#{HOST}layers.js", json: { layer: { code: content, location: type, name: name } }, (err, res, body) ->
+          console.log "Uploaded: #{type} #{name}"
