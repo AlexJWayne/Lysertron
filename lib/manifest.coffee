@@ -64,7 +64,7 @@ module.exports =
   findSongs: (callback) ->
     fs.readdir path.join(rootPath, "songs"), (err, files) ->
       files =
-        for file in files when /.*\.json/.test(file)
-          file.replace /\.\w+?$/, ''
+        for file in files when not /.*\.json/.test(file) and not /^\./.test(file)
+          file
 
       callback err, files

@@ -10,11 +10,13 @@ console.log "Uploading: #{path}"
 console.log "Saving as: #{name}"
 console.log "Standby..."
 
-echo.track.upload filetype: 'm4a', track: fs.readFileSync(path), (error, response) ->
+filetype = path.match(/\.(\w+?)$/)[1]
+
+echo.track.upload filetype: filetype, track: fs.readFileSync(path), (error, response) ->
   if error
     console.log error, response
   else
-    fs.createReadStream(path).pipe fs.createWriteStream("songs/#{name}.m4a")
+    fs.createReadStream(path).pipe fs.createWriteStream("songs/#{name}.#{filetype}")
 
     console.log 'response:', response
 

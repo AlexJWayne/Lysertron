@@ -23,13 +23,13 @@ class Lysertron.Song
   load: (@name, cb) ->
     if @name && @name isnt ''
       @audio = $('<audio id="audio" preload="auto" controls>')
-      @audio.attr src: "songs/#{@name}.m4a"
+      @audio.attr src: @musicFileUrl(@name)
       $('body').append @audio
 
       @audio.on 'canplay', => cb this
 
       $.ajax
-        url: "songs/#{@name}.json"
+        url: @dataFileUrl(@name)
         dataType: 'json'
         async: no
         success: (@data) =>
@@ -136,6 +136,20 @@ class Lysertron.Song
           , (eventData.start - playHead) * 1000
 
     return
+
+  musicFileUrl: (path) ->
+    if /^https?:/.test(path)
+      path
+    else
+      "songs/#{ path }"
+
+  dataFileUrl: (path) ->
+    filename = path.replace(/\.\w+?$/, '.json')
+    if /^https?:/.test(path)
+      filename
+    else
+      "songs/#{ filename }"
+
 
   # Start the audio player
   start: (playAudio = yes) ->
