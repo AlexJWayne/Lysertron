@@ -9,7 +9,10 @@ path = require 'path'
 fs   = require 'fs'
 argv = require('optimist').argv
 
-lib  = path.join path.dirname(fs.realpathSync(__filename)), '../lib'
+root = path.join path.dirname(fs.realpathSync(__filename)), '..'
+lib  = path.join root, 'lib'
+
+authKeys = JSON.parse fs.readFileSync(path.join root, 'auth.json')
 
 layerCompiler = require path.join(lib, 'layer')
 manifest = require path.join(lib, 'manifest')
@@ -41,5 +44,8 @@ switch command
         code = layerCompiler.compile type, name
         code = UglifyJS.minify(code, fromString: yes).code
 
-        request.post "#{HOST}layers.js", json: { layer: { code, location: type, name } }, (err, res, body) ->
-          console.log "Uploaded: #{type} #{name}"
+        request.post "#{HOST}layers.js", json: { token: authKeys.lysertron, layer: { code, location: type, name } }, (err, res, body) ->
+          if err
+            console.log "Error: #{err}"
+          else
+            console.log "Uploaded: #{type} #{name}"

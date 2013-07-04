@@ -1,8 +1,9 @@
 fs = require 'fs'
 request = require 'request'
 
+authKeys = JSON.parse fs.readFileSync('auth.json')
 Echonest = new require('echonest').Echonest
-echo = new Echonest api_key: JSON.parse(fs.readFileSync('echonest.json')).key
+echo = new Echonest api_key: authKeys.echonest
 
 [_, _, path, name] = process.argv
 
