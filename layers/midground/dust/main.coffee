@@ -1,17 +1,22 @@
-module.exports = class Dust extends Lysertron.Layer
+module.exports = class Dust extends Lysertron.LayerStack
+  initialize: ->
+    @push new SingleDust()
+    @push new SingleDust direction: -1
+
+class SingleDust extends Lysertron.Layer
   uniformAttrs:
     baseColor:     'c'
     size:          'f'
     particleAlpha: 'f'
 
-  initialize: ->
-    @direction = 1
+  initialize: (options = {}) ->
+    @direction = options.direction || 1
     
     @size = THREE.Math.randFloat(3, 8)
     @position.z = Math.random()
     @scale.setLength 0
 
-    @particleAlpha = THREE.Math.randFloat(0.4, 0.75)
+    @particleAlpha = THREE.Math.randFloat(0.3, 0.7)
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat(0, 1)
@@ -26,7 +31,9 @@ module.exports = class Dust extends Lysertron.Layer
     )
 
     @geom = new THREE.Geometry
-    for i in [0..THREE.Math.randFloat(250, 1000)]
+    qty = THREE.Math.randInt(150, 600)
+    console.log qty
+    for i in [0..qty]
       @geom.vertices.push new THREE.Vector3(
         THREE.Math.randFloat(-1, 1)
         THREE.Math.randFloat(-1, 1)
