@@ -108,6 +108,7 @@ class Lysertron.Stage
     @song.load @songName, =>
       @song.start playAudio
       @animate()
+      @showTimeline() if @getParam 'timeline'
   
   # Update all layers on each frame.
   update: =>
@@ -163,6 +164,37 @@ class Lysertron.Stage
   #   beat -> onBeat
   getHandlerName: (eventName) ->
     "on#{ eventName.charAt(0).toUpperCase() }#{ eventName[1...eventName.length] }"
+
+  showTimeline: ->
+    data = @song.data
+    duration = data.track.duration
+
+    timeline = $('<div>').attr id: 'timeline'
+    $(document.body).append timeline
+
+    current = $('<div>').attr(class: 'current').appendTo timeline
+
+    row = (events) ->
+      rowEl = $('<div>').addClass('row').appendTo timeline
+      for event in events
+        rowEl.append $('<div>')
+                    .addClass('block')
+                    .css(left: "#{event.start / duration * 100}%")
+
+    row data.sections
+    row data.bars
+    row data.beats
+    row data.segments
+
+    update = ->
+      progress = stage.song.audio.get(0).currentTime / duration
+      timeline.css '-webkit-transform': "translate3D(#{(-progress) * 100}%, 0, 0)"
+      current.css left: "#{progress * 100}%"
+      requestAnimationFrame(update)
+
+    update()
+
+
 
 # Go
 $ ->

@@ -9,6 +9,38 @@ html
       #song-select { position: absolute; bottom: 10px; left: 320px; }
       #stats       { position: absolute; top: 10px; right: 10px; }
 
+      #timeline {
+        position: absolute;
+        width: 2000%;
+        top: 0;
+        left: 50%;
+      }
+
+      #timeline .row {
+        background: rgba(255,255,255, 0.5);
+        height: 20px;
+        position: relative;
+        margin: 2px 0;
+      }
+
+      #timeline .block {
+        position: absolute;
+        top: 0;
+        height: 20px;
+        width: 1px;
+        background: #444;
+      }
+
+      #timeline .current {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 90px;
+        width: 1px;
+        background: red;
+        z-index: 10;
+      }
+
     // Vendor
     each name in vendor
       script(src="js/vendor/#{name}.js")
