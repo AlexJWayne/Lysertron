@@ -158,6 +158,7 @@ class Strut extends Lysertron.Layer
     @strutEnd   ?= 1 / @spiral.qty + @angle / (2*Math.PI)
 
     newGlow = _.max segment.pitches[Math.floor(@strutStart * 12)...Math.floor(@strutEnd * 12)]
+    newGlow *= segment.volume
     @glow = newGlow if newGlow > @glow
 
   alive: ->

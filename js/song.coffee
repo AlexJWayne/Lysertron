@@ -36,43 +36,28 @@ class Lysertron.Song
         dataType: 'json'
         async: no
         success: (@data) =>
-          @aggregateMusicEvents()
+          @cruncher = new Lysertron.MusicCruncher @data
+          @cruncher.crunch()
+
           @bpm = @data.track.tempo
           @bps = @bpm / 60
 
     else
       @noSong = yes
       @loadDefaultSong()
-      @aggregateMusicEvents()
+      @cruncher = new Lysertron.MusicCruncher @data
+      @cruncher.crunch()
+      
       setTimeout (=> cb this), 0
       console.log "No song selected, using #{@bpm}bpm"
-
-  # Put all music events into a single queue.
-  aggregateMusicEvents: ->
-    events = []
-    eventsByTime = {}
-    for eventType in @eventTypes when eventType isnt 'musicEvent'
-      for eventData in @data["#{eventType}s"]
-        start = eventData.start
-        unless eventsByTime[start]
-          obj = { start }
-          events.push obj
-          eventsByTime[start] = obj
-
-        eventsByTime[start][eventType] = eventData
-
-    events = events.sort (a, b) ->
-      a.start - b.start
-
-    @data.musicEvents = []
-    for event in events
-      @data.musicEvents.push event
 
   generateSongEvents: (duration = 1) ->
     for i in [0...600] by duration
       start: i / @bps
       duration: duration / @bps
       confidence: 1
+      volume: 0.9
+      intensity: 1
 
   loadDefaultSong: ->
     @bpm = 90

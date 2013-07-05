@@ -176,8 +176,10 @@ class Lysertron.Stage
       rowEl = $('<div>').addClass('row').appendTo timeline
       for event in events
         rowEl.append $('<div>')
-                    .addClass('block')
-                    .css(left: "#{event.start / duration * 100}%")
+                      .addClass('block')
+                      .css
+                        left: "#{event.start / duration * 100}%"
+                        'background-color': "rgba(0,0,0, #{event.volume ? 1})"
 
     row data.sections
     row data.bars
@@ -189,7 +191,7 @@ class Lysertron.Stage
       timeline.css
         '-webkit-transform': "translate3D(#{(-progress) * 100}%, 0, 0)",
         '-moz-transform': "translate3D(#{(-progress) * 100}%, 0, 0)"
-        
+
       requestAnimationFrame(update)
 
     update()

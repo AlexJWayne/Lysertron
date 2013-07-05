@@ -247,8 +247,9 @@ module.exports = class Holo extends Lysertron.Layer
       whitenings = @vertexAttrs.whitening.value
 
       for i in [0...pitches.length]
-        if i == Math.floor(vertex.v * 12) && pitches[i] > whitenings[vertIndex]
-          whitenings[vertIndex] = pitches[i]
+        volume = pitches[i] * segment.volume
+        if i == Math.floor(vertex.v * 12) && volume > whitenings[vertIndex]
+          whitenings[vertIndex] = volume
 
   kill: ->
     new TWEEN.Tween(this)

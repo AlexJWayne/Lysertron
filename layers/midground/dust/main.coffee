@@ -31,9 +31,8 @@ class SingleDust extends Lysertron.Layer
     )
 
     @geom = new THREE.Geometry
-    qty = THREE.Math.randInt(150, 600)
-    console.log qty
-    for i in [0..qty]
+    @qty = THREE.Math.randInt(150, 600)
+    for i in [0..@qty]
       @geom.vertices.push new THREE.Vector3(
         THREE.Math.randFloat(-1, 1)
         THREE.Math.randFloat(-1, 1)

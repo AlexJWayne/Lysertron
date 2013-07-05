@@ -29,6 +29,7 @@ module.exports =
     'util'
     'layer_group'
     'layer_stack'
+    'music_cruncher'
     'song'
     'stage'
   ]
