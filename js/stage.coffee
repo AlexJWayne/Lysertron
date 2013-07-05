@@ -169,10 +169,8 @@ class Lysertron.Stage
     data = @song.data
     duration = data.track.duration
 
-    timeline = $('<div>').attr id: 'timeline'
-    $(document.body).append timeline
-
-    current = $('<div>').attr(class: 'current').appendTo timeline
+    timeline = $('<div>').attr(id: 'timeline').appendTo $(document.body)
+    current = $('<div>').attr(id: 'timeline-current').appendTo $(document.body)
 
     row = (events) ->
       rowEl = $('<div>').addClass('row').appendTo timeline
@@ -188,8 +186,10 @@ class Lysertron.Stage
 
     update = ->
       progress = stage.song.audio.get(0).currentTime / duration
-      timeline.css '-webkit-transform': "translate3D(#{(-progress) * 100}%, 0, 0)"
-      current.css left: "#{progress * 100}%"
+      timeline.css
+        '-webkit-transform': "translate3D(#{(-progress) * 100}%, 0, 0)",
+        '-moz-transform': "translate3D(#{(-progress) * 100}%, 0, 0)"
+        
       requestAnimationFrame(update)
 
     update()
