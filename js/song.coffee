@@ -23,8 +23,8 @@ class Lysertron.Song
   load: (@name, cb) ->
     if @name && @name isnt ''
       @audio = $('<audio id="audio" preload="auto" controls>')
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'), type: "audio/ogg")
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name), type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
+      @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'))#, type: "audio/ogg")
+      @audio.append $('<source>').attr(src: @musicFileUrl(@name))#, type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
 
       # @audio.attr src: @musicFileUrl(@name)
       $('body').append @audio
