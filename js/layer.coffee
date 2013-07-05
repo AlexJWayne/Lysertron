@@ -16,7 +16,7 @@ class Lysertron.Layer extends THREE.Object3D
     @initUniforms()
 
     # Call a non-constructor init function.
-    @initialize?()
+    @initialize? arguments...
 
   # Setup list of uniforms sent to shaders.
   initUniforms: ->
