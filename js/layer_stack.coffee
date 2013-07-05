@@ -6,10 +6,10 @@ class Lysertron.LayerStack extends Lysertron.Layer
     @stack = new Lysertron.LayerGroup this
     super
 
-  push: (echoes...) ->
-    for echo in echoes
-      @add echo
-      @stack.push echo
+  push: (layers...) ->
+    for layer in layers
+      @add layer
+      @stack.push layer
     return
 
   dispatchMusicEvent: (data) ->
