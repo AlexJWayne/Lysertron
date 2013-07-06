@@ -52,6 +52,8 @@ class Lysertron.LayerGroup
       klass = (echoClass for echoClass in Lysertron.Layers[@echoType] when echoClass._id is forcedEchoName)[0]
       if klass
         console.log "Forced #{@echoType}:", forcedEchoName
+      else if forcedEchoName is '_'
+        console.log "Omitting #{@echoType}"
       else
         console.error "Forced #{@echoType} not found:", forcedEchoName
 
