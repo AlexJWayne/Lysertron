@@ -37,7 +37,7 @@ module.exports = class Gyro extends Lysertron.LayerStack
 
     @fanAngle = THREE.Math.randFloat(10, 45).degToRad
 
-    @radialDistance = THREE.Math.randFloat 3, 10
+    @radialDistance = THREE.Math.randFloat 6, 12
     
     @lightenOnNudge = [1, -0.5].random()
     @direction = 1 #[1, -1].random()
@@ -119,7 +119,7 @@ class Ring extends Lysertron.Layer
     @progress = 0
     new TWEEN.Tween(this)
       .to({progress: 1}, (duration * @animTime).ms)
-      .easing(TWEEN.Easing.Back.Out)
+      .easing(TWEEN.Easing.Back.In)
       .start()
 
 
@@ -127,7 +127,7 @@ class Ring extends Lysertron.Layer
     super
     new TWEEN.Tween(@scale)
       .to({x:0, y:0, z:0}, (1.5/stage.song.bps + @ringIndex/4).ms)
-      .easing(TWEEN.Easing.Back.In)
+      .easing(TWEEN.Easing.Sinusoidal.In)
       .onComplete(=> @visible = no)
       .start()
 

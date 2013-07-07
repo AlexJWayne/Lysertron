@@ -39,8 +39,8 @@ void main() {
   lightVal = pow(abs(lightVal), 4.0);
   gl_FragColor.xyz = mix(vec3(lightVal), color, 0.7);
 
-  // pulse color
-  gl_FragColor.xyz += vec3(pow((1.0 - progress), 2.0)) * lightenOnNudge;
+  // // pulse color
+  // gl_FragColor.xyz += vec3(pow((1.0 - progress), 2.0)) * lightenOnNudge;
 
   // large blurry noise for unlit portion
   gl_FragColor.xyz += vec3(snoise(screenNormal.xy + vec2(elapsed))) * 0.075;
