@@ -22,7 +22,8 @@ class Terrain extends Lysertron.Layer
 
     @undulation    = THREE.Math.randFloat 0.5, 1.5
     @smoothness    = THREE.Math.randFloat 125, 300
-    @maxHeight     = THREE.Math.randFloat 75, 160
+    @realMaxHeight = THREE.Math.randFloat 75, 160
+    @maxHeight     = @realMaxHeight * 0.5
     @baseColor     = new THREE.Color().setHSV(
       Math.random()
       THREE.Math.randFloat 0.5, 1
@@ -60,7 +61,12 @@ class Terrain extends Lysertron.Layer
     
     @travel.y -= @undulation * elapsed
 
-  onBeat: ->
+  onBeat: (beat) ->
+    new TWEEN.Tween(this)
+      .to({maxHeight: beat.volume * @realMaxHeight}, beat.duration * 1000)
+      .easing(TWEEN.Easing.Cubic.InOut)
+      .start()
+    
     @beatValue = 1
 
   kill: ->
