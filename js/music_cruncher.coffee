@@ -58,9 +58,10 @@ class Lysertron.MusicCruncher
     # Add normalized volumes to rhythmic events based on the segment volume within them.
     for eventType in ['sections', 'bars', 'beats']
       for event in @data[eventType]
-        event.volume = 0
-        for segment in @eventsInRange 'segments', event
-          event.volume = segment.volume if segment.volume > event.volume
+        unless event.volume?
+          event.volume = 0
+          for segment in @eventsInRange 'segments', event
+            event.volume = segment.volume if segment.volume > event.volume
 
     return
 
