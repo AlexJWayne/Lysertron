@@ -7,7 +7,7 @@ module.exports = class Lattice extends Lysertron.LayerStack
 
     @offsetTime = 10
     
-    @bulge = new THREE.Vector3
+    @bulge = new THREE.Vector3()
 
     @animateTweens()
 

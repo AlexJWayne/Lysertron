@@ -151,7 +151,7 @@ module.exports = class Sparkler extends Lysertron.Layer
         @counter.particles = @particlesPerSegment * event.segment.volume
         @counter.used = no
 
-    else if event.bar
+    if event.bar
       @counter.particles = @particlesPerBeat * event.bar.volume
       @counter.used = no
 

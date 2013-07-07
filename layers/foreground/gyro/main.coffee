@@ -126,7 +126,7 @@ class Ring extends Lysertron.Layer
   kill: ->
     super
     new TWEEN.Tween(@scale)
-      .to({x:0, y:0, z:0}, (1.5/stage.song.bps + @ringIndex/4).ms)
+      .to({x:0, y:0, z:0}, 1000)
       .easing(TWEEN.Easing.Sinusoidal.In)
       .onComplete(=> @visible = no)
       .start()
