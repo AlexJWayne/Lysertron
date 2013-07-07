@@ -72,14 +72,14 @@ module.exports = class Sparkler extends Lysertron.Layer
     
     @emitterZone = new MirrorPointZone(new THREE.Vector3 0, 0, 0)
     @emitter.addInitializer new SPARKS.Position(@emitterZone)
-    @emitter.addInitializer new SPARKS.Velocity(new SphereZone(0, 0, 0, 50))
+    @emitter.addInitializer new SPARKS.Velocity(new SphereZone(0, 0, 0, 70))
     @emitter.addInitializer new SPARKS.Lifetime .2, 1.5
 
     @emitter.addAction      new SPARKS.Age
     @emitter.addAction      new SPARKS.RandomDrift @drift, @drift, @drift
     @emitter.addAction      new SPARKS.Move
-    @emitter.addAction      new Resistance 40
-    @emitter.addAction      new Gravity 30
+    @emitter.addAction      new Resistance 60
+    @emitter.addAction      new Gravity 35
 
     @emitter.addCallback "created", @onParticleCreated
     @emitter.addCallback "dead",    @onParticleDead
@@ -104,7 +104,7 @@ module.exports = class Sparkler extends Lysertron.Layer
     @emitter.start()
 
   setupValues: ->
-    @drift = THREE.Math.randFloat 0, 500
+    @drift = 200#THREE.Math.randFloat 0, 500
 
     @baseColor = new THREE.Color().setHSV(
       THREE.Math.randFloat 0, 1
@@ -145,13 +145,19 @@ module.exports = class Sparkler extends Lysertron.Layer
       @geom.vertices[p.target].copy p.position
       @vertexAttributes.energy.value[p.target] = p.energy
 
-  onBeat: ->
-    @counter.particles = @particlesPerBeat
-    @counter.used = no
+  onMusicEvent: (event) ->
+    if event.segment
+      if @counter.used
+        @counter.particles = @particlesPerSegment * event.segment.volume
+        @counter.used = no
 
-  onSegment: ->
-    if @counter.used
-      @counter.particles = @particlesPerSegment
+    else if event.bar
+      # console.log @velocity
+      @counter.particles = @particlesPerBeat * event.bar.volume
+      @counter.used = no
+
+    else if event.beat
+      @counter.particles = @particlesPerBeat * event.beat.volume
       @counter.used = no
 
   alive: ->
