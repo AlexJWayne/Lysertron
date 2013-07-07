@@ -187,7 +187,7 @@ class Lysertron.Stage
     row data.segments
 
     update = ->
-      progress = stage.song.audio.get(0).currentTime / duration
+      progress = stage.song.audio.currentTime / duration
       timeline.css
         '-webkit-transform': "translate3D(#{(-progress) * 100}%, 0, 0)",
         '-moz-transform': "translate3D(#{(-progress) * 100}%, 0, 0)"

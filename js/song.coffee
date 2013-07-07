@@ -22,14 +22,14 @@ class Lysertron.Song
   # Load a track and it's meta data
   load: (@name, cb) ->
     if @name && @name isnt ''
-      @audio = $('<audio id="audio" preload="auto" controls>')
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'))#, type: "audio/ogg")
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name))#, type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
+      @audio = new WebAudio().createSound().load @musicFileUrl(@name), =>
+        cb this
 
-      # @audio.attr src: @musicFileUrl(@name)
-      $('body').append @audio
-
-      @audio.on 'canplay', => cb this
+      # @audio = $('<audio id="audio" preload="auto" controls>')
+      # @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'))#, type: "audio/ogg")
+      # @audio.append $('<source>').attr(src: @musicFileUrl(@name))#, type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
+      # $('body').append @audio
+      # @audio.on 'canplay', => cb this
 
       $.ajax
         url: @dataFileUrl(@name)
@@ -84,7 +84,7 @@ class Lysertron.Song
     # Current time of the audio playback.
     playHead =
       if @audio
-        @audio[0].currentTime
+        @audio.currentTime
       else
         @startedAt ||= Date.now()
         (Date.now() - @startedAt) / 1000
@@ -141,13 +141,13 @@ class Lysertron.Song
 
   # Start the audio player
   start: (playAudio = yes) ->
-    if @noSong
+    setInterval =>
+      @scheduleEvents()
+    , 250
+
+    unless @noSong
       setInterval =>
         @scheduleEvents()
       , 250
 
-    else
-      @audio.on 'timeupdate', => @scheduleEvents()
-
-      @audio[0].volume = if playAudio then 0.25 else 0
-      @audio[0].play()
+      @audio.volume(0.15).play()

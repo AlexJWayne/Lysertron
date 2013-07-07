@@ -32,6 +32,7 @@ Number::ms || Object.defineProperty Number::, 'ms',
   get: ->
     this * 1000
 
+# Shim window.performance.now
 window.performance ||= {}
 performance.now = do ->
   performance.now       ||
@@ -43,3 +44,8 @@ performance.now = do ->
     start = Date.now()
     -> return Date.now() - start
   )
+
+# Easily get curent time from WebAudio player
+WebAudio.Sound::curentTime || Object.defineProperty WebAudio.Sound::, 'currentTime',
+  get: ->
+    @_source.context.currentTime
