@@ -25,15 +25,17 @@ module.exports = class Cubes extends Lysertron.LayerStack
 
   onMusicEvent: (data) ->
     if data.bar
-      for i in [1..@spawnQty*8]
+      totalQty = @spawnQty * 8 * data.bar.volume
+      for i in [1..totalQty]
         @push new Cube this,
           color: @color
-          speed: Math.abs(@speed*2)
+          speed: Math.abs @speed * 2
           accel: @accel/2
           size: @size.map((s)-> s/2)
 
     else if data.beat
-      for i in [1..@spawnQty]
+      totalQty = @spawnQty * data.beat.volume
+      for i in [1..totalQty]
         @push new Cube this,
           color: @color
           speed: @speed
@@ -41,16 +43,6 @@ module.exports = class Cubes extends Lysertron.LayerStack
           size: @size
     
     return
-
-  # onBeat: ->
-  #   for i in [1..@spawnQty]
-  #     @push new Cube this, color: @color, speed: @speed, accel: @accel, size: @size
-  #   return
-
-  # onBar: ->
-  #   for i in [1..@spawnQty*8]
-  #     @push new Cube this, color: @color, speed: Math.abs(@speed*2), accel: @accel/2, size: @size.map((s)-> s/2)
-  #   return
   
   update: (elapsed) ->
     super
@@ -100,8 +92,7 @@ class Cube extends Lysertron.Layer
     @beatScale > 0
 
   update: (elapsed) ->
-    # @beatScale -= elapsed / @parentLayer.shrinkTime
-    @mesh.scale.setLength @finalSize * @beatScale * @beatScale
+    @mesh.scale.setLength @finalSize * @beatScale * @beatScale 
 
     @vel.add THREE.Vector3.temp(@mesh.position).setLength(@accel * elapsed)
     @mesh.position.add THREE.Vector3.temp(@vel).multiplyScalar(elapsed)
