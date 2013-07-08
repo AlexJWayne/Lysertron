@@ -63,9 +63,6 @@ switch command
       for layerPath in layers
         do (layerPath, type, name) ->
           [type, name] = layerPath.split('/')
-          
-          # meta = layerCompiler.compileMeta type, name
-          # meta.content = layerCompiler.compile type, name
 
           code = layerCompiler.compile type, name
 
@@ -73,6 +70,6 @@ switch command
             if err
               console.log "Error: #{err}"
             else if ! /^2/.test res.statusCode.toString()
-              console.log "Server Error: #{res.statusCode} #{res.body}"
+              console.log "Server Error: HTTP #{res.statusCode}\n#{res.body}"
             else
               console.log "Uploaded: #{type} #{name}"
