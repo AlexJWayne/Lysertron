@@ -42,10 +42,13 @@ switch command
           fs.writeFileSync authFilePath,
             """
             {
+              "echonest": "ECHONEST_API_KEY_HERE",
               "lysertron": "#{result[keyMsg]}"
             }
             """
-        
+          
+          fs.writeFileSync path.join(projectRoot, '.gitignore'), 'auth.json'
+
           console.log "API Key added to auth.json. Please try to publish again."
 
         null
