@@ -34,14 +34,22 @@ module.exports =
     'stage'
   ]
   
-  findLayers: (callback) ->
+  findLayers: (args...) ->
+    if args.length is 2
+      [onlyLocal, callback] = args
+
+    else
+      onlyLocal = false
+      callback = args[0]
+
     layers = []
 
     # Find all framework echoes
-    for layerType in layerTypes
-      for layer in fs.readdirSync(path.join layersPath, layerType)
-        continue if /^(\.|_)/.test layer
-        layers.push "#{layerType}/#{layer}"
+    unless onlyLocal
+      for layerType in layerTypes
+        for layer in fs.readdirSync(path.join layersPath, layerType)
+          continue if /^(\.|_)/.test layer
+          layers.push "#{layerType}/#{layer}"
 
     # Find all local echoes
     if currentPath isnt rootPath

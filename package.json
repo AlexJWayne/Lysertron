@@ -30,7 +30,8 @@
   "devDependencies": {},
   "keywords": [
     "webgl",
-    "music"
+    "music",
+    "echonest"
   ],
   "main": "./lib/server",
   "bin": {

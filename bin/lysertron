@@ -58,11 +58,15 @@ switch command
       if type && name
         echoes = ["#{type}/#{name}"]
       else
-        manifest.findLayers (err, layerPaths) -> layers = layerPaths
+        manifest.findLayers true, (err, layerPaths) -> layers = layerPaths
       
       for layerPath in layers
         do (layerPath, type, name) ->
           [type, name] = layerPath.split('/')
+
+          if name == 'example'
+            console.log "#{layerPath} not uploaded. Will not upload 'example'. Modify and rename the layer if you want to publish it."
+            return
 
           code = layerCompiler.compile type, name
 
