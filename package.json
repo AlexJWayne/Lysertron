@@ -2,7 +2,7 @@
   "name": "lysertron",
   "description": "Semantic Music Visualization, extensible by WebGL doodlers.",
   "homepage": "http://lysertron.com",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/Squeegy/Lysertron.git"
@@ -41,5 +41,11 @@
   "engines": {
     "node": "*"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "files": [
+    "songs/Escape.ogg",
+    "songs/Escape.json",
+    "songs/DropOfWaterInTheOcean.ogg",
+    "songs/DropOfWaterInTheOcean.json"
+  ]
 }
