@@ -7,12 +7,15 @@ UglifyJS = require 'uglify-js'
 request = require 'request'
 path = require 'path'
 fs   = require 'fs'
+prompt = require 'prompt'
 argv = require('optimist').argv
 
 root = path.join path.dirname(fs.realpathSync(__filename)), '..'
 lib  = path.join root, 'lib'
 
-authKeys = JSON.parse fs.readFileSync(path.join root, 'auth.json')
+projectRoot = process.cwd()
+
+authFilePath = path.join projectRoot, 'auth.json'
 
 layerCompiler = require path.join(lib, 'layer')
 manifest = require path.join(lib, 'manifest')
@@ -28,24 +31,48 @@ switch command
     app.listen port
 
   when 'publish'
-    [type, name] = options
-    layers = []
+    authKeys =
+      if fs.existsSync authFilePath
+        JSON.parse fs.readFileSync(authFilePath)
 
-    if type && name
-      echoes = ["#{type}/#{name}"]
-    else
-      manifest.findLayers (err, layerPaths) -> layers = layerPaths
-    
-    for layerPath in layers
-      do (layerPath, type, name) ->
-        [type, name] = layerPath.split('/')
-        # meta = layerCompiler.compileMeta type, name
-        # meta.content = layerCompiler.compile type, name
-        code = layerCompiler.compile type, name
-        # code = UglifyJS.minify(code, fromString: yes).code
+      else
+        prompt.start()
+        keyMsg = 'Enter Your API Key - See http://lysertron.com/users/edit'
+        prompt.get [keyMsg], (err, result) ->
+          fs.writeFileSync authFilePath,
+            """
+            {
+              "lysertron": "#{result[keyMsg]}"
+            }
+            """
+        
+          console.log "API Key added to auth.json. Please try to publish again."
 
-        request.post "#{HOST}layers.js", json: { token: authKeys.lysertron, layer: { code, location: type, name } }, (err, res, body) ->
-          if err
-            console.log "Error: #{err}"
-          else
-            console.log "Uploaded: #{type} #{name}"
+        null
+
+
+    if authKeys
+      [type, name] = options
+      layers = []
+
+      if type && name
+        echoes = ["#{type}/#{name}"]
+      else
+        manifest.findLayers (err, layerPaths) -> layers = layerPaths
+      
+      for layerPath in layers
+        do (layerPath, type, name) ->
+          [type, name] = layerPath.split('/')
+          
+          # meta = layerCompiler.compileMeta type, name
+          # meta.content = layerCompiler.compile type, name
+
+          code = layerCompiler.compile type, name
+
+          request.post "#{HOST}layers.js", json: { token: authKeys.lysertron, layer: { code, location: type, name } }, (err, res, body) ->
+            if err
+              console.log "Error: #{err}"
+            else if ! /^2/.test res.statusCode.toString()
+              console.log "Server Error: #{res.statusCode} #{res.body}"
+            else
+              console.log "Uploaded: #{type} #{name}"

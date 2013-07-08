@@ -1,8 +1,8 @@
 {
-  "name": "echotron",
+  "name": "lysertron",
   "description": "Semantic Music Visualization, extensible by WebGL doodlers.",
-  "homepage": "https://github.com/Squeegy/Lysertron",
-  "version": "0.0.2",
+  "homepage": "http://lysertron.com",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/Squeegy/Lysertron.git"
@@ -24,7 +24,8 @@
     "optimist":      "*",
     "coffeeson":     "*",
     "request":       "*",
-    "uglify-js":     "2.3.6"
+    "uglify-js":     "2.3.6",
+    "prompt":        "*"
   },
   "devDependencies": {},
   "keywords": [
@@ -33,7 +34,7 @@
   ],
   "main": "./lib/server",
   "bin": {
-    "echotron": "./bin/echotron"
+    "lysertron": "./bin/lysertron"
   },
   "engines": {
     "node": "*"
