@@ -25,7 +25,8 @@
     "coffeeson":     "*",
     "request":       "*",
     "uglify-js":     "2.3.6",
-    "prompt":        "*"
+    "prompt":        "*",
+    "ncp":           "*"
   },
   "devDependencies": {},
   "keywords": [
