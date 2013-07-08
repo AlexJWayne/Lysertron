@@ -4,7 +4,7 @@ Lysertron is a WebGL semantic and extensible music visualizer.
 
 ![](http://media.tumblr.com/378c7af6967e6cf2175e8f6c3e07a322/tumblr_inline_mhlz6sjZEn1qz4rgp.jpg)
 
-* [Online Demo](dl.dropbox.com/u/485347/echotron/index.html?song=Escape)
+* [Online Demo](http://dl.dropbox.com/u/485347/echotron/index.html?song=Escape)
 * [See an overview in this blog post here](http://beautifulpixel.com/day/2013/02/02)
 
 
