@@ -7,6 +7,10 @@ Lysertron.Layers.background ||= []
 # A single renderable object that can respond to music events.
 # These are the building blocks of all visulizations!
 class Lysertron.Layer extends THREE.Object3D
+
+  # Expose coffee script inheritance to plain ol' js.
+  @extend = -> class extends this
+
   uniformAttrs: {}
 
   # Override, calling super. Setup your Echo however you need.

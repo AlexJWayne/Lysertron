@@ -12,7 +12,6 @@ Lysertron is a WebGL collborative, semantic and extensible music visualizer.  Yo
 **Prerequisites:**
 * node.js
 * npm
-* CoffeeScript _(for the moment)_
 * WebGL capable browser
 
 If you have the above squared away, then you are ready to get your own local Lysertron server.
@@ -36,7 +35,7 @@ Lysertron has 3 pools of layers. When creating each scene, a random layer of eac
 In your project there is a directory for each of these types.  Each layer gets it's own folder within those. Simply adding a directory for a new layer type in the correct directory will cause the server to find it, package it, and expose it to the browser.  The name of this directory is the name of the layer.
 
 Most layers will have at least 3 files:
-* **main.coffee:** The JavaScript that powers the layer.
+* **main.coffee:** The CoffeeScript that powers the layer. (or `main.js` if you want to use vanilla JavaScript instead)
 * **vert.glsl:** A vertex shader.
 * **frag.glsl:** A fragment shader.
 
@@ -71,6 +70,16 @@ When you have a master piece ready to go, you can publish the layer to http://ly
 Now every layer you have created in your `background`, `midground` and `foreground` directories will be compiled and submitted to the server.
 
 But be patient, for now there is a review process in place.  If deemed worthy, the layer will be approved and will enter the rotation of layers available on the homepage.  This approval is necesary since many peoples code must play nice with each other.  If one layer raises exceptions, it could kill the entire visualization.  Also, noone wants this thing covered in penis.  The plan is to have better community review tools, coming soon...
+
+## Using Plain JavaScript
+
+CoffeeScript not your thing? No worries.
+
+1. Rename your `main.coffee` to `main.js`.
+2. Extend `Lysertron.Layer` to create your class: `var MyLayer = Lysertron.Layer.extend()`
+3. Add methods to the prototype: `MyLayer.prototype.onBeat = function(beat) { ... }`
+
+See `foreground/example/main.js` for a commented JavScript version of the foreground example layer.
 
 ## Adding your own music
 
