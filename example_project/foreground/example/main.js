@@ -68,21 +68,23 @@ Example.prototype.onBeat = function (beat) {
   return this.baseColor.setRGB(Math.random(), Math.random(), Math.random());
 };
 
-// Called for each discernable note. Inspect the argment for details about the note.
-Example.prototype.onSegment = function(segment) { };
+// // Called for each discernable note. Inspect the argment for details about the note.
+// Example.prototype.onSegment = function(segment) { };
 
-// Called at the start of every bar. Typically 4 beats in a 4/4 time signature.
-Example.prototype.onBar = function(bar) { };
+// // Called at the start of every bar. Typically 4 beats in a 4/4 time signature.
+// Example.prototype.onBar = function(bar) { };
 
-// Called on each tatum. Tatums represent the lowest regular pulse train that a
-// listener intuitively infers from the timing of perceived musical events (segments).
-Example.prototype.onTatum = function(tatum) { };
+// // Called on each tatum. Tatums represent the lowest regular pulse train that a
+// // listener intuitively infers from the timing of perceived musical events (segments).
+// Example.prototype.onTatum = function(tatum) { };
 
-// Called when the scene transitions and the layer should begin to die.  If you
-// override this, make sure to call `super`!
-Example.prototype.kill = function() { };
+// // Called when the scene transitions and the layer should begin to die.  If you
+// // override this, make sure to call `super`!
+// Example.prototype.kill = function() {
+//   Lysertron.Layer.prototype.kill.apply(this);
+// };
 
-// Called every frame after the layer has been killed. For as long as this method
-// returns `true` the layer will still be rendered. Make it return false when it's
-// death animation is completed.
-Example.prototype.alive = function() { };
+// // Called every frame after the layer has been killed. For as long as this method
+// // returns `true` the layer will still be rendered. Make it return false when it's
+// // death animation is completed.
+// Example.prototype.alive = function() { };
