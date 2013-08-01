@@ -23,6 +23,7 @@ module.exports =
     'tweencurve'
     'tween'
     'sparks'
+    'oculus_rift'
   ]
   app: [
     'layer'

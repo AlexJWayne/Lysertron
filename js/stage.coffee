@@ -42,6 +42,11 @@ class Lysertron.Stage
     @renderer.autoClear = no
     container.appendChild @renderer.domElement
 
+    if @getParam('vr')
+      @oculusRenderer = new THREE.OculusRiftEffect @renderer
+      @oculusRenderer.blankScene = new THREE.Scene()
+      @oculusRenderer.setInterpupillaryDistance 10
+
     # # fps
     # @stats = new Stats
     # $(document.body).append @stats.domElement
@@ -137,14 +142,25 @@ class Lysertron.Stage
 
   # Render the scene.
   render: =>
-    @renderer.clear yes, yes, yes
-    @renderer.render @logicalLayers.background.scene, @camera
 
-    @renderer.clear no, yes, yes
-    @renderer.render @logicalLayers.midground.scene,  @camera
+    if @oculusRenderer
+      # Render a blank scene and clear the buffer
+      @oculusRenderer.render @oculusRenderer.blankScene, @camera, undefined, true
 
-    @renderer.clear no, yes, yes
-    @renderer.render @logicalLayers.foreground.scene, @camera
+      # With a cleared canvas, render each layer
+      @oculusRenderer.render @logicalLayers.background.scene, @camera, undefined, false
+      @oculusRenderer.render @logicalLayers.midground.scene,  @camera, undefined, false
+      @oculusRenderer.render @logicalLayers.foreground.scene, @camera, undefined, false
+
+    else
+      @renderer.clear yes, yes, yes
+      @renderer.render @logicalLayers.background.scene, @camera
+
+      @renderer.clear no, yes, yes
+      @renderer.render @logicalLayers.midground.scene,  @camera
+
+      @renderer.clear no, yes, yes
+      @renderer.render @logicalLayers.foreground.scene, @camera
 
   # Return the value of a query string parameter.
   getParam: (name) ->
