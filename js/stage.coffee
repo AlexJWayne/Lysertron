@@ -34,7 +34,7 @@ class Lysertron.Stage
 
     # canvas
     container = document.createElement 'div'
-    document.body.appendChild container
+    document.body.insertBefore container, document.body.firstChild
 
     # renderer
     @renderer = new THREE.WebGLRenderer antialias: yes
@@ -45,14 +45,28 @@ class Lysertron.Stage
     if @getParam('vr')
       @oculusRenderer = new THREE.OculusRiftEffect @renderer
       @oculusRenderer.blankScene = new THREE.Scene()
-      @oculusRenderer.setInterpupillaryDistance 10
+      @oculusRenderer.setInterpupillaryDistance 2
+
+      $(window).on 'keydown', (e) =>
+        switch e.keyCode
+          when 70 # f
+            if vr.isFullScreen()
+              vr.exitFullScreen()
+            else
+              vr.enterFullScreen()
+
+          when 69 # e
+            if confirm("Swap left and right?")
+              @oculusRenderer.setInterpupillaryDistance -@oculusRenderer.getInterpupillaryDistance()
+
 
     # # fps
     # @stats = new Stats
     # $(document.body).append @stats.domElement
 
     # resize
-    THREEx.WindowResize @renderer, @camera
+    unless @oculusRenderer
+      THREEx.WindowResize @renderer, @camera
 
   # Initialize the song and bind song events.
   initSong: ->
