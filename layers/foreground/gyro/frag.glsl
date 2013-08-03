@@ -32,8 +32,10 @@ float lightRing(float width, float speed) {
 }
 
 void main() {
-  float lightVal = dot(vec3(0.0, 1.0, 0.0), screenNormal) * 0.75;
-  lightVal      += dot(vec3(1.0, 0.0, 0.0), screenNormal) * 0.5;
+  float lightVal = dot(vec3(0.0, 1.0, 0.0), vNormal) * 0.65;
+  lightVal      += dot(vec3(1.0, 0.0, 0.0), vNormal) * 0.4;
+
+  // float lightVal = 1.0;
 
   // Attenuate light
   lightVal = pow(abs(lightVal), 4.0);
