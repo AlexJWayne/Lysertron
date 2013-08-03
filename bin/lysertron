@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 
 # HOST = 'http://localhost:3000/'
-HOST = 'http://lysertron.com/'
+HOST = 'http://www.lysertron.com/'
 
 UglifyJS = require 'uglify-js'
 request = require 'request'
