@@ -17,7 +17,7 @@ Lysertron is a WebGL collborative, semantic and extensible music visualizer.  Yo
 If you have the above squared away, then you are ready to get your own local Lysertron server.
 
 1. Install the npm module globally: `npm install -g lysteron`
-2. Create a project: `lysertron supercool_project_name`
+2. Create a project: `lysertron project supercool_project_name`
 3. Change into the new project directory: `cd supercool_project_name`
 3. Start the local server: `lysertron`
 4. Point your browser to: `http://localhost:3001/`
