@@ -1,5 +1,8 @@
 if chrome.app.window
 
+  $progressBar = null
+  $progressBarValue = null
+
   song =
     blob: null
     analysis: null
@@ -35,6 +38,9 @@ if chrome.app.window
           console.log 'SUCCESS', jsonUrl
 
           $.getJSON jsonUrl, (json) ->
+            $progressBar.remove()
+            $progressBar = null
+
             song.analysis = json
             stage.initSong song
             stage.start()
@@ -42,6 +48,8 @@ if chrome.app.window
         # Will never get it :(
         else if res.response.track.status is 'error'
           console.log 'ERROR', res
+          $progressBar.remove()
+          $progressBar = null
 
         # Retry in 5 seconds
         else
@@ -51,9 +59,26 @@ if chrome.app.window
 
   # Show progress on the the upload.
   reportProgress = (event) ->
-    console.log "#{Math.round event.loaded / 1000}KB (#{Math.round event.loaded / event.total * 100}%)"
+    loaded = Math.round event.loaded / 1000
+    progress = event.loaded / event.total
+    console.log "#{loaded}KB (#{Math.round progress * 100}%)"
 
-  
+    unless $progressBar
+      $progressBar = $('<div id="progressBar">')
+      $progressBarValue = $('<div id="progressBarValue">').appendTo $progressBar
+      $progressBar.prependTo $(document.body)
+
+    fullWidth = $progressBar.width() - 20
+    $progressBarValue.css width: "#{fullWidth * progress}px"
+
+    if progress < 1
+      $progressBarValue.text "#{loaded}k"
+    else
+      $progressBarValue
+        .addClass('waiting')
+        .text "Analyzing..."
+
+
   $window = $(window)
 
   # File drags over the window.
