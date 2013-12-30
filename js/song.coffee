@@ -21,27 +21,44 @@ class Lysertron.Song
 
   # Load a track and it's meta data
   load: (@name, cb) ->
-    if @name && @name isnt ''
+    if @name
       @audio = $('<audio id="audio" preload="auto" controls>')
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'))#, type: "audio/ogg")
-      @audio.append $('<source>').attr(src: @musicFileUrl(@name))#, type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
 
-      # @audio.attr src: @musicFileUrl(@name)
-      $('body').append @audio
+      # Load from a { blob, analysis } object assembled on the fly.
+      if $.isPlainObject @name
+        songObj = @name
 
-      @audio.on 'canplay', => cb this
+        @audio.attr src: URL.createObjectURL(songObj.blob)
+        $('body').append @audio
+        @audio.on 'canplay', => cb this
 
-      $.ajax
-        url: @dataFileUrl(@name)
-        dataType: 'json'
-        async: no
-        success: (@data) =>
-          @cruncher = new Lysertron.MusicCruncher @data
-          @cruncher.crunch()
+        @data = songObj.analysis
+        @cruncher = new Lysertron.MusicCruncher @data
+        @cruncher.crunch()
 
-          @bpm = @data.track.tempo
-          @bps = @bpm / 60
+        @bpm = @data.track.tempo
+        @bps = @bpm / 60
+        
+      
+      # Load from local files within the app by song name.
+      else if @name isnt ''
+        @audio.append $('<source>').attr(src: @musicFileUrl(@name).replace(/\.(\w+?$)/, '.ogg'))#, type: "audio/ogg")
+        @audio.append $('<source>').attr(src: @musicFileUrl(@name))#, type: "audio/#{ @name.match(/\.(\w+?$)/)[1] }")
+        $('body').append @audio
+        @audio.on 'canplay', => cb this
 
+        $.ajax
+          url: @dataFileUrl(@name)
+          dataType: 'json'
+          async: no
+          success: (@data) =>
+            @cruncher = new Lysertron.MusicCruncher @data
+            @cruncher.crunch()
+
+            @bpm = @data.track.tempo
+            @bps = @bpm / 60
+
+    # No song specified, make up some events to trigger visuals.
     else
       @noSong = yes
       @loadDefaultSong()
@@ -142,7 +159,8 @@ class Lysertron.Song
   # Start the audio player
   start: (playAudio = yes) ->
     if @noSong
-      setInterval =>
+      @songEventsInterval = setInterval =>
+        console.log 'asdasdasdasd'
         @scheduleEvents()
       , 250
 
@@ -151,3 +169,8 @@ class Lysertron.Song
 
       @audio[0].volume = if playAudio then 0.25 else 0
       @audio[0].play()
+
+  stop: ->
+    clearInterval @songEventsInterval if @songEventsInterval?
+    @audio?[0].pause()
+    @audio?.remove()

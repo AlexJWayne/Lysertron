@@ -69,7 +69,9 @@ class Lysertron.Stage
       THREEx.WindowResize @renderer, @camera
 
   # Initialize the song and bind song events.
-  initSong: ->
+  initSong: (@songName) ->
+    @stop() if @playing
+    
     @song = new Lysertron.Song
 
     # Bind music events events
@@ -99,7 +101,7 @@ class Lysertron.Stage
       @logicalLayers.foreground.stack.transition()
 
     # Get song from URL
-    @songName = @getParam 'song'
+    @songName ||= @getParam 'song'
   
   createSongSelector: ->
     $.get "/songs.json", (songs) =>
@@ -123,11 +125,16 @@ class Lysertron.Stage
 
   # Start the song and the visualization.
   start: (playAudio = yes) ->
+    @playing = true
     @lastFrame = Date.now() / 1000
     @song.load @songName, =>
       @song.start playAudio
       @animate()
       @showTimeline() if @getParam 'timeline'
+
+  stop: ->
+    debugger
+    @song.stop()
   
   # Update all layers on each frame.
   update: =>

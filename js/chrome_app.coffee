@@ -28,19 +28,22 @@ if chrome.app.window
         id: id
         bucket: 'audio_summary'
 
-      # Got it!
       success: (res) ->
-        jsonUrl = res.response.track.audio_summary.analysis_url
-        console.log 'SUCCESS', jsonUrl
+        # Got it!
+        if res.response.track.status is 'complete'
+          jsonUrl = res.response.track.audio_summary.analysis_url
+          console.log 'SUCCESS', jsonUrl
 
-        $.getJSON jsonUrl, (json) ->
-          song.analysis = json
+          $.getJSON jsonUrl, (json) ->
+            song.analysis = json
+            stage.initSong song
+            stage.start()
 
-      # Retry in 5 seconds
-      error: (res) ->
-        setTimeout ->
-          checkForData id
-        , 5000
+        # Retry in 5 seconds
+        else
+          setTimeout ->
+            checkForData id
+          , 5000
 
   $window = $(window)
 
