@@ -1,6 +1,6 @@
 #!/usr/bin/env coffee
 
-fs            = require 'fs'
+fs            = require 'fs.extra'
 request       = require 'request'
 spawn         = require('child_process').spawn
 coffee        = require 'coffee-script'
@@ -9,24 +9,14 @@ app           = require './lib/server'
 manifest      = require './lib/manifest'
 layerCompiler = require './lib/layer'
 
-deleteFolderRecursive = (path) ->
-  if fs.existsSync(path)
-    fs.readdirSync(path).forEach (file,index) ->
-      curPath = "#{path}/#{file}"
-      if fs.statSync(curPath).isDirectory()
-        deleteFolderRecursive curPath
-      else
-        fs.unlinkSync curPath
-      
-    fs.rmdirSync path
-
 write = (path, content) ->
   console.log "writing #{path}"
   fs.unlinkSync path if fs.existsSync path
   fs.writeFileSync path, content
 
 # Create all folder we need.
-deleteFolderRecursive './chromeapp/public'
+console.log 'removing ./chromeapp/public'
+fs.rmrfSync  './chromeapp/public'
 fs.mkdirSync './chromeapp/public'
 fs.mkdirSync './chromeapp/public/js'
 fs.mkdirSync './chromeapp/public/js/vendor'

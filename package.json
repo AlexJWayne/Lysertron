@@ -26,7 +26,8 @@
     "coffeeson":     "*",
     "request":       "*",
     "prompt":        "*",
-    "ncp":           "*"
+    "ncp":           "*",
+    "fs.extra":      "*"
   },
   "devDependencies": {},
   "keywords": [

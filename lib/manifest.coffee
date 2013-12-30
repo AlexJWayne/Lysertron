@@ -33,6 +33,7 @@ module.exports =
     'music_cruncher'
     'song'
     'stage'
+    'chrome_app'
   ]
   
   findLayers: (args...) ->
