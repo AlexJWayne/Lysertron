@@ -77,7 +77,7 @@ class Lysertron.Stage
 
       # Dispatch event to echoes
       @logicalLayers.background.stack.dispatchMusicEvent(data)
-      @logicalLayers.midground .stack.dispatchMusicEvent(data)
+      @logicalLayers.midground.stack.dispatchMusicEvent(data)
       @logicalLayers.foreground.stack.dispatchMusicEvent(data)
 
       # Transition layers on new sections

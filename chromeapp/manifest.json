@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "permissions": [
     "fileSystem",
-    "storage"
+    "storage",
+    "webview",
+    "<all_urls>"
   ],
   "app": {
     "background": {

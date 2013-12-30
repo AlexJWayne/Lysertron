@@ -25,6 +25,9 @@ fs.mkdirSync './chromeapp/public/layers/background'
 fs.mkdirSync './chromeapp/public/layers/midground'
 fs.mkdirSync './chromeapp/public/layers/foreground'
 
+# Copy auth.json
+write "./chromeapp/public/auth.json", fs.readFileSync("./auth.json")
+
 # Copy over vendor libs.
 for name in manifest.vendor
   write "./chromeapp/public/js/vendor/#{name}.js", fs.readFileSync("./js/vendor/#{name}.js")

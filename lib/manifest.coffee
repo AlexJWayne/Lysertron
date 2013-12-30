@@ -14,7 +14,7 @@ layerTypes = [
 
 module.exports =
   vendor: [
-    'zepto'
+    'jquery'
     'three'
     'three_resize'
     'stats'
