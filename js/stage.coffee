@@ -70,8 +70,8 @@ class Lysertron.Stage
 
   # Initialize the song and bind song events.
   initSong: (@songName) ->
-    @stop() if @playing
-    
+    @song.stop() if @playing
+
     @song = new Lysertron.Song
 
     # Bind music events events
@@ -131,10 +131,6 @@ class Lysertron.Stage
       @song.start playAudio
       @animate()
       @showTimeline() if @getParam 'timeline'
-
-  stop: ->
-    debugger
-    @song.stop()
   
   # Update all layers on each frame.
   update: =>

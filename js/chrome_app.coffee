@@ -29,7 +29,7 @@ if chrome.app.window
         bucket: 'audio_summary'
 
       success: (res) ->
-        # Got it!
+        # Got it! :D
         if res.response.track.status is 'complete'
           jsonUrl = res.response.track.audio_summary.analysis_url
           console.log 'SUCCESS', jsonUrl
@@ -39,12 +39,21 @@ if chrome.app.window
             stage.initSong song
             stage.start()
 
+        # Will never get it :(
+        else if res.response.track.status is 'error'
+          console.log 'ERROR', res
+
         # Retry in 5 seconds
         else
           setTimeout ->
             checkForData id
           , 5000
 
+  # Show progress on the the upload.
+  reportProgress = (event) ->
+    console.log "#{Math.round event.loaded / 1000}KB (#{Math.round event.loaded / event.total * 100}%)"
+
+  
   $window = $(window)
 
   # File drags over the window.
@@ -73,15 +82,21 @@ if chrome.app.window
         formData.append 'track',    file
 
         console.log "Uploading: #{file.name}"
-        $.ajax
+        upload = $.ajax
           url: "#{echonestHost}/track/upload"
           type: 'POST'
           data: formData
           dataType: 'json'
           processData: false
           contentType: false
-          success: (res) -> checkForData res.response.track.id
 
+          xhr: ->
+            xhr = jQuery.ajaxSettings.xhr()
+            xhr.upload.addEventListener 'progress', reportProgress, false
+            xhr
+
+          success: (res) ->
+            checkForData res.response.track.id
 
         
       else # uris

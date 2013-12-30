@@ -160,7 +160,6 @@ class Lysertron.Song
   start: (playAudio = yes) ->
     if @noSong
       @songEventsInterval = setInterval =>
-        console.log 'asdasdasdasd'
         @scheduleEvents()
       , 250
 
