@@ -1,0 +1,59 @@
+#!/usr/bin/env coffee
+
+fs            = require 'fs'
+request       = require 'request'
+spawn         = require('child_process').spawn
+coffee        = require 'coffee-script'
+
+app           = require './lib/server'
+manifest      = require './lib/manifest'
+layerCompiler = require './lib/layer'
+
+deleteFolderRecursive = (path) ->
+  if fs.existsSync(path)
+    fs.readdirSync(path).forEach (file,index) ->
+      curPath = "#{path}/#{file}"
+      if fs.statSync(curPath).isDirectory()
+        deleteFolderRecursive curPath
+      else
+        fs.unlinkSync curPath
+      
+    fs.rmdirSync path
+
+write = (path, content) ->
+  console.log "writing #{path}"
+  fs.unlinkSync path if fs.existsSync path
+  fs.writeFileSync path, content
+
+# Create all folder we need.
+deleteFolderRecursive './chromeapp/public'
+fs.mkdirSync './chromeapp/public'
+fs.mkdirSync './chromeapp/public/js'
+fs.mkdirSync './chromeapp/public/js/vendor'
+fs.mkdirSync './chromeapp/public/layers'
+fs.mkdirSync './chromeapp/public/layers/background'
+fs.mkdirSync './chromeapp/public/layers/midground'
+fs.mkdirSync './chromeapp/public/layers/foreground'
+
+# Copy over vendor libs.
+for name in manifest.vendor
+  write "./chromeapp/public/js/vendor/#{name}.js", fs.readFileSync("./js/vendor/#{name}.js")
+
+# Compile framework javascript.
+for name in manifest.app
+  coffeePath = "./js/#{name}.coffee"
+  fileContent = fs.readFileSync coffeePath
+  jsContent = coffee.compile fileContent.toString()
+  write "./chromeapp/public/js/#{name}.js", jsContent
+
+# Compile layers.
+manifest.findLayers (err, layers) ->
+  for layer in layers
+    [layerType, name] = layer.split '/'
+    write "./chromeapp/public/layers/#{layerType}/#{name}.js", layerCompiler.compile(layerType, name)
+
+# Get index.html from a server since this is rendered by express.
+app.listen 3002
+request "http://localhost:3002/", (err, res, body) ->
+  write './chromeapp/public/index.html', body
+  process.exit()
