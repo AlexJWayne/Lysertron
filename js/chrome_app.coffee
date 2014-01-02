@@ -1,131 +1,146 @@
 if chrome.app.window
 
-  $progressBar = null
-  $progressBarValue = null
+  # Listen for drag and dropped files.
+  $ -> SongUpload.bindEvents()
 
-  song =
-    blob: null
-    analysis: null
+  class SongUpload
+    echonestHost: "http://developer.echonest.com/api/v4"
+    $.getJSON 'auth.json', (json) => @::echonestKey = json.echonest
 
-  # Get echonest api key
-  echonestHost = "http://developer.echonest.com/api/v4"
-  auth = null
-  $.getJSON 'auth.json', (json) -> auth = json
+    # Start an upload of a given file object.
+    constructor: (file) ->
+      @progressBar      = null
+      @progressBarValue = null
+      @song =
+        blob:     file
+        analysis: null
 
-  # Returns tru if this event is a valid file dragondrop event.
-  isValid = (e) ->
-    e = e.originalEvent if e.originalEvent
-    dataTransfer = e.dataTransfer || e
+      @uploadFile()
 
-    dataTransfer?.types? &&
-      ('Files' in dataTransfer.types || 'text/uri-list' in dataTransfer.types)
-  
-  # Retry until we have the analaysis data available.
-  checkForData = (id) ->
-    $.ajax
-      url: "#{echonestHost}/track/profile"
-      type: 'GET'
-      dataType: 'json'
-      data:
-        api_key: auth.echonest
-        id: id
-        bucket: 'audio_summary'
+    # Upload the file to Echonest.
+    uploadFile: ->
+      # Construct a FormData object for a file upload to EchoNest.
+      formData = new FormData()
+      formData.append 'api_key',  @echonestKey
+      formData.append 'filetype', @song.blob.name.match(/\.(\w+?)$/)[1]
+      formData.append 'track',    @song.blob
 
-      success: (res) ->
-        # Got it! :D
-        if res.response.track.status is 'complete'
-          jsonUrl = res.response.track.audio_summary.analysis_url
-          console.log 'SUCCESS', jsonUrl
+      # Upload via AJAX.
+      console.log "Uploading: #{@song.blob.name}"
+      upload = $.ajax
+        url: "#{@echonestHost}/track/upload"
+        type: 'POST'
+        data: formData
+        dataType: 'json'
+        processData: false
+        contentType: false
+        xhr: @xhrWithProgress
+        success: (res) =>
+          @echonestId = res.response.track.id
+          @checkForAnalysis()
 
-          $.getJSON jsonUrl, (json) ->
-            $progressBar.remove()
-            $progressBar = null
+    # Returns an xh object that is tapped to report progress.
+    xhrWithProgress: =>
+      xhr = jQuery.ajaxSettings.xhr()
+      xhr.upload.addEventListener 'progress', @reportProgress, false
+      xhr
 
-            song.analysis = json
-            stage.initSong song
-            stage.start()
+    # Create the progress bar view to later manipulate.
+    createProgressBar: ->
+      @progressBar = $('<div id="progressBar">')
+      @progressBarValue = $('<div id="progressBarValue">').appendTo @progressBar
+      @progressBar.prependTo $(document.body)
 
-        # Will never get it :(
-        else if res.response.track.status is 'error'
-          console.log 'ERROR', res
-          $progressBar.remove()
-          $progressBar = null
+    # Update the progress bar to show current upload status.
+    reportProgress: (e) =>
+      @createProgressBar() unless @progressBar
 
-        # Retry in 5 seconds
-        else
-          setTimeout ->
-            checkForData id
-          , 5000
+      loaded = Math.round e.loaded / 1000
+      progress = e.loaded / e.total
+      console.log "#{loaded}KB (#{Math.round progress * 100}%)"
 
-  # Show progress on the the upload.
-  reportProgress = (event) ->
-    loaded = Math.round event.loaded / 1000
-    progress = event.loaded / event.total
-    console.log "#{loaded}KB (#{Math.round progress * 100}%)"
+      fullWidth = @progressBar.width() - 20
+      @progressBarValue.css width: "#{fullWidth * progress}px"
 
-    unless $progressBar
-      $progressBar = $('<div id="progressBar">')
-      $progressBarValue = $('<div id="progressBarValue">').appendTo $progressBar
-      $progressBar.prependTo $(document.body)
+      if progress < 1
+        @progressBarValue.text "#{loaded}k"
+      else
+        @progressBarValue
+          .addClass('waiting')
+          .text "Analyzing..."
 
-    fullWidth = $progressBar.width() - 20
-    $progressBarValue.css width: "#{fullWidth * progress}px"
+    # Ask echonest if the analysis is done yet.
+    checkForAnalysis: ->
+      $.ajax
+        url: "#{@echonestHost}/track/profile"
+        type: 'GET'
+        dataType: 'json'
+        data:
+          api_key: @echonestKey
+          id: @echonestId
+          bucket: 'audio_summary'
 
-    if progress < 1
-      $progressBarValue.text "#{loaded}k"
-    else
-      $progressBarValue
-        .addClass('waiting')
-        .text "Analyzing..."
+        success: (res) =>
+          # Got it! :D
+          if res.response.track.status is 'complete'
+            jsonUrl = res.response.track.audio_summary.analysis_url
+            console.log 'SUCCESS', jsonUrl
+            @fetchAnalysis jsonUrl
 
+          # Will never get it :(
+          else if res.response.track.status is 'error'
+            console.log 'ERROR', res
+            @progressBar.remove()
+            @progressBar = null
 
-  $window = $(window)
+          # Retry in 5 seconds
+          else
+            console.log 'Analysis status:', res.response.track.status
+            setTimeout =>
+              @checkForAnalysis()
+            , 5000
 
-  # File drags over the window.
-  $window.on 'dragover', (e) ->
-    e.stopPropagation()
-    e.preventDefault()
+    # Download the completed analaysis JSON file.
+    fetchAnalysis: (jsonUrl) ->
+      $.getJSON jsonUrl, (json) ->
+        @progressBar.remove()
+        @progressBar = null
 
-    # if isValid e
-    #   console.log 'omg!!'
-    # else
-    #   console.log 'boooo'
+        @song.analysis = json
+        stage.initSong @song
+        stage.start()
 
-  # File drops on the window.
-  $window.on 'drop', (e) ->
-    e.preventDefault()
-    e.stopPropagation()
+    # Bind the file drag and drop event to the window.
+    @bindEvents = ->
+      $(window)
+        .on('drop',     @onDragDrop)
+        .on('dragover', @onDragOver)
 
-    if isValid e
-      if 'Files' in e.originalEvent.dataTransfer.types
-        file = e.originalEvent.dataTransfer.files[0]
-        song.blob = file
+    # File is being dragged over the window.
+    @onDragOver = (e) =>
+      e.stopPropagation()
+      e.preventDefault()
 
-        formData = new FormData()
-        formData.append 'api_key',  auth.echonest
-        formData.append 'filetype', file.name.match(/\.(\w+?)$/)[1]
-        formData.append 'track',    file
+    # File was dropped on the window.
+    @onDragDrop = (e) =>
+      e.preventDefault()
+      e.stopPropagation()
 
-        console.log "Uploading: #{file.name}"
-        upload = $.ajax
-          url: "#{echonestHost}/track/upload"
-          type: 'POST'
-          data: formData
-          dataType: 'json'
-          processData: false
-          contentType: false
+      if @isValidFileDrop e
+        if 'Files' in e.originalEvent.dataTransfer.types
+          file = e.originalEvent.dataTransfer.files[0]
+          new SongUpload file
+          
+        else # uris
+          uri = e.originalEvent.dataTransfer.getData "text/uri-list"
+          console.log "uri: #{uri}"
 
-          xhr: ->
-            xhr = jQuery.ajaxSettings.xhr()
-            xhr.upload.addEventListener 'progress', reportProgress, false
-            xhr
+      return false
 
-          success: (res) ->
-            checkForData res.response.track.id
+    # Is the currently dragged thing over the window a file?
+    @isValidFileDrop: (e) ->
+      e = e.originalEvent if e.originalEvent
+      dataTransfer = e.dataTransfer || e
 
-        
-      else # uris
-        uri = e.originalEvent.dataTransfer.getData "text/uri-list"
-        console.log "uri: #{uri}"
-    
-    # dragLeave()
+      dataTransfer?.types? &&
+        ('Files' in dataTransfer.types || 'text/uri-list' in dataTransfer.types)
