@@ -33,6 +33,8 @@ module.exports =
     'music_cruncher'
     'song'
     'stage'
+    'song_upload'
+    'dev_reloader'
     'chrome_app'
   ]
   
