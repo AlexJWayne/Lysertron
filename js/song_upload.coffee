@@ -97,7 +97,7 @@ class Lysertron.SongUpload
 
   # Download the completed analaysis JSON file.
   fetchAnalysis: (jsonUrl) ->
-    $.getJSON jsonUrl, (json) ->
+    $.getJSON jsonUrl, (json) =>
       @progressBar.remove()
       @progressBar = null
 

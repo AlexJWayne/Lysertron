@@ -1,8 +1,8 @@
-fs = require 'fs'
+fs   = require 'fs'
 path = require 'path'
 
-rootPath = path.join path.dirname(fs.realpathSync(__filename)), '..'
-layersPath = path.join rootPath, 'layers'
+rootPath    = path.join path.dirname(fs.realpathSync(__filename)), '..'
+layersPath  = path.join rootPath, 'layers'
 currentPath = process.cwd()
 
 layerTypes = [
