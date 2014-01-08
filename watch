@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+nodemon -x "coffee buildapp" --ignore chromeapp

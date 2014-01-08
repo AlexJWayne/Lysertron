@@ -1,5 +1,17 @@
 if chrome.app.window
 
+  # Reload the chrome extension
+  do ->
+    version = null
+    setInterval ->
+      $.get 'version', (newVersion) ->
+        if version? && version isnt newVersion
+          chrome.runtime.reload()
+        else
+          version = newVersion
+          
+    , 1000
+
   # Listen for drag and dropped files.
   $ -> SongUpload.bindEvents()
 

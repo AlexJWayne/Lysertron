@@ -25,6 +25,9 @@ fs.mkdirSync './chromeapp/public/layers/background'
 fs.mkdirSync './chromeapp/public/layers/midground'
 fs.mkdirSync './chromeapp/public/layers/foreground'
 
+# Add a timestamped version file
+write "./chromeapp/public/version", Date.now().toString()
+
 # Copy auth.json
 write "./chromeapp/public/auth.json", fs.readFileSync("./auth.json")
 
