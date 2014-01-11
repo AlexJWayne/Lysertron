@@ -24,6 +24,7 @@ module.exports =
     'tween'
     'sparks'
     'oculus_rift'
+    'spark_md5'
   ]
   app: [
     'layer'
@@ -36,6 +37,9 @@ module.exports =
     'song_upload'
     'dev_reloader'
     'chrome_app'
+    'file_md5'
+
+    'views/progress_bar'
   ]
   
   findLayers: (args...) ->

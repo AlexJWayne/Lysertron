@@ -5,12 +5,28 @@ class Lysertron.SongUpload
   # Start an upload of a given file object.
   constructor: (file) ->
     @progressBar      = null
-    @progressBarValue = null
     @song =
       blob:     file
+      md5:      null
       analysis: null
 
-    @uploadFile()
+    @progressBar = new Lysertron.Views.ProgressBar()
+    @progressBar.text 'Inspecting...'
+    @progressBar.completion 0.05
+
+    new Lysertron.FileMD5 file,
+      progress: (completion) =>
+        @progressBar.completion completion        
+
+      complete: (md5) =>
+        @song.md5 = md5
+
+        # TODO: if md5 is not recognized, upload the file
+        @uploadFile()
+
+        # TODO: else play stored song with stored analysis
+
+
 
   # Upload the file to Echonest.
   uploadFile: ->
@@ -21,7 +37,7 @@ class Lysertron.SongUpload
     formData.append 'track',    @song.blob
 
     # Upload via AJAX.
-    console.log "Uploading: #{@song.blob.name}"
+    console.log 'Uploading:', @song.blob.name, @song
     upload = $.ajax
       url: "#{@echonestHost}/track/upload"
       type: 'POST'
@@ -40,29 +56,18 @@ class Lysertron.SongUpload
     xhr.upload.addEventListener 'progress', @reportProgress, false
     xhr
 
-  # Create the progress bar view to later manipulate.
-  createProgressBar: ->
-    @progressBar = $('<div id="progressBar">')
-    @progressBarValue = $('<div id="progressBarValue">').appendTo @progressBar
-    @progressBar.prependTo $(document.body)
-
   # Update the progress bar to show current upload status.
   reportProgress: (e) =>
-    @createProgressBar() unless @progressBar
-
     loaded = Math.round e.loaded / 1000
     progress = e.loaded / e.total
     console.log "#{loaded}KB (#{Math.round progress * 100}%)"
 
-    fullWidth = @progressBar.width() - 20
-    @progressBarValue.css width: "#{fullWidth * progress}px"
+    @progressBar.completion progress
 
     if progress < 1
-      @progressBarValue.text "#{loaded}k"
+      @progressBar.text "#{ loaded }k"
     else
-      @progressBarValue
-        .addClass('waiting')
-        .text "Analyzing..."
+      @progressBar.class('waiting').text "Analyzing..."
 
   # Ask echonest if the analysis is done yet.
   checkForAnalysis: ->
@@ -85,8 +90,7 @@ class Lysertron.SongUpload
         # Will never get it :(
         else if res.response.track.status is 'error'
           console.log 'ERROR', res
-          @progressBar.remove()
-          @progressBar = null
+          @progressBar.destroy()
 
         # Retry in 5 seconds
         else
@@ -98,8 +102,7 @@ class Lysertron.SongUpload
   # Download the completed analaysis JSON file.
   fetchAnalysis: (jsonUrl) ->
     $.getJSON jsonUrl, (json) =>
-      @progressBar.remove()
-      @progressBar = null
+      @progressBar.destroy()
 
       @song.analysis = json
       stage.initSong @song
