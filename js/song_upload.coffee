@@ -9,26 +9,37 @@ class Lysertron.SongUpload
       blob:     file
       md5:      null
       analysis: null
+      title:    null
+      artist:   null
 
-    Lysertron.SongUpload.dragDropOverlay.text 'Analyzing file...'
+    # Make the overlay report that we are analyzing the file while
+    # we compute the md5 checksum.
+    @dragDropOverlay = Lysertron.SongUpload.dragDropOverlay
+    @dragDropOverlay.text 'Preparing music...'
 
     new Lysertron.FileMD5 file, complete: (md5) =>
 
       # Remove the overlay.
-      Lysertron.SongUpload.dragDropOverlay.destroy()
-      Lysertron.SongUpload.dragDropOverlay = null
-
-      # Add an upload progress bar.
-      @progressBar = new Lysertron.Views.ProgressBar()
-      @progressBar.text 'Inspecting...'
-      @progressBar.completion 0.05
+      @dragDropOverlay.hide()
 
       @song.md5 = md5
 
-      # TODO: if md5 is not recognized, upload the file
-      @uploadFile()
+      # if md5 is recognized, just play it.
+      libSong = Lysertron.Library.get @song
+      if libSong
+        console.log "Song already in library, playing now!"
+        stage.initSong libSong
+        stage.start()
 
-      # TODO: else play stored song with stored analysis
+      # else upload the file for analysis.
+      else
+        # Add an upload progress bar.
+        @progressBar = new Lysertron.Views.ProgressBar()
+        @progressBar.text ''
+        @progressBar.completion 0
+
+        @uploadFile()
+
 
 
   # Upload the file to Echonest.
@@ -88,6 +99,10 @@ class Lysertron.SongUpload
         if res.response.track.status is 'complete'
           jsonUrl = res.response.track.audio_summary.analysis_url
           console.log 'SUCCESS', jsonUrl
+
+          @song.title =  res.response.track.title
+          @song.artist = res.response.track.artist
+
           @fetchAnalysis jsonUrl
 
         # Will never get it :(
@@ -110,6 +125,8 @@ class Lysertron.SongUpload
       @song.analysis = json
       stage.initSong @song
       stage.start()
+
+      Lysertron.Library.add @song
 
   # Bind the file drag and drop event to the window.
   @bindEvents = ->

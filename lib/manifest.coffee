@@ -38,6 +38,7 @@ module.exports =
     'dev_reloader'
     'chrome_app'
     'file_md5'
+    'library'
 
     'views/progress_bar'
     'views/drag_drop_overlay'

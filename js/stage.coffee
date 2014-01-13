@@ -103,25 +103,30 @@ class Lysertron.Stage
     # Get song from URL
     @songName ||= @getParam 'song'
   
-  createSongSelector: ->
-    $.get "/songs.json", (songs) =>
-      select = $('<select>')
+  createSongSelector: (selectedSongObj)->
+    @songSelector?.remove()
+
+    # Load song library from local storage.
+    Lysertron.Library.load (lib) =>
+      @songSelector = $('<select>')
         .attr(id: 'song-select')
-        .on 'change', ->
-          window.location.search = "?song=#{ @value }"
+        .on 'change', =>
+          stage.initSong lib.get(md5: @songSelector.val())
+          stage.start()
 
-      select.append $('<option>').text(' - Select Song - ')
+        @songSelector.append $('<option>').text(' - Select Song - ')
 
-      for song in songs
-        option = $('<option>')
-          .attr(value: song)
-          .text(song)
+        for songObj in lib.songObjs
+          option = $('<option>')
+            .attr(value: songObj.md5)
+            .text("#{ songObj.artist } - #{ songObj.title }")
 
-        option.attr selected: yes if song is @getParam('song')
+          if selectedSongObj?.md5 is songObj.md5
+            option.attr(selected: yes)
 
-        select.append option
+          @songSelector.append option
 
-      $(document.body).append select
+        $(document.body).append @songSelector
 
   # Start the song and the visualization.
   start: (playAudio = yes) ->

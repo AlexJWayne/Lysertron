@@ -10,4 +10,4 @@ Lysertron.reloadChromeAppOnUpdate = ->
       else
         version = newVersion
 
-  setInterval checkVersion, 500
+  setInterval checkVersion, 2000
