@@ -10,22 +10,25 @@ class Lysertron.SongUpload
       md5:      null
       analysis: null
 
-    @progressBar = new Lysertron.Views.ProgressBar()
-    @progressBar.text 'Inspecting...'
-    @progressBar.completion 0.05
+    Lysertron.SongUpload.dragDropOverlay.text 'Analyzing file...'
 
-    new Lysertron.FileMD5 file,
-      progress: (completion) =>
-        @progressBar.completion completion        
+    new Lysertron.FileMD5 file, complete: (md5) =>
 
-      complete: (md5) =>
-        @song.md5 = md5
+      # Remove the overlay.
+      Lysertron.SongUpload.dragDropOverlay.destroy()
+      Lysertron.SongUpload.dragDropOverlay = null
 
-        # TODO: if md5 is not recognized, upload the file
-        @uploadFile()
+      # Add an upload progress bar.
+      @progressBar = new Lysertron.Views.ProgressBar()
+      @progressBar.text 'Inspecting...'
+      @progressBar.completion 0.05
 
-        # TODO: else play stored song with stored analysis
+      @song.md5 = md5
 
+      # TODO: if md5 is not recognized, upload the file
+      @uploadFile()
+
+      # TODO: else play stored song with stored analysis
 
 
   # Upload the file to Echonest.
@@ -113,11 +116,26 @@ class Lysertron.SongUpload
     $(window)
       .on('drop',     @onDragDrop)
       .on('dragover', @onDragOver)
+      .on('dragleave',  @onDragLeave)
 
   # File is being dragged over the window.
   @onDragOver = (e) =>
     e.stopPropagation()
     e.preventDefault()
+
+    @dragDropOverlay ||= new Lysertron.Views.DragDropOverlay()
+    @dragDropOverlay.show()
+
+  # Remove the overlay.
+  @onDragLeave = (e) =>
+    e.stopPropagation()
+    e.preventDefault()
+
+    unless e.target.tagName is 'CANVAS'
+      @dragDropOverlay?.hide()
+
+    
+
 
   # File was dropped on the window.
   @onDragDrop = (e) =>

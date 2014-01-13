@@ -40,6 +40,7 @@ module.exports =
     'file_md5'
 
     'views/progress_bar'
+    'views/drag_drop_overlay'
   ]
   
   findLayers: (args...) ->
