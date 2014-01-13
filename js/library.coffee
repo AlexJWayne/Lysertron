@@ -24,15 +24,14 @@ Lysertron.Library =
     else
       chrome.storage.local.get 'library', (items) =>
         @songObjs = items.library || []
-        # @songObjs = []
+        # @songObjs = [] # reset library
 
-        timeout = 0
         for songObj in @songObjs
           do (songObj) =>
             fs.root.getFile songObj.md5, {}, (fileEntry) =>
               console.log 'getFile', songObj.md5
               fileEntry.file (file) =>
-                console.log 'fileEntry', songObj.md5
+                console.log 'fileEntry', songObj.md5, file
                 songObj.blob = file
                 cb this if cb && @doAllSongsHaveFiles()
 
@@ -48,17 +47,18 @@ Lysertron.Library =
       for songObj in @songObjs
 
         # Save each song file.
-        fs.root.getFile songObj.md5, create: true, (fileEntry) ->
-          fileEntry.createWriter (fileWriter) ->
-            fileWriter.onwriteend = (e) ->
-              console.log 'Song file saved!', fileEntry, e
+        do (songObj) =>
+          fs.root.getFile songObj.md5, create: true, (fileEntry) ->
+            fileEntry.createWriter (fileWriter) ->
+              fileWriter.onwriteend = (e) ->
+                console.log 'Song file saved!', fileEntry, e
 
-            fileWriter.onerror    = (e) ->
-              console.log 'fileWriter.onerror', e
+              fileWriter.onerror    = (e) ->
+                console.log 'fileWriter.onerror', e
 
-            fileWriter.write songObj.blob
-          , (e) -> console.log 'fileEntry.createWriter error', e
-        , (e) -> console.log 'fs.root.getFile error', e
+              fileWriter.write songObj.blob
+            , (e) -> console.log 'fileEntry.createWriter error', e
+          , (e) -> console.log 'fs.root.getFile error', e
 
         # Collect objects of just meta data, not binary blob data.
         {
