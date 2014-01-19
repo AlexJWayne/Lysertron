@@ -2,6 +2,13 @@ Lysertron.Arduino =
   exists: no
   connection: {}
 
+  flags:
+    segment:  1 # 00000001
+    tatum:    2 # 00000010
+    beat:     4 # 00000100
+    bar:      8 # 00001000
+    section: 16 # 00010000
+
   # Find and connect to an Arduino over USB serial.
   connect: ->
     @getArduinoSerialPath (serialPath) =>
@@ -15,10 +22,10 @@ Lysertron.Arduino =
           @connection.info = openInfo
           console.log 'Ardunio connected!', @connection.info
 
-          # chrome.serial.onReceive.addListener (info) ->
-          #   uint8View = new Uint8Array(info.data)
-          #   value = String.fromCharCode(uint8View[0])
-          #   console.log 'Serial Data Received', value
+          chrome.serial.onReceive.addListener (info) ->
+            uint8View = new Uint8Array(info.data)
+            value = String.fromCharCode(uint8View[0])
+            console.log 'Serial Data Received', value
 
   # Callback with the path of the serial port with the Arduino.
   getArduinoSerialPath: (cb) ->
@@ -27,19 +34,24 @@ Lysertron.Arduino =
         if device.path.indexOf("/dev/tty.usbmodem") > -1
           cb device.path
 
-  sendInt: (value) ->
+  sendByte: (byte) ->
     buffer = new ArrayBuffer(1)
     uint8View = new Uint8Array(buffer)
-    uint8View[0] = value
+    uint8View[0] = byte
     chrome.serial.send @connection.info.connectionId, buffer, ->
 
 
   dispatchMusicEvent: (data) ->
-    @sendInt 1 if data.segment
-    @sendInt 2 if data.tatum
-    @sendInt 3 if data.beat
-    @sendInt 4 if data.bar
-    @sendInt 5 if data.section
+    byte = 0
+
+    byte = byte | @flags.segment if data.segment
+    byte = byte | @flags.tatum   if data.tatum
+    byte = byte | @flags.beat    if data.beat
+    byte = byte | @flags.bar     if data.bar
+    byte = byte | @flags.section if data.section
+
+    # console.log 'bitmasked serial byte', byte.toString(2), byte
+    @sendByte byte
 
 # Find the arduino!
 Lysertron.Arduino.connect()
