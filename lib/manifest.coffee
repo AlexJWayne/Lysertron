@@ -39,6 +39,7 @@ module.exports =
     'chrome_app'
     'file_md5'
     'library'
+    'arduino'
 
     'views/progress_bar'
     'views/drag_drop_overlay'

@@ -138,7 +138,7 @@ class Lysertron.Song
             @trigger eventType, eventData
 
           # Schedule the event trigger in the future.
-          , (eventData.start - playHead) * 1000
+          , (eventData.start - playHead) * 500
 
     return
 

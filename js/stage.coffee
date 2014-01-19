@@ -82,6 +82,10 @@ class Lysertron.Stage
       @logicalLayers.midground.stack.dispatchMusicEvent(data)
       @logicalLayers.foreground.stack.dispatchMusicEvent(data)
 
+      # Activate Arduino
+      if Lysertron.Arduino.exists
+        Lysertron.Arduino.dispatchMusicEvent(data)
+
       # Transition layers on new sections
       if data.section
         fullTransition()
@@ -239,4 +243,4 @@ class Lysertron.Stage
 # Go
 $ ->
   stage = window.stage = new Lysertron.Stage
-  stage.start yes unless mocha?
+  # stage.start yes unless mocha?
