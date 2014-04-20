@@ -3,3 +3,4 @@ songs/*
 auth.json
 node_modules/*
 chromeapp/public/*
+arduino/3D-parts/*
