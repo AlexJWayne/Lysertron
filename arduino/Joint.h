@@ -13,10 +13,11 @@ class Joint {
       EaseLinear,
       EaseInOut,
       EaseIn,
-      EaseOut
+      EaseOut,
+      EaseInOutLoop,
     };
 
-    Joint();
+    // Joint();
     void init(int pin, float offset, float direction);
 
     int pin;
@@ -32,6 +33,7 @@ class Joint {
     float tweenEndAngle;
     Easing tweenEasing;
 
+    void tween(float angle, float duration);
     void tween(float angle, float duration, Easing easing);
     float tweenCompletion();
 

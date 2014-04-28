@@ -1,7 +1,5 @@
 #include "Joint.h"
 
-Joint::Joint() {}
-
 void Joint::init(int _pin, float _offset, float _direction) {
   pin = _pin;
   offset = _offset;
@@ -9,6 +7,10 @@ void Joint::init(int _pin, float _offset, float _direction) {
   currentTime = 0.1;
   servo.attach(pin);
   tween(0, 0, EaseLinear);
+}
+
+void Joint::tween(float angle, float duration) {
+  tween(angle, duration, EaseInOut);
 }
 
 void Joint::tween(float angle, float duration, Easing easing) {
@@ -35,6 +37,10 @@ float Joint::tweenCompletion() {
 
     case EaseIn:
       completion = sin(completion * PI * 0.5);
+      break;
+
+    case EaseInOutLoop:
+      completion = 0.5 - cos(completion * PI * 2) * 0.5;
       break;
   }
 
