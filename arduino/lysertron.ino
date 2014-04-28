@@ -1,126 +1,110 @@
-#include "Servo.h"
+// #include "Servo.h"
+#include "Joint.h"
 
-Servo barServo;
+const float pi = 3.14159;
 
-struct Joint {
-  int pin;
-  float offset;
-  float dir;
-  Servo servo;
-};
+Joint FL1;
+Joint FL2;
+Joint FR1;
+Joint FR2;
+Joint BR1;
+Joint BR2;
+Joint BL1;
+Joint BL2;
 
-Joint FL1 = { 2,  15,  1 };
-Joint FL2 = { 3,  -5, -1 };
-Joint FR1 = { 4, -10, -1 };
-Joint FR2 = { 5,  15,  1 };
-Joint BR1 = { 6,   0,  1 };
-Joint BR2 = { 7, -15, -1 };
-Joint BL1 = { 8,   0, -1 };
-Joint BL2 = { 9, -10,  1 };
-
-const int EVT_SEGMENT  = 1;  // 00000001
-const int EVT_TATUM    = 2;  // 00000010
-const int EVT_BEAT     = 4;  // 00000100
-const int EVT_BAR      = 8;  // 00001000
-const int EVT_SECTION  = 16; // 00010000
-
-long lastLoop = 0;
-
-float sinceBeat;
-float untilBeat;
-
-float sinceBar;
-float untilBar;
-
-float beatDir = 1;
-float barDir  = 1;
+long lastTime = 0;
 
 void setup() {
-  Serial.begin(9600);
-  
-  jointInit(FL1);
-  jointInit(FL2);
-  jointInit(FR1);
-  jointInit(FR2);
-  jointInit(BR1);
-  jointInit(BR2);
-  jointInit(BL1);
-  jointInit(BL2);
+  Serial.begin(115200);
+
+  FL1.init(2,  15,  1);
+  FR1.init(3,  -5, -1);
+  BL1.init(4, -10, -1);
+  BR1.init(5,  15,  1);
+  FL2.init(6,   0,  1);
+  FR2.init(7, -15, -1);
+  BL2.init(8,   0, -1);
+  BR2.init(9, -10,  1);
+
+  delay(1000);
 }
 
 void loop() {
-  float thisLoop = millis();
-  float elapsed = (thisLoop - lastLoop) / 1000;
-  
-
-  sinceBeat += elapsed;
-  untilBeat -= elapsed;
-  if (untilBeat < 0) untilBeat = 0;
-
-  sinceBar += elapsed;
-  untilBar -= elapsed;
-  if (untilBar < 0) untilBar = 0;
+  float currentTime = (float)millis() / 1000.0;
+  float elapsed = (currentTime - lastTime);
 
   while (Serial.available() > 0) {
-    // float serialFloat;
+    float serialFloat;
+    // segment
+    readFloat();
 
-    // // first value is beat
-    // serialFloat = Serial.parseFloat();
-    // if (serialFloat > 0) {
-    //   // startBeat(serialFloat);
-    //   jointMove(FL2, random(-10, 10));
-    // }
-
-    // // second is bar
-    // serialFloat = Serial.parseFloat();
-    // if (serialFloat > 0) {
-    //   // untilBar = serialFloat;
-    // }
-
-    int serialVal = Serial.read();
-
-    // Check presence of event bits with a binary and operation.
-    if (serialVal & EVT_BEAT)  {
-      startBeat(0.2);
+    // tatum
+    readFloat();
+    
+    // beat
+    serialFloat = readFloat();
+    if (serialFloat > 0) {
+      startBeat(serialFloat);
     }
 
-    if (serialVal & EVT_BAR) {
-      untilBar = 0.2;
-      sinceBar = 0;
-      barDir *= -1;
+    // bar
+    serialFloat = readFloat();
+    if (serialFloat > 0) {
+      startBar(serialFloat);
     }
+
+    // section
+    readFloat();
   }
+  
+  FL1.update(currentTime);
+  FR1.update(currentTime);
+  BL1.update(currentTime);
+  BR1.update(currentTime);
+  FL2.update(currentTime);
+  FR2.update(currentTime);
+  BL2.update(currentTime);
+  BR2.update(currentTime);
 
-  float completion = sinceBeat / (sinceBeat + untilBeat);
-  jointMove(FL2, 60 - 5 * completion * beatDir);
-  jointMove(FR2, 60 - 5 * completion * beatDir);
-  jointMove(BL2, 60 - 5 * completion * beatDir);
-  jointMove(BR2, 60 - 5 * completion * beatDir);  
-  
-  completion = sinceBar / (sinceBar + untilBar);
-  jointMove(FL1, 30 - 10 * completion * barDir);
-  jointMove(FR1, 30 - 10 * completion * barDir);
-  jointMove(BL1, 30 - 10 * completion * barDir);
-  jointMove(BR1, 30 - 10 * completion * barDir);
-  
-  lastLoop = thisLoop;
+  lastTime = currentTime;
 }
 
 void startBeat(float duration) {
-  beatDir *= -1;
-  untilBeat = duration;
-  sinceBeat = 0;
+  // beatDir *= -1;
+  // untilBeat = duration;
+  // sinceBeat = 0;
+
+  if (FL1.currentAngle > 45) {
+    FL1.tween(45+45, duration, Joint::EaseInOut);
+  } else {
+    FL1.tween(45-45, duration, Joint::EaseInOut);
+  }
 }
 
-void jointInit(Joint joint) {
-  joint.servo.attach(joint.pin);
-  jointMove(joint, 0);
+void startBar(float duration) {
+  // barDir *= -1;
+  // untilBar = duration;
+  // sinceBar = 0;
 }
 
-void jointMove(Joint joint, float angle) {
-  joint.servo.write(
-    90 + joint.offset + (
-      angle * joint.dir
-    )
-  );
+float readFloat() {
+  // Allows us to read bytes as a float
+  union {
+    char chars[4];
+    float floatResult;
+  } converter;
+
+  // Buffer that store the bytes
+  char buffer[4];
+
+  // Read into the buffer
+  Serial.readBytes(buffer, 4);
+
+  // Map the buffer bytes into the converter
+  for (int i = 0; i < 4; i++) {
+    converter.chars[i] = buffer[i];
+  }
+
+  // Snag the result as a float
+  return converter.floatResult;
 }

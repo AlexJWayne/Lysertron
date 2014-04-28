@@ -9,6 +9,9 @@ Lysertron.Arduino =
     bar:      8 # 00001000
     section: 16 # 00010000
 
+  disconnect: ->
+    chrome.serial.disconnect @connection.info.connectionId, ->
+
   # Find and connect to an Arduino over USB serial.
   connect: ->
     @getArduinoSerialPath (serialPath) =>
@@ -18,7 +21,7 @@ Lysertron.Arduino =
       if @connection.serialPath
         console.log "Ardunio Found", @connection.serialPath
 
-        chrome.serial.connect @connection.serialPath, {}, (openInfo) =>
+        chrome.serial.connect @connection.serialPath, { bitrate: 115200 }, (openInfo) =>
           @connection.info = openInfo
           console.log 'Ardunio connected!', @connection.info
 
@@ -49,24 +52,29 @@ Lysertron.Arduino =
     for i in [0...floats.length]
       floatBufferView[i] = floats[i]
 
+    # console.log floatBufferView
     chrome.serial.send @connection.info.connectionId, buffer, ->
 
   dispatchMusicEvent: (data) ->
-    byte = 0
+    # byte = 0
 
-    byte = byte | @flags.segment if data.segment
-    byte = byte | @flags.tatum   if data.tatum
-    byte = byte | @flags.beat    if data.beat
-    byte = byte | @flags.bar     if data.bar
-    byte = byte | @flags.section if data.section
+    # byte = byte | @flags.segment if data.segment
+    # byte = byte | @flags.tatum   if data.tatum
+    # byte = byte | @flags.beat    if data.beat
+    # byte = byte | @flags.bar     if data.bar
+    # byte = byte | @flags.section if data.section
 
-    durations = []
-    durations.push(if data.beat then data.beat.duration else -1)
-    durations.push(if data.bar  then data.bar.duration  else -1)
+    durations = [
+      (if data.segment then data.segment.duration else -1)
+      (if data.tatum   then data.tatum.duration   else -1)
+      (if data.beat    then data.beat.duration    else -1)
+      (if data.bar     then data.bar.duration     else -1)
+      (if data.section then data.section.duration else -1)
+    ]
 
     # console.log 'bitmasked serial byte', byte.toString(2), byte
-    @sendByte(byte)
-    # @sendFloats(durations)
+    # @sendByte(byte)
+    @sendFloats(durations)
 
 # Find the arduino!
 Lysertron.Arduino.connect()
