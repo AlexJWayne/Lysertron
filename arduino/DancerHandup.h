@@ -21,7 +21,7 @@ class DancerHandup : public Dancer {
 
     void start();
     void onBeatStart(float duration);
-    // void onBarStart(float duration);
+    void onBarStart(float duration);
 
   private:
     bool didSetup;

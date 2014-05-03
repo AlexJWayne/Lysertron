@@ -18,7 +18,7 @@ class Joint {
     };
 
     // Joint();
-    void init(int pin, float offset, float direction);
+    void init(int pin, float offset, float direction, float initialAngle);
 
     int pin;
     float offset;

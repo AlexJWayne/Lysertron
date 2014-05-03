@@ -27,13 +27,13 @@ void DancerHandup::onBeatStart(float duration) {
 
   float dir = bounceUp ? 1 : 0;
 
-  back2->tween(      5 +  5 * dir, duration);
-  sideLong2->tween( 55 + 10 * dir, duration);
-  sideShort2->tween(55 + 10 * dir, duration);
+  back2->tween(      5 + 10 * dir, duration, bounceUp ? Joint::EaseOut : Joint::EaseIn);
+  sideLong2->tween( 55 + 20 * dir, duration, bounceUp ? Joint::EaseOut : Joint::EaseIn);
+  sideShort2->tween(55 + 20 * dir, duration, bounceUp ? Joint::EaseOut : Joint::EaseIn);
 
   back1->tween(     45, duration);
-  sideLong1->tween( 55, duration);
-  sideShort1->tween(35, duration);
+  sideLong1->tween( 65, duration);
+  sideShort1->tween(25, duration);
 
   float angle;
   if (beatCount % 2 == 0) {
@@ -47,13 +47,13 @@ void DancerHandup::onBeatStart(float duration) {
   }
 }
 
-// void DancerHandup::onBarStart(float duration) {
-//   barCount++;
+void DancerHandup::onBarStart(float duration) {
+  barCount++;
 
-//   if (barCount % 4 == 0) {
-//     setup();
-//   }
-// }
+  if (barCount % 5 == 0) {
+    setup();
+  }
+}
 
 void DancerHandup::setup() {
   if (hand1 == BL1) {

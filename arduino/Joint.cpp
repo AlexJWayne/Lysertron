@@ -1,12 +1,14 @@
 #include "Joint.h"
 
-void Joint::init(int _pin, float _offset, float _direction) {
+void Joint::init(int _pin, float _offset, float _direction, float initialAngle) {
   pin = _pin;
   offset = _offset;
   direction = _direction;
   currentTime = 0.1;
   servo.attach(pin);
-  tween(0, 0, EaseLinear);
+
+  currentAngle = initialAngle;
+  move(currentAngle);
 }
 
 void Joint::tween(float angle, float duration) {
@@ -50,7 +52,9 @@ float Joint::tweenCompletion() {
 void Joint::update(float _currentTime) {
   currentTime = _currentTime;
   float diff = tweenEndAngle - tweenStartAngle;
-  move(tweenStartAngle + diff * tweenCompletion());
+  if (abs(diff) > 0.0) {
+    move(tweenStartAngle + diff * tweenCompletion());
+  }
 }
 
 void Joint::move(float angle) {
