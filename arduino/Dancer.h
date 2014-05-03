@@ -27,8 +27,9 @@ class Dancer {
       Joint& _BR2
     );
 
-    virtual void onBeatStart(float duration);
-    virtual void onBarStart(float duration);
+    virtual void start() {};
+    virtual void onBeatStart(float duration) {};
+    virtual void onBarStart(float duration) {};
 
 };
 #endif

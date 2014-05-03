@@ -38,16 +38,13 @@ void setup() {
   BL1.init(8,   0, -1);
   BL2.init(9, -10,  1);
 
-  delay(500);
-
   dancers[0]->init(FL1, FL2, FR1, FR2, BR1, BR2, BL1, BL2);
   dancers[1]->init(FL1, FL2, FR1, FR2, BR1, BR2, BL1, BL2);
 
-  delay(500);
+  currentDancer = dancers[1];
+  currentDancer->start();
 
-  currentDancer = dancers[0];
-
-  metronome.start(60);
+  metronome.start(90);
 }
 
 void loop() {
@@ -94,7 +91,10 @@ void loop() {
     if (currentDancerIndex >= dancerCount) {
       currentDancerIndex = 0;
     }
+
     currentDancer = dancers[currentDancerIndex];
+    currentDancer->start();
+
     Serial.print("currentDancerIndex: ");
     Serial.println(currentDancerIndex);
   }

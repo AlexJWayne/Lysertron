@@ -17,9 +17,11 @@ class DancerHandup : public Dancer {
     bool handUp;
     bool handRight;
     int beatCount;
+    int barCount;
 
+    void start();
     void onBeatStart(float duration);
-    void onBarStart(float duration);
+    // void onBarStart(float duration);
 
   private:
     bool didSetup;
