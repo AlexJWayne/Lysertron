@@ -2,6 +2,7 @@
 #include "Joint.h"
 #include "Dancer.h"
 
+#include "Metronome.h"
 #include "DancerPushups.h"
 #include "DancerHandup.h"
 
@@ -14,13 +15,15 @@ Joint BR2;
 Joint BL1;
 Joint BL2;
 
+Metronome metronome;
+
 Dancer *currentDancer;
 int currentDancerIndex;
 
 const int dancerCount = 2;
 Dancer *dancers[] = {
-  new DancerHandup(),
-  new DancerPushups()
+  new DancerPushups(),
+  new DancerHandup()
 };
 
 void setup() {
@@ -43,44 +46,70 @@ void setup() {
   delay(500);
 
   currentDancer = dancers[0];
+
+  metronome.start(60);
 }
 
 void loop() {
   float currentTime = (float)millis() / 1000.0;
 
-  while (Serial.available() > 0) {
-    float duration;
-    // segment
-    readFloat();
+  // while (Serial.available() > 0) {
+  //   float duration;
+  //   // segment
+  //   readFloat();
 
-    // tatum
-    readFloat();
+  //   // tatum
+  //   readFloat();
     
-    // beat
-    duration = readFloat();
-    if (duration > 0) {
-      currentDancer->onBeatStart(duration);
-    }
+  //   // beat
+  //   duration = readFloat();
+  //   if (duration > 0) {
+  //     currentDancer->onBeatStart(duration);
+  //   }
 
-    // bar
-    duration = readFloat();
-    if (duration > 0) {
-      currentDancer->onBarStart(duration);
-    }
+  //   // bar
+  //   duration = readFloat();
+  //   if (duration > 0) {
+  //     currentDancer->onBarStart(duration);
+  //   }
 
-    // section
-    duration = readFloat();
-    if (duration > 0) {
-      currentDancerIndex++;
-      if (currentDancerIndex >= dancerCount) {
-        currentDancerIndex = 0;
-      }
-      currentDancer = dancers[currentDancerIndex];
-      Serial.print("currentDancerIndex: ");
-      Serial.println(currentDancerIndex);
-    }
-  }
+  //   // section
+  //   duration = readFloat();
+  //   if (duration > 0) {
+  //     currentDancerIndex++;
+  //     if (currentDancerIndex >= dancerCount) {
+  //       currentDancerIndex = 0;
+  //     }
+  //     currentDancer = dancers[currentDancerIndex];
+  //     Serial.print("currentDancerIndex: ");
+  //     Serial.println(currentDancerIndex);
+  //   }
+  // }
   
+  
+  metronome.update();
+
+  if (metronome.triggerSection()) {
+    currentDancerIndex++;
+    if (currentDancerIndex >= dancerCount) {
+      currentDancerIndex = 0;
+    }
+    currentDancer = dancers[currentDancerIndex];
+    Serial.print("currentDancerIndex: ");
+    Serial.println(currentDancerIndex);
+  }
+
+  if (metronome.triggerBeat()) {
+    Serial.println("beat ");
+    currentDancer->onBeatStart(metronome.spb);
+  }
+
+  if (metronome.triggerBar()) {
+    Serial.println("bar ");
+    currentDancer->onBarStart(metronome.spb * 4.0);
+  }
+
+
   FL1.update(currentTime);
   FR1.update(currentTime);
   BL1.update(currentTime);
