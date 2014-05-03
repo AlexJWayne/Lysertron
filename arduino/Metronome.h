@@ -9,6 +9,9 @@ class Metronome {
     float bps;
     float spb;
 
+    float beatsTime;
+    float lastTime;
+
     int beatsTriggered;
     int barsTriggered;
     int sectionsTriggered;
@@ -18,6 +21,7 @@ class Metronome {
     int sectionsPassed;
 
     void start(float bpm);
+    void setBPM(float bpm);
     void update();
 
     bool triggerBeat();

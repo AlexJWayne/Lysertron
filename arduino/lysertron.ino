@@ -6,6 +6,12 @@
 #include "DancerPushups.h"
 #include "DancerHandup.h"
 
+const int inputSwitchPin = 52;
+bool switchPressed = false;
+int inputMode = 1;
+
+const int bpmPotPin = 0;
+
 Joint FL1;
 Joint FL2;
 Joint FR1;
@@ -29,6 +35,8 @@ Dancer *dancers[] = {
 void setup() {
   Serial.begin(115200);
 
+  pinMode(inputSwitchPin, INPUT);
+
   FL1.init(2,  15,  1, 30);
   FL2.init(3,  0, -1,  60);
   FR1.init(4, -10, -1, 30);
@@ -50,8 +58,26 @@ void setup() {
 void loop() {
   float currentTime = (float)millis() / 1000.0;
 
-  updateSerial();
-  // updateMetronome();
+  if (!switchPressed && digitalRead(inputSwitchPin) == HIGH) {
+    switchPressed = true;
+    if (inputMode == 0) {
+      inputMode = 1;
+    } else {
+      inputMode = 0;
+    }
+  } else if (digitalRead(inputSwitchPin) == LOW) {
+    switchPressed = false;
+  }
+
+  float bpmScalar = (float)analogRead(bpmPotPin) / 1023;
+  metronome.setBPM(60.0 + 180.0 * bpmScalar);
+
+  switch (inputMode) {
+    case 0:
+      updateSerial(); break;
+    case 1:
+      updateMetronome(); break;
+  }
 
   FL1.update(currentTime);
   FR1.update(currentTime);
