@@ -5,12 +5,13 @@
 #include "Metronome.h"
 #include "DancerPushups.h"
 #include "DancerHandup.h"
+#include "DancerThrusts.h"
 
 const int inputSwitchPin = 52;
 bool switchPressed = false;
-int inputMode = 1;
+int inputMode = 0;
 
-const int bpmPotPin = 0;
+const int bpmPotPin = 2;
 
 Joint FL1;
 Joint FL2;
@@ -24,16 +25,17 @@ Joint BL2;
 Metronome metronome;
 
 Dancer *currentDancer;
-int currentDancerIndex;
 
-const int dancerCount = 2;
+const int dancerCount = 3;
 Dancer *dancers[] = {
   new DancerPushups(),
-  new DancerHandup()
+  new DancerHandup(),
+  new DancerThrusts(),
 };
 
 void setup() {
   Serial.begin(115200);
+  randomSeed(analogRead(4) + analogRead(5) + analogRead(6) + analogRead(7));
 
   pinMode(inputSwitchPin, INPUT);
 
@@ -46,10 +48,11 @@ void setup() {
   BL1.init(8,   0, -1, 30);
   BL2.init(9, -10,  1, 60);
 
-  dancers[0]->init(FL1, FL2, FR1, FR2, BR1, BR2, BL1, BL2);
-  dancers[1]->init(FL1, FL2, FR1, FR2, BR1, BR2, BL1, BL2);
+  for (int i = 0; i < dancerCount; i++) {
+    dancers[i]->init(FL1, FL2, FR1, FR2, BR1, BR2, BL1, BL2);
+  }
 
-  currentDancer = dancers[1];
+  currentDancer = dancers[random(0, dancerCount)];
   currentDancer->start();
 
   metronome.start(90);
@@ -113,13 +116,10 @@ void updateSerial() {
     // section
     duration = readFloat();
     if (duration > 0) {
-      currentDancerIndex++;
-      if (currentDancerIndex >= dancerCount) {
-        currentDancerIndex = 0;
-      }
-      currentDancer = dancers[currentDancerIndex];
+      currentDancer = dancers[random(0, dancerCount)];
+      currentDancer->start();
       // Serial.print("currentDancerIndex: ");
-      Serial.println(currentDancerIndex);
+      // Serial.println(currentDancerIndex);
     }
   }
 }
@@ -128,12 +128,7 @@ void updateMetronome() {
   metronome.update();
 
   if (metronome.triggerSection()) {
-    currentDancerIndex++;
-    if (currentDancerIndex >= dancerCount) {
-      currentDancerIndex = 0;
-    }
-
-    currentDancer = dancers[currentDancerIndex];
+    currentDancer = dancers[random(0, dancerCount)];
     currentDancer->start();
 
     // Serial.print("currentDancerIndex: ");

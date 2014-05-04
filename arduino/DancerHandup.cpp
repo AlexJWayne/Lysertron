@@ -7,7 +7,7 @@ void DancerHandup::start() {
   beatCount = 0;
   barCount  = 0;
 
-  switch (rand() % 4) {
+  switch (random(0, 4)) {
     case 0:
       hand1 = FL1; break;
     case 1:
