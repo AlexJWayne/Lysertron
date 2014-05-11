@@ -5,7 +5,7 @@
 
 #include "Servo.h"
 #include <Arduino.h>
-
+#include "Adafruit_PWMServoDriver.h"
 
 class Joint {
   public:
@@ -18,7 +18,9 @@ class Joint {
     };
 
     // Joint();
-    void init(int pin, float offset, float direction, float initialAngle);
+    void init(Adafruit_PWMServoDriver& pwmDriver, int pin, float offset, float direction, float initialAngle);
+
+    Adafruit_PWMServoDriver *pwmDriver;
 
     int pin;
     float offset;

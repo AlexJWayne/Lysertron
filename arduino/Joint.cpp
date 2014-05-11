@@ -1,6 +1,11 @@
 #include "Joint.h"
 
-void Joint::init(int _pin, float _offset, float _direction, float initialAngle) {
+const int SERVOMIN = 160;
+const int SERVOMAX = 590;
+
+void Joint::init(Adafruit_PWMServoDriver& _pwmDriver, int _pin, float _offset, float _direction, float initialAngle) {
+  pwmDriver = &_pwmDriver;
+
   pin = _pin;
   offset = _offset;
   direction = _direction;
@@ -59,5 +64,8 @@ void Joint::update(float _currentTime) {
 
 void Joint::move(float angle) {
   currentAngle = angle;
-  servo.write(90 + offset + (currentAngle * direction));
+  
+  float absAngle = 90 + offset + currentAngle * direction;
+  float pulseLen = map(absAngle, 0, 180, SERVOMIN, SERVOMAX);
+  pwmDriver->setPWM(pin, 0, pulseLen);
 }
